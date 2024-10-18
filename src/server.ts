@@ -14,7 +14,9 @@ import { onCompletion } from "./completion";
 // Create a connection for the server, using Node's IPC as a transport.
 // Also include all preview / proposed LSP features.
 const connection = createConnection(ProposedFeatures.all);
-connection.console.info(`Laravel LSP running in node ${process.version}`);
+connection.console.info(
+	`Laravel Language Server running in node ${process.version}`,
+);
 
 const documents: TextDocuments<TextDocument> = new TextDocuments(TextDocument);
 
