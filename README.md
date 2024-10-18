@@ -6,6 +6,7 @@ laravelとbladeというかbladeで補完したいのだ。
 - [ ] 文法としてわかっているスニペットを補完候補に追加
     - 追加中
 - [ ] `{{ }}`の中での補完
+- [ ] ディレクティブの引数の中での補完
 - [ ] Goto Definition
 - [ ] Diagnostics
 - [ ] 補完のdocumentation、detailの追加
