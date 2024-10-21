@@ -8,6 +8,9 @@ importers:
 
   .:
     dependencies:
+      stillat-blade-parser:
+        specifier: 1.2.0
+        version: 1.2.0
       vscode-languageserver:
         specifier: ^9.0.1
         version: 9.0.1
@@ -80,8 +83,82 @@ packages:
     cpu: [x64]
     os: [win32]
 
+  '@prettier/plugin-php@0.19.7':
+    resolution: {integrity: sha512-QOzBs05nwuR92uak7xBHf7RCZCFXml+6Sk3cjTp2ahQlilBtupqlNjitlTXsOfPIAYwlFgLP1oSfyapS6DN00w==}
+    peerDependencies:
+      prettier: ^1.15.0 || ^2.0.0
+
+  '@stedi/prettier-plugin-jsonata@1.16.1':
+    resolution: {integrity: sha512-/bp/7IJZk+4Zde5M5FwXFU1wU6tDVEVcgVD+DKGNnpH5hEv+XwHw2XrRx+RlDdtypceWoSOrw+4Ks1cXQvqTbw==}
+    peerDependencies:
+      jsonata: ^1.7.0 || ^2.0.0
+      prettier: ^3.0.0
+
+  '@types/esprima@4.0.6':
+    resolution: {integrity: sha512-lIk+kSt9lGv5hxK6aZNjiUEGZqKmOTpmg0tKiJQI+Ow98fLillxsiZNik5+RcP7mXL929KiTH/D9jGtpDlMbVw==}
+
+  '@types/estree@1.0.6':
+    resolution: {integrity: sha512-AYnb1nQyY49te+VRAVgmzfcgjYS91mY5P0TKUDCLEM+gNnA+3T6rWITXRLYCpahpqSQbN5cE+gHpnPyXjHWxcw==}
+
   '@types/node@22.7.6':
     resolution: {integrity: sha512-/d7Rnj0/ExXDMcioS78/kf1lMzYk4BZV8MZGTBKzTGZ6/406ukkbYlIsZmMPhcR5KlkunDHQLrtAVmSq7r+mSw==}
+
+  '@types/prettier@2.7.3':
+    resolution: {integrity: sha512-+68kP9yzs4LMp7VNh8gdzMSPZFL44MLGqiHWvttYJe+6qnuVr4Ek9wSBQoveqY/r+LwjCcU29kNVkidwim+kYA==}
+
+  camelize@1.0.1:
+    resolution: {integrity: sha512-dU+Tx2fsypxTgtLoE36npi3UqcjSSMNYfkqgmoEhtZrraP5VWq0K7FkWVTYa8eMPtnU/G2txVsfdCJTn9uzpuQ==}
+
+  charenc@0.0.2:
+    resolution: {integrity: sha512-yrLQ/yVUFXkzg7EDQsPieE/53+0RlaWTs+wBrvW36cyilJ2SaDWfl4Yj7MtLTXleV9uEKefbAGUPv2/iWSooRA==}
+
+  crypt@0.0.2:
+    resolution: {integrity: sha512-mCxBlsHFYh9C+HVpiEacem8FEBnMXgU9gy4zmNC+SXAZNB/1idgp/aulFJ4FgCi7GPEVbfyng092GqL2k2rmow==}
+
+  esprima@4.0.1:
+    resolution: {integrity: sha512-eGuFFw7Upda+g4p+QHvnW0RyTX/SVeJBDM/gCtMARO0cLuT2HcEKnTPvhjV6aGeqrCB/sbNop0Kszm0jsaWU4A==}
+    engines: {node: '>=4'}
+    hasBin: true
+
+  jsonata@1.8.6:
+    resolution: {integrity: sha512-ZH2TPYdNP2JecOl/HvrH47Xc+9imibEMQ4YqKy/F/FrM+2a6vfbGxeCX23dB9Fr6uvGwv+ghf1KxWB3iZk09wA==}
+    engines: {node: '>= 8'}
+
+  linguist-languages@7.27.0:
+    resolution: {integrity: sha512-Wzx/22c5Jsv2ag+uKy+ITanGA5hzvBZngrNGDXLTC7ZjGM6FLCYGgomauTkxNJeP9of353OM0pWqngYA180xgw==}
+
+  map-age-cleaner@0.1.3:
+    resolution: {integrity: sha512-bJzx6nMoP6PDLPBFmg7+xRKeFZvFboMrGlxmNj9ClvX53KrmvM5bXFXEWjbz4cz1AFn+jWJ9z/DJSz7hrs0w3w==}
+    engines: {node: '>=6'}
+
+  mem@8.1.1:
+    resolution: {integrity: sha512-qFCFUDs7U3b8mBDPyz5EToEKoAkgCzqquIgi9nkkR9bixxOVOre+09lbuH7+9Kn2NFpm56M3GUWVbU2hQgdACA==}
+    engines: {node: '>=10'}
+
+  mimic-fn@3.1.0:
+    resolution: {integrity: sha512-Ysbi9uYW9hFyfrThdDEQuykN4Ey6BuwPD2kpI5ES/nFTDn/98yxYNLZJcgUAKPT/mcrLLKaGzJR9YVxJrIdASQ==}
+    engines: {node: '>=8'}
+
+  p-defer@1.0.0:
+    resolution: {integrity: sha512-wB3wfAxZpk2AzOfUMJNL+d36xothRSyj8EXOa4f6GMqYDN9BJaaSISbsk+wS9abmnebVw95C2Kb5t85UmpCxuw==}
+    engines: {node: '>=4'}
+
+  php-parser@3.1.4:
+    resolution: {integrity: sha512-WUEfH4FWsVItqgOknM67msDdcUAfgPJsHhPNl6EPXzWtX+PfdY282m4i8YIJ9ALUEhf+qGDajdmW+VYqSd7Deg==}
+
+  php-parser@3.1.5:
+    resolution: {integrity: sha512-jEY2DcbgCm5aclzBdfW86GM6VEIWcSlhTBSHN1qhJguVePlYe28GhwS0yoeLYXpM2K8y6wzLwrbq814n2PHSoQ==}
+
+  prettier@2.8.8:
+    resolution: {integrity: sha512-tdN8qQGvNjw4CHbY+XXk0JgCXn9QiF21a55rBe5LJAU+kDyC4WQn4+awm2Xfk2lQMk5fKup9XgzTZtGkjBdP9Q==}
+    engines: {node: '>=10.13.0'}
+    hasBin: true
+
+  sha1@1.1.1:
+    resolution: {integrity: sha512-dZBS6OrMjtgVkopB1Gmo4RQCDKiZsqcpAQpkV/aaj+FCrCg8r4I4qMkDPQjBgLIxlmu9k4nUbWq6ohXahOneYA==}
+
+  stillat-blade-parser@1.2.0:
+    resolution: {integrity: sha512-sqFvaGbEM2RFxhbDrVm3xHvmxSAHEjkNggsdZIBPN6QhhHSvbn54VBFoFDGOfzdTKpjTDS0C8COWBdGUU5285w==}
 
   typescript@5.6.3:
     resolution: {integrity: sha512-hjcS1mhfuyi4WW8IWtjP7brDrG2cuDZukyrYrSauoXGNgx0S7zceP07adYkJycEr56BOUTNPzbInooiN3fn1qw==}
@@ -90,6 +167,10 @@ packages:
 
   undici-types@6.19.8:
     resolution: {integrity: sha512-ve2KP6f/JnbPBFyobGHuerC9g1FYGn/F8n1LWTwNxCEzd6IfqTwUQcNXgEtmmQ6DlRrC1hrSrBnCZPokRrDHjw==}
+
+  uuid@8.3.2:
+    resolution: {integrity: sha512-+NYs2QeMWy+GWFOEm9xnn6HCDp0l7QBD7ml8zLUmJ+93Q5NF0NocErnwkTkXVFNiX3/fpC6afS8Dhb/gz7R7eg==}
+    hasBin: true
 
   vscode-jsonrpc@8.2.0:
     resolution: {integrity: sha512-C+r0eKJUIfiDIfwJhria30+TYWPtuHJXHtI7J0YlOmKAo7ogxP20T0zxB7HZQIFhIyvoBPwWskjxrvAtfjyZfA==}
@@ -145,13 +226,85 @@ snapshots:
   '@biomejs/cli-win32-x64@1.9.3':
     optional: true
 
+  '@prettier/plugin-php@0.19.7(prettier@2.8.8)':
+    dependencies:
+      linguist-languages: 7.27.0
+      mem: 8.1.1
+      php-parser: 3.1.5
+      prettier: 2.8.8
+
+  '@stedi/prettier-plugin-jsonata@1.16.1(jsonata@1.8.6)(prettier@2.8.8)':
+    dependencies:
+      jsonata: 1.8.6
+      prettier: 2.8.8
+
+  '@types/esprima@4.0.6':
+    dependencies:
+      '@types/estree': 1.0.6
+
+  '@types/estree@1.0.6': {}
+
   '@types/node@22.7.6':
     dependencies:
       undici-types: 6.19.8
 
+  '@types/prettier@2.7.3': {}
+
+  camelize@1.0.1: {}
+
+  charenc@0.0.2: {}
+
+  crypt@0.0.2: {}
+
+  esprima@4.0.1: {}
+
+  jsonata@1.8.6: {}
+
+  linguist-languages@7.27.0: {}
+
+  map-age-cleaner@0.1.3:
+    dependencies:
+      p-defer: 1.0.0
+
+  mem@8.1.1:
+    dependencies:
+      map-age-cleaner: 0.1.3
+      mimic-fn: 3.1.0
+
+  mimic-fn@3.1.0: {}
+
+  p-defer@1.0.0: {}
+
+  php-parser@3.1.4: {}
+
+  php-parser@3.1.5: {}
+
+  prettier@2.8.8: {}
+
+  sha1@1.1.1:
+    dependencies:
+      charenc: 0.0.2
+      crypt: 0.0.2
+
+  stillat-blade-parser@1.2.0:
+    dependencies:
+      '@prettier/plugin-php': 0.19.7(prettier@2.8.8)
+      '@stedi/prettier-plugin-jsonata': 1.16.1(jsonata@1.8.6)(prettier@2.8.8)
+      '@types/esprima': 4.0.6
+      '@types/prettier': 2.7.3
+      camelize: 1.0.1
+      esprima: 4.0.1
+      jsonata: 1.8.6
+      php-parser: 3.1.4
+      prettier: 2.8.8
+      sha1: 1.1.1
+      uuid: 8.3.2
+
   typescript@5.6.3: {}
 
   undici-types@6.19.8: {}
+
+  uuid@8.3.2: {}
 
   vscode-jsonrpc@8.2.0: {}
 
