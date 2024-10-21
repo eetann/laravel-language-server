@@ -5,6 +5,7 @@ import { DocumentParser } from "stillat-blade-parser/out/parser/documentParser";
 import {
 	type CompletionItem,
 	CompletionItemKind,
+	InsertTextFormat,
 	type Position as LspPosition,
 	type TextDocumentIdentifier,
 	type TextDocumentPositionParams,
@@ -39,6 +40,14 @@ export function onCompletion(
 	const itemList: CompletionItem[] = [];
 	if (params.textDocument.uri.endsWith("blade.php")) {
 		itemList.push(...bladeDirective);
+		itemList.push({
+			label: "comment",
+			kind: CompletionItemKind.Snippet,
+			detail: "{{-- comment here --}}",
+			documentation: "```blade\n{{-- comment here --}}\n```",
+			insertText: "{{-- ${1} --}}",
+			insertTextFormat: InsertTextFormat.Snippet,
+		});
 		const bladeParser = new DocumentParser();
 		const text = getFileContent(params.textDocument);
 		bladeParser.parse(text.toString());
@@ -50,6 +59,7 @@ export function onCompletion(
 				kind: CompletionItemKind.Text,
 			});
 		}
+		// とりあえず今はコメントに書いたファイルの変数を参考にする
 	}
 	itemList.push({
 		label: "TypeScript",
