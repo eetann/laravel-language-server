@@ -55,6 +55,9 @@ importers:
 
   packages/vscode:
     dependencies:
+      '@eetann/laravel-language-server':
+        specifier: link:../language-server
+        version: link:../language-server
       '@types/vscode':
         specifier: ^1.94.0
         version: 1.94.0
@@ -64,9 +67,6 @@ importers:
       '@volar/vscode':
         specifier: ^2.4.6
         version: 2.4.6
-      language-server:
-        specifier: link:../language-server
-        version: link:../language-server
       vscode-languageclient:
         specifier: ^9.0.1
         version: 9.0.1

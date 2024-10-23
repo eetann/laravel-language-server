@@ -2,17 +2,23 @@
 	"name": "@eetann/vscode-laravel-lsp-client",
 	"displayName": "Laravel LSP Client",
 	"description": "A VS Code extension for Laravel.",
+	"scripts": {
+		"watch": "tsc --watch",
+		"build": "tsc",
+		"format": "biome format",
+		"lint": "biome lint"
+	},
 	"version": "0.0.1",
 	"engines": {
 		"vscode": "^1.55.0"
 	},
 	"activationEvents": ["onLanguage:blade"],
-	"main": "./src/extension.js",
+	"main": "./dist/extension.js",
 	"contributes": {
 		"languages": [
 			{
 				"id": "blade",
-				"extensions": [".blade"]
+				"extensions": [".blade.php"]
 			}
 		]
 	},
@@ -20,7 +26,7 @@
 		"@types/vscode": "^1.94.0",
 		"@volar/language-server": "^2.4.6",
 		"@volar/vscode": "^2.4.6",
-		"language-server": "link:../language-server",
+		"@eetann/laravel-language-server": "link:../language-server",
 		"vscode-languageclient": "^9.0.1"
 	}
 }
