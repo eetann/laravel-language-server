@@ -33,13 +33,23 @@ export function getEmbeddedLanguage(
 			) {
 				if (lowerName === "style") {
 					virtualCodes.push(
-						fragmentToVirtualCode(bladeParser, fragment, "css"),
+						fragmentToVirtualCode(
+							bladeParser,
+							fragment,
+							closingFragment,
+							"css",
+						),
 					);
 					// VirtualCodeにして配列へ
 					continue;
 				}
 				virtualCodes.push(
-					fragmentToVirtualCode(bladeParser, fragment, "javascript"),
+					fragmentToVirtualCode(
+						bladeParser,
+						fragment,
+						closingFragment,
+						"javascript",
+					),
 				);
 			}
 		}
@@ -50,11 +60,13 @@ export function getEmbeddedLanguage(
 function fragmentToVirtualCode(
 	bladeParser: BladeParser,
 	fragment: FragmentNode,
+	closingFragment: FragmentNode,
 	languageId: LanguageId,
 ): VirtualCode {
+	// タグ以外 = 中身のみを取得する
 	const text = bladeParser.getText(
-		fragment.startPosition.offset,
-		fragment.endPosition.offset,
+		fragment.endPosition.offset + 1,
+		closingFragment.startPosition.offset - 1,
 	);
 	return {
 		id: `${languageId}_${fragment.refId}`,
@@ -66,8 +78,7 @@ function fragmentToVirtualCode(
 		},
 		mappings: [
 			{
-				// TODO: ここは実際にembeddedとして扱いたいコードのオフセット？
-				sourceOffsets: [fragment.startPosition.offset + text.length],
+				sourceOffsets: [fragment.endPosition.offset + 1],
 				generatedOffsets: [0],
 				lengths: [text.length],
 				data: {
