@@ -1,0 +1,29 @@
+{
+	"name": "@eetann/laravel-language-server",
+	"version": "1.0.0",
+	"description": "",
+	"bin": {
+		"laravel-language-server": "./bin/laravel-language-server.js"
+	},
+	"main": "index.js",
+	"scripts": {
+		"watch": "tsc --watch",
+		"build": "tsc",
+		"format": "biome format",
+		"lint": "biome lint"
+	},
+	"keywords": [],
+	"author": "",
+	"license": "ISC",
+	"dependencies": {
+		"@volar/language-core": "^2.4.6",
+		"@volar/language-server": "^2.4.6",
+		"@volar/language-service": "^2.4.6",
+		"volar-service-css": "^0.0.62",
+		"volar-service-html": "^0.0.62",
+		"vscode-html-languageservice": "^5.3.1"
+	},
+	"devDependencies": {
+		"vscode-uri": "^3.0.8"
+	}
+}
