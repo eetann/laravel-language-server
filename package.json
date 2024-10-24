@@ -1,5 +1,5 @@
 {
-	"name": "laravel-ls",
+	"name": "laravel-language-server",
 	"version": "0.0.1",
 	"description": "",
 	"main": "index.js",
