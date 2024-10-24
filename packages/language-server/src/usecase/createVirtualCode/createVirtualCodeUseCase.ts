@@ -1,4 +1,4 @@
-import type { LanguagePlugin, VirtualCode } from "@volar/language-server";
+import type { LanguagePlugin } from "@volar/language-server";
 import { BladeVirtualCode } from "./blade/BladeVirtualCode";
 
 export class createVirtualCodeUseCase {

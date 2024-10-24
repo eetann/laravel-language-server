@@ -1,12 +1,12 @@
 import {
-	createServer,
 	createConnection,
+	createServer,
 	createSimpleProject,
 } from "@volar/language-server/node";
 import { create as createCssService } from "volar-service-css";
 import { create as createHtmlService } from "volar-service-html";
-import { createBladeService } from "./blade-service";
 import { laravelLanguagePlugin } from "./languagePlugin";
+import { createBladeService } from "./presentation/createBladeService";
 
 const connection = createConnection();
 const server = createServer(connection);
