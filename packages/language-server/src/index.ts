@@ -1,6 +1,6 @@
 import {
-	createConnection,
 	createServer,
+	createConnection,
 	createSimpleProject,
 } from "@volar/language-server/node";
 import { create as createCssService } from "volar-service-css";
