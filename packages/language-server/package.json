@@ -8,7 +8,7 @@
 	"main": "index.js",
 	"scripts": {
 		"watch": "vite build --watch",
-		"build": "vite build",
+		"build": "tsc --noEmit && vite build",
 		"format": "biome format",
 		"lint": "biome lint"
 	},
@@ -23,6 +23,7 @@
 		"volar-service-css": "^0.0.62",
 		"volar-service-html": "^0.0.62",
 		"vscode-html-languageservice": "^5.3.1",
+		"vscode-languageserver-textdocument": "^1.0.12",
 		"vscode-uri": "^3.0.8"
 	},
 	"devDependencies": {
