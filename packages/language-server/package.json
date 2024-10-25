@@ -21,9 +21,12 @@
 		"@volar/language-service": "^2.4.6",
 		"volar-service-css": "^0.0.62",
 		"volar-service-html": "^0.0.62",
-		"vscode-html-languageservice": "^5.3.1"
+		"vscode-html-languageservice": "^5.3.1",
+		"vscode-uri": "^3.0.8"
 	},
 	"devDependencies": {
-		"vscode-uri": "^3.0.8"
+		"esbuild": "0.24.0",
+		"vite": "^5.4.10",
+		"vite-plugin-node": "^4.0.0"
 	}
 }
