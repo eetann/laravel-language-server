@@ -1,5 +1,5 @@
 import type { LanguagePlugin } from "@volar/language-server";
-import { BladeVirtualCode } from "./blade/BladeVirtualCode";
+import { BladeVirtualCode } from "./BladeVirtualCode";
 
 export class createVirtualCodeUseCase {
 	execute: LanguagePlugin["createVirtualCode"] = (_, languageId, snapshot) => {

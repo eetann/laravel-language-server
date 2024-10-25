@@ -1,15 +1,32 @@
-import type { IScriptSnapshot, VirtualCode } from "@volar/language-core";
-import type { FragmentNode } from "stillat-blade-parser/out/nodes/nodes";
+import type { VirtualCode } from "@volar/language-core";
+import type {
+	AbstractNode,
+	FragmentNode,
+} from "stillat-blade-parser/out/nodes/nodes";
 import { DocumentParser } from "stillat-blade-parser/out/parser/documentParser";
 import type { FragmentsParser } from "stillat-blade-parser/out/parser/fragmentsParser";
+import type { Position as LspPosition } from "vscode-languageserver-textdocument";
 
 export class BladeParser {
 	private parser: DocumentParser;
 	private fragmentsParser: FragmentsParser;
-	constructor(snapshot: IScriptSnapshot) {
+	constructor(text: string) {
 		this.parser = new DocumentParser();
-		this.parser.parse(snapshot.getText(0, snapshot.getLength()));
+		this.parser.parse(text);
 		this.fragmentsParser = this.parser.getFragmentsParser();
+	}
+
+	getCurrentNode(position: LspPosition): AbstractNode | undefined {
+		const cursor = this.parser.positionFromCursor(
+			position.line + 1,
+			position.character + 1,
+		);
+		for (const node of this.parser.getNodes()) {
+			if (cursor?.isWithin(node.startPosition, node.endPosition)) {
+				return node;
+			}
+		}
+		return undefined;
 	}
 
 	getEmbeddedLanguage(): VirtualCode[] {

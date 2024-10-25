@@ -1,4 +1,4 @@
-import { ProvideCompletionItemsUseCase } from "@/usecase/ProvideCompletionItemsUseCase";
+import { ProvideCompletionItemsUseCase } from "@/usecase/provideCompletionItems/ProvideCompletionItemsUseCase";
 import type {
 	LanguageServicePlugin,
 	LanguageServicePluginInstance,

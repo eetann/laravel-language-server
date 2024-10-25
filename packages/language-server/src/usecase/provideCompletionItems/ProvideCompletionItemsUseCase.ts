@@ -1,24 +1,26 @@
 import {
-	CompletionItemKind,
 	type CompletionItem,
+	CompletionItemKind,
 	type LanguageServicePluginInstance,
 } from "@volar/language-server";
+import { BladeCompletionItemsProvider } from "./bladeCompletionItemsProvider/BladeCompletionItemsProvider";
 
 export class ProvideCompletionItemsUseCase {
 	execute: LanguageServicePluginInstance["provideCompletionItems"] = (
-		document,
+		textDocument,
 		position,
 		completionContext,
 		token,
 	) => {
 		if (token.isCancellationRequested) return null;
 		const items: CompletionItem[] = [];
+		if (textDocument.languageId === "blade") {
+			items.push(
+				...new BladeCompletionItemsProvider().execute(textDocument, position),
+			);
+		}
 		items.push({
 			label: "volar-test!",
-			kind: CompletionItemKind.Text,
-		});
-		items.push({
-			label: "VOLAR-TEST!?!?",
 			kind: CompletionItemKind.Text,
 		});
 		return {

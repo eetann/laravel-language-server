@@ -1,6 +1,6 @@
+import { BladeParser } from "@/usecase/shared/BladeParser";
 import type { VirtualCode } from "@volar/language-server";
 import type { IScriptSnapshot } from "typescript";
-import { BladeParser } from "./BladeParser";
 
 export class BladeVirtualCode implements VirtualCode {
 	id = "root";
@@ -21,7 +21,9 @@ export class BladeVirtualCode implements VirtualCode {
 				},
 			},
 		];
-		this.bladeParser = new BladeParser(snapshot);
+		this.bladeParser = new BladeParser(
+			snapshot.getText(0, snapshot.getLength()),
+		);
 		this.embeddedCodes = this.bladeParser.getEmbeddedLanguage();
 	}
 }
