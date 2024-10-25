@@ -7,13 +7,15 @@
 			"request": "launch",
 			"runtimeExecutable": "${execPath}",
 			"args": [
+				"${workspaceFolder}/packages/laravel-sample/",
+				"${workspaceFolder}/packages/laravel-sample/resources/views/book/test.blade.php",
 				"--disable-updates",
 				"--disable-workspace-trust",
-				"--profile-temp",
 				"--skip-release-notes",
 				"--skip-welcome",
 				"--extensionDevelopmentPath=${workspaceRoot}/packages/vscode"
 			],
+			"internalConsoleOptions": "openOnSessionStart",
 			"outFiles": ["${workspaceRoot}/packages/vscode/dist/*.js"]
 		}
 	]
