@@ -2,6 +2,7 @@
 	"name": "@eetann/vscode-laravel-lsp-client",
 	"displayName": "Laravel LSP Client",
 	"description": "A VS Code extension for Laravel.",
+	"author": "eetann",
 	"scripts": {
 		"watch": "tsc --watch",
 		"build": "tsc",
