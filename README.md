@@ -11,7 +11,7 @@ laravelとbladeというかbladeで補完したいのだ。
 - [ ] Diagnostics
 - [ ] 補完のdocumentation、detailの追加
 
-## 試しすとき
+## 試すとき
 
 Neovim
 
@@ -41,3 +41,21 @@ lspconfig["laravel-language-server"].setup{
 pnpm install
 pnpm run build
 ```
+
+### 試す用のリポジトリ
+
+```sh
+cd packages/laravel-sample/
+```
+
+## VSCodeでVolar Labsを動かす
+このリポジトリをVSCodeで開いて、debug and runから`Launch Extension`
+
+
+## VSCodeで動かす
+
+```sh
+cd packages/vscode
+pnpm run build
+```
+TODO: この後はまだわからない
