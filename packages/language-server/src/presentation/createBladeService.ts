@@ -1,10 +1,9 @@
-import { ProvideCompletionItemsUseCase } from "@/usecase/provideCompletionItems/ProvideCompletionItemsUseCase";
-import type {
-	LanguageServicePlugin,
-	LanguageServicePluginInstance,
-} from "@volar/language-server";
+import type { Connection, LanguageServicePlugin } from "@volar/language-server";
+import { LanguageServicePluginInstanceCreator } from "./LanguageServicePluginInstanceCreator";
 
-export const createBladeService = (): LanguageServicePlugin => {
+export const createBladeService = (
+	connection: Connection,
+): LanguageServicePlugin => {
 	return {
 		capabilities: {
 			completionProvider: {
@@ -12,10 +11,6 @@ export const createBladeService = (): LanguageServicePlugin => {
 				resolveProvider: true,
 			},
 		},
-		create(context): LanguageServicePluginInstance {
-			return {
-				provideCompletionItems: new ProvideCompletionItemsUseCase().execute,
-			};
-		},
+		create: new LanguageServicePluginInstanceCreator(connection).execute,
 	};
 };

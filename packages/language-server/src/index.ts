@@ -17,7 +17,7 @@ connection.onInitialize((params) => {
 	return server.initialize(
 		params,
 		createSimpleProject([laravelLanguagePlugin]),
-		[createBladeService(), createHtmlService(), createCssService()],
+		[createBladeService(connection), createHtmlService(), createCssService()],
 	);
 });
 
