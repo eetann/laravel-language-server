@@ -39,6 +39,8 @@ export class ProvideCompletionItemsUseCase {
 				label: symbol.symbol,
 				// 後で SymbolInformation_Kind -> LSPのやつの変換関数を作る
 				kind: CompletionItemKind.Text,
+				// $は削除
+				insertText: symbol.symbol.slice(1),
 			});
 		}
 		return items;
