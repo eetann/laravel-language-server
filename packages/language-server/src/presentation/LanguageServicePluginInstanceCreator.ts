@@ -4,7 +4,9 @@ import {
 	type LanguageServiceContext,
 	type LanguageServicePluginInstance,
 	MessageType,
+	ProgressType,
 	ShowMessageNotification,
+	WorkDoneProgress,
 } from "@volar/language-server";
 
 export class LanguageServicePluginInstanceCreator {
@@ -32,10 +34,20 @@ export class LanguageServicePluginInstanceCreator {
 
 	async initialize() {
 		this.initializationStarted = true;
+		// TODO: VSCodeだとプログレスバーが表示されていない
+		this.connection.sendProgress(WorkDoneProgress.type, "initialize", {
+			kind: "begin",
+			title: "initialize",
+			percentage: 0,
+		});
 		// ここでindexする
+		await new Promise((res) => setTimeout(res, 1000));
 		this.connection.sendNotification(ShowMessageNotification.type, {
 			type: MessageType.Info,
-			message: "initialized!",
+			message: "Laravel Language Server initialized.",
+		});
+		this.connection.sendProgress(WorkDoneProgress.type, "initialize", {
+			kind: "end",
 		});
 	}
 }
