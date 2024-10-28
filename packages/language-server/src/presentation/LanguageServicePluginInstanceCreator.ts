@@ -34,20 +34,14 @@ export class LanguageServicePluginInstanceCreator {
 
 	async initialize() {
 		this.initializationStarted = true;
-		// TODO: VSCodeだとプログレスバーが表示されていない
-		this.connection.sendProgress(WorkDoneProgress.type, "initialize", {
-			kind: "begin",
-			title: "initialize",
-			percentage: 0,
-		});
+		const progress = await this.connection.window.createWorkDoneProgress();
+		progress.begin("initializing...");
 		// ここでindexする
 		await new Promise((res) => setTimeout(res, 1000));
+		progress.done();
 		this.connection.sendNotification(ShowMessageNotification.type, {
 			type: MessageType.Info,
 			message: "Laravel Language Server initialized.",
-		});
-		this.connection.sendProgress(WorkDoneProgress.type, "initialize", {
-			kind: "end",
 		});
 	}
 }
