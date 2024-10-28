@@ -16,6 +16,10 @@ export class BladeParser {
 		this.fragmentsParser = this.parser.getFragmentsParser();
 	}
 
+	getNodes() {
+		return this.parser.getNodes();
+	}
+
 	getCurrentNode(position: LspPosition): AbstractNode | undefined {
 		const cursor = this.parser.positionFromCursor(
 			position.line + 1,

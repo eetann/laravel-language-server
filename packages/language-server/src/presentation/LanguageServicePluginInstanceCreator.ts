@@ -1,4 +1,5 @@
 import { ProvideCompletionItemsUseCase } from "@/usecase/provideCompletionItems/ProvideCompletionItemsUseCase";
+import { Indexer } from "@/usecase/shared/IndexCodeUseCase";
 import {
 	type Connection,
 	type LanguageServiceContext,
@@ -11,6 +12,7 @@ import {
 
 export class LanguageServicePluginInstanceCreator {
 	private initializationStarted = false;
+	private indexer = new Indexer();
 	constructor(private connection: Connection) {}
 
 	// Use arrow function to keep `this` in the defined scope
@@ -20,7 +22,7 @@ export class LanguageServicePluginInstanceCreator {
 		return {
 			provideCompletionItems: async (...args) =>
 				await this.runWithInitialization(async () =>
-					new ProvideCompletionItemsUseCase().execute(...args),
+					new ProvideCompletionItemsUseCase(this.indexer).execute(...args),
 				),
 		};
 	};
@@ -37,6 +39,7 @@ export class LanguageServicePluginInstanceCreator {
 		const progress = await this.connection.window.createWorkDoneProgress();
 		progress.begin("initializing...");
 		// ここでindexする
+		this.indexer.setIndex();
 		await new Promise((res) => setTimeout(res, 1000));
 		progress.done();
 		this.connection.sendNotification(ShowMessageNotification.type, {
