@@ -1,13 +1,11 @@
 import { ProvideCompletionItemsUseCase } from "@/usecase/provideCompletionItems/ProvideCompletionItemsUseCase";
-import { Indexer } from "@/usecase/shared/IndexCodeUseCase";
+import { Indexer } from "@/usecase/shared/indexer/Indexer";
 import {
 	type Connection,
 	type LanguageServiceContext,
 	type LanguageServicePluginInstance,
 	MessageType,
-	ProgressType,
 	ShowMessageNotification,
-	WorkDoneProgress,
 } from "@volar/language-server";
 
 export class LanguageServicePluginInstanceCreator {

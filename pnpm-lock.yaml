@@ -38,6 +38,9 @@ importers:
       '@volar/language-service':
         specifier: ^2.4.6
         version: 2.4.6
+      php-parser:
+        specifier: ^3.1.5
+        version: 3.1.5
       stillat-blade-parser:
         specifier: 1.2.0
         version: 1.2.0

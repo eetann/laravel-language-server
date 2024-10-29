@@ -3,7 +3,7 @@ import {
 	CompletionItemKind,
 	type LanguageServicePluginInstance,
 } from "@volar/language-server";
-import type { Indexer } from "../shared/IndexCodeUseCase";
+import type { Indexer } from "../shared/indexer/Indexer";
 import { BladeCompletionItemsProvider } from "./bladeCompletionItemsProvider/BladeCompletionItemsProvider";
 
 export class ProvideCompletionItemsUseCase {
