@@ -237,6 +237,10 @@ declare module "php-parser" {
 	interface Node {
 		accept(visitor: AbstractVisitor): void;
 	}
+	interface UseGroup {
+		// typo?
+		items: UseItem[];
+	}
 }
 
 PhpArray.prototype.accept = function (visitor: AbstractVisitor) {

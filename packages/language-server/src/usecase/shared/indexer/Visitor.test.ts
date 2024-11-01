@@ -3,14 +3,21 @@ import { describe, it } from "vitest";
 import { Visitor } from "./Visitor";
 
 describe("visitor", () => {
-	const visitor = new Visitor();
-	const parser = new Engine({});
-	const nodes = parser.parseCode(
+	const visitor = new Visitor("test.php");
+	const parser = new Engine({
+		parser: {
+			extractDoc: true,
+		},
+		ast: {
+			withPositions: true,
+		},
+	});
+	const rootNode = parser.parseCode(
 		`
 <?php
-namespace App\Http\Controllers;
-use App\Http\Requests\BookRequest;
-use App\Models\Book;
+namespace App\\Http\\Controllers;
+use App\\Http\\Requests\\BookRequest;
+use App\\Models\\Book;
 class BookController extends Controller
 {
 public function index()
@@ -23,9 +30,6 @@ return view('book/index', compact('books'));
 		"test.php",
 	);
 	it("first test!", () => {
-		for (const node of nodes.children) {
-			console.log(node.kind);
-			node.accept(visitor);
-		}
+		rootNode.accept(visitor);
 	});
 });

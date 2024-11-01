@@ -117,8 +117,52 @@ import type {
 } from "php-parser";
 import type { AbstractVisitor } from "./visitorPatternExtensions";
 import "./visitorPatternExtensions";
+import {
+	type Document,
+	DocumentSchema,
+	OccurrenceSchema,
+	SymbolInformationSchema,
+	SymbolInformation_Kind,
+	SymbolRole,
+	SyntaxKind,
+} from "@/gen/scip_pb";
+import { type MessageInitShape, create } from "@bufbuild/protobuf";
+import { ScipSymbol } from "../../../domain/model/Symbol";
 
 export class Visitor implements AbstractVisitor {
+	private document: Document;
+	private symbol: ScipSymbol;
+	constructor(filename: string) {
+		this.document = create(DocumentSchema, {
+			language: "php",
+			relativePath: filename,
+		});
+		this.symbol = new ScipSymbol(filename);
+	}
+
+	createSymbol(symbol: MessageInitShape<typeof SymbolInformationSchema>) {
+		this.document.symbols.push(create(SymbolInformationSchema, symbol));
+	}
+
+	createOccurrence(
+		symbol: string,
+		node: Node,
+		occurrence?: MessageInitShape<typeof OccurrenceSchema>,
+	) {
+		this.document.occurrences.push(
+			create(OccurrenceSchema, {
+				symbol,
+				range: [
+					node.loc.start.line,
+					node.loc.start.column,
+					node.loc.end.line,
+					node.loc.end.column,
+				],
+				...occurrence,
+			}),
+		);
+	}
+
 	visitPhpArray(node: PhpArray): void {
 		console.log("visitPhpArray");
 	}
@@ -166,6 +210,33 @@ export class Visitor implements AbstractVisitor {
 	}
 	visitClass(node: Class): void {
 		console.log("visitClass");
+		let symbol = "";
+		if (typeof node.name === "string") {
+			symbol = node.name;
+		} else {
+			// visitIdentifier
+			node.name.accept(this);
+			symbol = this.symbol.createType(node.name.name);
+		}
+		console.log(symbol);
+		this.document.symbols.push(
+			create(SymbolInformationSchema, {
+				symbol,
+				kind: SymbolInformation_Kind.Class,
+			}),
+		);
+		this.document.occurrences.push(
+			create(OccurrenceSchema, {
+				range: [
+					node.loc.start.line,
+					node.loc.start.column,
+					node.loc.end.column,
+				],
+				symbol,
+				symbolRoles: SymbolRole.Definition,
+				syntaxKind: SyntaxKind.IdentifierType,
+			}),
+		);
 	}
 	visitClassConstant(node: ClassConstant): void {
 		console.log("visitClassConstant");
@@ -316,6 +387,16 @@ export class Visitor implements AbstractVisitor {
 	}
 	visitNamespace(node: Namespace): void {
 		console.log("visitNamespace");
+		const symbol = this.symbol.createNamespace(node.name);
+		console.log(symbol);
+		this.createSymbol({
+			symbol,
+			kind: SymbolInformation_Kind.Namespace,
+		});
+		this.createOccurrence(symbol, node);
+		for (const child of node.children) {
+			child.accept(this);
+		}
 	}
 	visitNew(node: New): void {
 		console.log("visitNew");
@@ -364,6 +445,16 @@ export class Visitor implements AbstractVisitor {
 	}
 	visitProgram(node: Program): void {
 		console.log("visitProgram");
+		const symbol = this.symbol.filename;
+		console.log(symbol);
+		this.createSymbol({
+			symbol,
+			kind: SymbolInformation_Kind.Namespace,
+		});
+		this.createOccurrence(symbol, node);
+		for (const child of node.children) {
+			child.accept(this);
+		}
 	}
 	visitProperty(node: Property): void {
 		console.log("visitProperty");
@@ -442,9 +533,22 @@ export class Visitor implements AbstractVisitor {
 	}
 	visitUseGroup(node: UseGroup): void {
 		console.log("visitUseGroup");
+		for (const child of node.items) {
+			child.accept(this);
+		}
 	}
 	visitUseItem(node: UseItem): void {
 		console.log("visitUseItem");
+		const symbol = this.symbol.createNamespace(node.name);
+		console.log(symbol);
+		this.createSymbol({
+			symbol,
+			kind: SymbolInformation_Kind.Module,
+		});
+		this.createOccurrence(symbol, node, {
+			symbolRoles: SymbolRole.Import,
+			syntaxKind: SyntaxKind.IdentifierNamespace,
+		});
 	}
 	visitVariable(node: Variable): void {
 		console.log("visitVariable");
