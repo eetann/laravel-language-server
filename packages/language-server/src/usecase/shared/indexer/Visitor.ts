@@ -130,18 +130,22 @@ import { type MessageInitShape, create } from "@bufbuild/protobuf";
 import { ScipSymbol } from "../../../domain/model/Symbol";
 
 export class Visitor implements AbstractVisitor {
-	private document: Document;
-	private symbol: ScipSymbol;
+	private _document: Document;
+	private _symbol: ScipSymbol;
 	constructor(filename: string) {
-		this.document = create(DocumentSchema, {
+		this._document = create(DocumentSchema, {
 			language: "php",
 			relativePath: filename,
 		});
-		this.symbol = new ScipSymbol(filename);
+		this._symbol = new ScipSymbol(filename);
+	}
+
+	get document() {
+		return this._document;
 	}
 
 	createSymbol(symbol: MessageInitShape<typeof SymbolInformationSchema>) {
-		this.document.symbols.push(create(SymbolInformationSchema, symbol));
+		this._document.symbols.push(create(SymbolInformationSchema, symbol));
 	}
 
 	createOccurrence(
@@ -149,7 +153,7 @@ export class Visitor implements AbstractVisitor {
 		node: Node,
 		occurrence?: MessageInitShape<typeof OccurrenceSchema>,
 	) {
-		this.document.occurrences.push(
+		this._document.occurrences.push(
 			create(OccurrenceSchema, {
 				symbol,
 				range: [
@@ -216,27 +220,17 @@ export class Visitor implements AbstractVisitor {
 		} else {
 			// visitIdentifier
 			node.name.accept(this);
-			symbol = this.symbol.createType(node.name.name);
+			symbol = this._symbol.createType(node.name.name);
 		}
 		console.log(symbol);
-		this.document.symbols.push(
-			create(SymbolInformationSchema, {
-				symbol,
-				kind: SymbolInformation_Kind.Class,
-			}),
-		);
-		this.document.occurrences.push(
-			create(OccurrenceSchema, {
-				range: [
-					node.loc.start.line,
-					node.loc.start.column,
-					node.loc.end.column,
-				],
-				symbol,
-				symbolRoles: SymbolRole.Definition,
-				syntaxKind: SyntaxKind.IdentifierType,
-			}),
-		);
+		this.createSymbol({
+			symbol,
+			kind: SymbolInformation_Kind.Class,
+		});
+		this.createOccurrence(symbol, node, {
+			symbolRoles: SymbolRole.Definition,
+			syntaxKind: SyntaxKind.IdentifierType,
+		});
 	}
 	visitClassConstant(node: ClassConstant): void {
 		console.log("visitClassConstant");
@@ -387,7 +381,7 @@ export class Visitor implements AbstractVisitor {
 	}
 	visitNamespace(node: Namespace): void {
 		console.log("visitNamespace");
-		const symbol = this.symbol.createNamespace(node.name);
+		const symbol = this._symbol.createNamespace(node.name);
 		console.log(symbol);
 		this.createSymbol({
 			symbol,
@@ -445,7 +439,7 @@ export class Visitor implements AbstractVisitor {
 	}
 	visitProgram(node: Program): void {
 		console.log("visitProgram");
-		const symbol = this.symbol.filename;
+		const symbol = this._symbol.filename;
 		console.log(symbol);
 		this.createSymbol({
 			symbol,
@@ -539,7 +533,7 @@ export class Visitor implements AbstractVisitor {
 	}
 	visitUseItem(node: UseItem): void {
 		console.log("visitUseItem");
-		const symbol = this.symbol.createNamespace(node.name);
+		const symbol = this._symbol.createNamespace(node.name);
 		console.log(symbol);
 		this.createSymbol({
 			symbol,
