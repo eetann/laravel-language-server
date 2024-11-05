@@ -6,7 +6,8 @@
 		"paths": {
 			"@/*": ["src/*"]
 		},
-		"outDir": "dist"
+		"outDir": "dist",
+		"types": ["vitest/globals"]
 	},
 	"include": ["src"]
 }

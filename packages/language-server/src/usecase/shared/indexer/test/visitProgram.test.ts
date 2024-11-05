@@ -1,19 +1,9 @@
 import { SymbolInformation_Kind } from "@/gen/scip_pb";
-import { Engine } from "php-parser";
-import { describe, expect, it } from "vitest";
-import { Visitor } from "./Visitor";
+import { createParser, createVisitor, prefix, targetName } from "./helper";
 
-describe("visitor", () => {
-	const filename = "test.php";
-	const visitor = new Visitor(filename);
-	const parser = new Engine({
-		parser: {
-			extractDoc: true,
-		},
-		ast: {
-			withPositions: true,
-		},
-	});
+describe("Visitor", () => {
+	const visitor = createVisitor();
+	const parser = createParser();
 	const rootNode = parser.parseCode(
 		`<?php
 namespace App\\Http\\Controllers;
@@ -27,21 +17,20 @@ class BookController extends Controller
     return view('book/index', compact('books'));
   }
 }`,
-		filename,
+		targetName,
 	);
 	it("Run without error", () => {
 		expect(() => rootNode.accept(visitor)).not.toThrow();
-	});
-	const s = "laravel-language-server composer example 0.0.0 ";
-	it("SCIP Document is generated as expected", () => {
 		expect(visitor.document.language).toBe("php");
-		// visitProgram
+	});
+	it("SCIP Document is generated as expected", () => {
+		const symbol = `${prefix}\`test.php\`/`;
 		expect(visitor.document.symbols[0]).toMatchObject({
-			symbol: `${s}\`test.php\`/`,
+			symbol,
 			kind: SymbolInformation_Kind.Namespace,
 		});
 		expect(visitor.document.occurrences[0]).toMatchObject({
-			symbol: `${s}\`test.php\`/`,
+			symbol,
 			range: [1, 0, 12, 1],
 		});
 	});
