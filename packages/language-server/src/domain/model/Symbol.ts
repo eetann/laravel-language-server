@@ -47,6 +47,7 @@ export class ScipSymbol {
 	}
 
 	createNamespace(namespace: string) {
+		// TODO: phpのuseなどは _filename を含めないほうがいいのでは？
 		this._namespace = `${this.filename}${escapedIdentifier(namespace)}/`;
 		return this._namespace;
 	}
