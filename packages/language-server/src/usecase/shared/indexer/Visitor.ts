@@ -533,6 +533,8 @@ export class Visitor implements AbstractVisitor {
 	}
 	visitUseItem(node: UseItem): void {
 		console.log("visitUseItem");
+		// TODO: useの後のキーワードとファイルの対応をどうやって知るか
+		const scipSymbol = new ScipSymbol(node.name);
 		const symbol = this._symbol.createNamespace(node.name);
 		console.log(symbol);
 		this.createSymbol({

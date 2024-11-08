@@ -24,7 +24,7 @@ export class ScipSymbol {
 	private version = "0.0.0";
 	private _filename: string;
 	private _namespace = "";
-	constructor(filename: string) {
+	constructor(filename: string, packageName?: string, version?: string) {
 		// ここで composer.jsonからpackageNameやversionを取得する
 		this.packageName = escapePackage("example");
 		this.version = escapePackage("0.0.0");
