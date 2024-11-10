@@ -148,7 +148,25 @@ export class Visitor implements AbstractVisitor {
 		this._document.symbols.push(create(SymbolInformationSchema, symbol));
 	}
 
-	createOccurrence(
+	createOccurrenceSameLine(
+		symbol: string,
+		node: Node,
+		occurrence?: MessageInitShape<typeof OccurrenceSchema>,
+	) {
+		this._document.occurrences.push(
+			create(OccurrenceSchema, {
+				symbol,
+				range: [
+					node.loc.start.line,
+					node.loc.start.column,
+					node.loc.end.column,
+				],
+				...occurrence,
+			}),
+		);
+	}
+
+	createOccurrenceMultipleLine(
 		symbol: string,
 		node: Node,
 		occurrence?: MessageInitShape<typeof OccurrenceSchema>,
@@ -227,7 +245,7 @@ export class Visitor implements AbstractVisitor {
 			symbol,
 			kind: SymbolInformation_Kind.Class,
 		});
-		this.createOccurrence(symbol, node, {
+		this.createOccurrenceMultipleLine(symbol, node, {
 			symbolRoles: SymbolRole.Definition,
 			syntaxKind: SyntaxKind.IdentifierType,
 		});
@@ -387,7 +405,7 @@ export class Visitor implements AbstractVisitor {
 			symbol,
 			kind: SymbolInformation_Kind.Namespace,
 		});
-		this.createOccurrence(symbol, node);
+		this.createOccurrenceMultipleLine(symbol, node);
 		for (const child of node.children) {
 			child.accept(this);
 		}
@@ -445,7 +463,7 @@ export class Visitor implements AbstractVisitor {
 			symbol,
 			kind: SymbolInformation_Kind.Namespace,
 		});
-		this.createOccurrence(symbol, node);
+		this.createOccurrenceMultipleLine(symbol, node);
 		for (const child of node.children) {
 			child.accept(this);
 		}
@@ -541,7 +559,7 @@ export class Visitor implements AbstractVisitor {
 			symbol,
 			kind: SymbolInformation_Kind.Module,
 		});
-		this.createOccurrence(symbol, node, {
+		this.createOccurrenceSameLine(symbol, node, {
 			symbolRoles: SymbolRole.Import,
 			syntaxKind: SyntaxKind.IdentifierNamespace,
 		});

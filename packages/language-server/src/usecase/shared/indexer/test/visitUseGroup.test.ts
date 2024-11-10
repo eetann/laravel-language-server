@@ -1,4 +1,4 @@
-import { SymbolInformation_Kind } from "@/gen/scip_pb";
+import { SymbolInformation_Kind, SymbolRole, SyntaxKind } from "@/gen/scip_pb";
 import { createParser, createVisitor, prefix, targetName } from "./helper";
 
 describe("visit UseGroup UseItem", () => {
@@ -20,17 +20,23 @@ class BookController extends Controller
 		targetName,
 	);
 	rootNode.accept(visitor);
-	const symbol = `${prefix}\`App\\Http\\Controllers\`/`;
+	const symbol = `${prefix}\`test.php\`/\`App\\Http\\Requests\\BookRequest\`/`;
 
 	it("visitUseGroup", () => {});
 	it("visitUseItem", () => {
-		expect(visitor.document.symbols[3]).toMatchObject({
-			symbol,
-			kind: SymbolInformation_Kind.Namespace,
-		});
-		expect(visitor.document.occurrences[3]).toMatchObject({
-			symbol,
-			range: [3, 4, 33],
-		});
+		expect(visitor.document.symbols).toContainEqual(
+			expect.objectContaining({
+				symbol,
+				kind: SymbolInformation_Kind.Module,
+			}),
+		);
+		expect(visitor.document.occurrences).toContainEqual(
+			expect.objectContaining({
+				symbol,
+				range: [3, 4, 33],
+				symbolRoles: SymbolRole.Import,
+				syntaxKind: SyntaxKind.IdentifierNamespace,
+			}),
+		);
 	});
 });
