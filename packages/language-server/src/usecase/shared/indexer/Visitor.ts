@@ -249,6 +249,7 @@ export class Visitor implements AbstractVisitor {
 			symbolRoles: SymbolRole.Definition,
 			syntaxKind: SyntaxKind.IdentifierType,
 		});
+		// TODO: extendsはどう書くか？
 	}
 	visitClassConstant(node: ClassConstant): void {
 		console.log("visitClassConstant");
