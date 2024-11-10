@@ -1,7 +1,7 @@
 import { SymbolInformation_Kind, SymbolRole, SyntaxKind } from "@/gen/scip_pb";
 import { createParser, createVisitor, prefix, targetName } from "./helper";
 
-describe("visit UseGroup UseItem", () => {
+describe("visit Class", () => {
 	const visitor = createVisitor();
 	const parser = createParser();
 	const rootNode = parser.parseCode(
@@ -20,23 +20,22 @@ class BookController extends Controller
 		targetName,
 	);
 	rootNode.accept(visitor);
-	const symbol = `${prefix}\`test.php\`/\`App\\Http\\Requests\\BookRequest\`/`;
+	const namespace = `${prefix}\`test.php\`/\`App\\Http\\Controllers\`/`;
+	const symbol = `${namespace}BookController#`;
 
-	// TODO: 実装したらここも変更
-	it.skip("visitUseGroup", () => {});
-	it.skip("visitUseItem", () => {
+	it("visitClass", () => {
 		expect(visitor.document.symbols).toContainEqual(
 			expect.objectContaining({
 				symbol,
-				kind: SymbolInformation_Kind.Module,
+				kind: SymbolInformation_Kind.Class,
 			}),
 		);
 		expect(visitor.document.occurrences).toContainEqual(
 			expect.objectContaining({
 				symbol,
-				range: [3, 4, 33],
-				symbolRoles: SymbolRole.Import,
-				syntaxKind: SyntaxKind.IdentifierNamespace,
+				range: [5, 0, 12, 1],
+				symbolRoles: SymbolRole.Definition,
+				syntaxKind: SyntaxKind.IdentifierType,
 			}),
 		);
 	});

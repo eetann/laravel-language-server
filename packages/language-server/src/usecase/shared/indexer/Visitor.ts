@@ -552,17 +552,21 @@ export class Visitor implements AbstractVisitor {
 	visitUseItem(node: UseItem): void {
 		console.log("visitUseItem");
 		// TODO: useの後のキーワードとファイルの対応をどうやって知るか
-		const scipSymbol = new ScipSymbol(node.name);
-		const symbol = this._symbol.createNamespace(node.name);
-		console.log(symbol);
-		this.createSymbol({
-			symbol,
-			kind: SymbolInformation_Kind.Module,
-		});
-		this.createOccurrenceSameLine(symbol, node, {
-			symbolRoles: SymbolRole.Import,
-			syntaxKind: SyntaxKind.IdentifierNamespace,
-		});
+		const filename = "TODO: ";
+		const packageName = "TODO: ";
+		const version = "0.0.1";
+		const itemSymbol = new ScipSymbol(filename, packageName, version);
+		// TODO: ここでvisitもやる？
+		// const symbol = itemSymbol.createNamespace(node.name);
+		// console.log(symbol);
+		// this.createSymbol({
+		// 	symbol,
+		// 	kind: SymbolInformation_Kind.Module,
+		// });
+		// this.createOccurrenceSameLine(symbol, node, {
+		// 	symbolRoles: SymbolRole.Import,
+		// 	syntaxKind: SyntaxKind.IdentifierNamespace,
+		// });
 	}
 	visitVariable(node: Variable): void {
 		console.log("visitVariable");
