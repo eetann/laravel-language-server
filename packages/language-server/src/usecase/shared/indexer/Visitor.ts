@@ -553,6 +553,7 @@ export class Visitor implements AbstractVisitor {
 	visitUseItem(node: UseItem): void {
 		console.log("visitUseItem");
 		// TODO: useの後のキーワードとファイルの対応をどうやって知るか
+		// composer.lockからのpackagesから、それぞれの`name`・`version`・`autoload.psr-4`を読み出す
 		const filename = "TODO: ";
 		const packageName = "TODO: ";
 		const version = "0.0.1";
