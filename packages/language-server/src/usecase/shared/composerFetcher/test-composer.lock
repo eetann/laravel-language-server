@@ -1,0 +1,25 @@
+{
+  "packages":[
+    {
+      "name":"brick/math",
+      "version":"0.12.1",
+      "autoload":{
+        "psr-4":{
+          "Brick\\Math\\":"src/"
+        }
+      },
+      "time":"2023-11-29T23:19:16+00:00"
+    },
+    {
+      "name":"carbonphp/carbon-doctrine-types",
+      "version":"3.2.0",
+      "autoload":{
+        "psr-4":{
+          "Carbon\\Doctrine\\":"src/Carbon/Doctrine/"
+        }
+      },
+      "time":"2024-02-09T16:56:22+00:00"
+    }
+  ],
+  "plugin-api-version":"2.6.0"
+}
