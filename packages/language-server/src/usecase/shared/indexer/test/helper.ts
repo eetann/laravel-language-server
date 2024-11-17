@@ -4,7 +4,7 @@ import { Visitor } from "../Visitor";
 export const targetName = "test.php";
 
 export function createVisitor() {
-	return new Visitor(targetName);
+	return new Visitor(targetName, {}, "example", "0.0.0");
 }
 
 export function createParser() {

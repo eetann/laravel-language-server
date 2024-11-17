@@ -10,27 +10,24 @@ describe("ComposerFetcher", () => {
 		const fetcher = new ComposerFetcher(testComposerLockPath);
 		const packageDict = fetcher.execute();
 
-		// brick/math
-		let expectKey = "composer brick/math 0.12.1";
+		// TODO: ここから
+		let expectKey = "Brick\\Math\\";
 		expect(packageDict).toHaveProperty(expectKey);
-		expect(packageDict[expectKey]).toEqual({
-			name: "brick/math",
-			version: "0.12.1",
-			srcList: {
-				"Brick\\Math\\": "src/",
-			},
-		});
+		expect(packageDict[expectKey]).toEqual("composer brick/math 0.12.1 src/");
 
-		// carbonphp/carbon-doctrine-types
-		expectKey = "composer carbonphp/carbon-doctrine-types 3.2.0";
+		expectKey = "Illuminate\\";
 		expect(packageDict).toHaveProperty(expectKey);
-		expect(packageDict[expectKey]).toEqual({
-			name: "carbonphp/carbon-doctrine-types",
-			version: "3.2.0",
-			srcList: {
-				"Carbon\\Doctrine\\": "src/Carbon/Doctrine/",
-			},
-		});
+		expect(packageDict[expectKey]).toEqual(
+			"composer laravel/framework v11.29.0 src/Illuminate/",
+		);
+
+		expectKey = "Illuminate\\Support\\";
+		expect(packageDict).toHaveProperty(expectKey);
+		expect(packageDict[expectKey]).toEqual([
+			"composer laravel/framework v11.29.0 src/Illuminate/Macroable/",
+			"composer laravel/framework v11.29.0 src/Illuminate/Collections/",
+			"composer laravel/framework v11.29.0 src/Illuminate/Conditionable/",
+		]);
 	});
 
 	it("should throw an error if composer.lock does not exist", () => {

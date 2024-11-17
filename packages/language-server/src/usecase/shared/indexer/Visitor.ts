@@ -128,16 +128,28 @@ import {
 } from "@/gen/scip_pb";
 import { type MessageInitShape, create } from "@bufbuild/protobuf";
 import { ScipSymbol } from "../../../domain/model/Symbol";
+import type { PackageDict } from "../composerFetcher/ComposerFetcher";
 
 export class Visitor implements AbstractVisitor {
 	private _document: Document;
 	private _symbol: ScipSymbol;
-	constructor(filename: string) {
+	private _packageDict: PackageDict;
+	constructor(
+		filename: string,
+		packageDict: PackageDict,
+		thisPackageName: string,
+		thisPackageVersion: string,
+	) {
 		this._document = create(DocumentSchema, {
 			language: "php",
 			relativePath: filename,
 		});
-		this._symbol = new ScipSymbol(filename);
+		this._symbol = new ScipSymbol(
+			thisPackageName,
+			thisPackageVersion,
+			filename,
+		);
+		this._packageDict = packageDict;
 	}
 
 	get document() {

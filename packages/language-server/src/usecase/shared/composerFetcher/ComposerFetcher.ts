@@ -1,14 +1,7 @@
 import { existsSync, readFileSync } from "node:fs";
 
-type PackageDict = {
-	// Symbolとして書く
-	[packageSymbol: string]: {
-		name: string;
-		version: string;
-		srcList: {
-			[usename: string]: string;
-		};
-	};
+export type PackageDict = {
+	[packageSymbol: string]: string | string[];
 };
 
 export class ComposerFetcher {
@@ -37,16 +30,19 @@ export class ComposerFetcher {
 		for (const packageData of data.packages) {
 			const name = packageData.name ?? "";
 			const version = packageData.version ?? "";
-			const psr4 = packageData.autoload["psr-4"];
-			if (name === "" || version === "" || !psr4) {
+			if (name === "" || version === "") {
 				continue;
 			}
+			let srcList: string | string[];
+			const psr4 = packageData.autoload["psr-4"];
+			if (typeof psr4 === "string") {
+				// TODO: ここでSymbolを使う
+				srcList = psr4;
+			} else {
+				//
+			}
 			const packageSymbol = `composer ${name} ${version}`;
-			mapping[packageSymbol] = {
-				name,
-				version,
-				srcList: psr4,
-			};
+			mapping[packageSymbol] = srcList;
 		}
 		return mapping;
 	}
