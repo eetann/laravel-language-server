@@ -20,7 +20,7 @@ class BookController extends Controller
 		targetName,
 	);
 	rootNode.accept(visitor);
-	const namespace = `${prefix}\`test.php\`/\`App\\Http\\Controllers\`/`;
+	const namespace = `${prefix}\`App\\Http\\Controllers\`/`;
 	const symbol = `${namespace}BookController#`;
 
 	it("visitClass", () => {

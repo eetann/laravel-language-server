@@ -10,24 +10,33 @@ describe("ComposerFetcher", () => {
 		const fetcher = new ComposerFetcher(testComposerLockPath);
 		const packageDict = fetcher.execute();
 
-		// TODO: ここから
 		let expectKey = "Brick\\Math\\";
 		expect(packageDict).toHaveProperty(expectKey);
-		expect(packageDict[expectKey]).toEqual("composer brick/math 0.12.1 src/");
+		expect(packageDict[expectKey]).toEqual({
+			name: "brick/math",
+			version: "0.12.1",
+			srcList: "src/",
+		});
 
 		expectKey = "Illuminate\\";
 		expect(packageDict).toHaveProperty(expectKey);
-		expect(packageDict[expectKey]).toEqual(
-			"composer laravel/framework v11.29.0 src/Illuminate/",
-		);
+		expect(packageDict[expectKey]).toEqual({
+			name: "laravel/framework",
+			version: "v11.29.0",
+			srcList: "src/Illuminate/",
+		});
 
 		expectKey = "Illuminate\\Support\\";
 		expect(packageDict).toHaveProperty(expectKey);
-		expect(packageDict[expectKey]).toEqual([
-			"composer laravel/framework v11.29.0 src/Illuminate/Macroable/",
-			"composer laravel/framework v11.29.0 src/Illuminate/Collections/",
-			"composer laravel/framework v11.29.0 src/Illuminate/Conditionable/",
-		]);
+		expect(packageDict[expectKey]).toEqual({
+			name: "laravel/framework",
+			version: "v11.29.0",
+			srcList: [
+				"src/Illuminate/Macroable/",
+				"src/Illuminate/Collections/",
+				"src/Illuminate/Conditionable/",
+			],
+		});
 	});
 
 	it("should throw an error if composer.lock does not exist", () => {

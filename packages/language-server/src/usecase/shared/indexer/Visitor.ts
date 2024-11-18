@@ -412,6 +412,7 @@ export class Visitor implements AbstractVisitor {
 	}
 	visitNamespace(node: Namespace): void {
 		console.log("visitNamespace");
+		// TODO: ここでファイル名とnamespaceの対応を保持するリストへ入れる
 		const symbol = this._symbol.createNamespace(node.name);
 		console.log(symbol);
 		this.createSymbol({

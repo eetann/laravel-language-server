@@ -20,7 +20,7 @@ class BookController extends Controller
 		targetName,
 	);
 	rootNode.accept(visitor);
-	const symbol = `${prefix}\`test.php\`/\`App\\Http\\Controllers\`/`;
+	const symbol = `${prefix}\`App\\Http\\Controllers\`/`;
 	expect(visitor.document.symbols[1]).toMatchObject({
 		symbol,
 		kind: SymbolInformation_Kind.Namespace,
