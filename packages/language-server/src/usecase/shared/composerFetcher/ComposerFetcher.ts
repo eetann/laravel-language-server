@@ -89,8 +89,6 @@ export class ComposerFetcher {
 						.replace(/\.php$/, "")
 						.replace(/[\\/]/g, "\\");
 					const namespace = `${namespacePrefix}${namespaceSuffix}`;
-					console.log({ namespace });
-					console.log("packageDict");
 					this.packageDict[namespace] = {
 						name: packageName,
 						version: packageVersion,

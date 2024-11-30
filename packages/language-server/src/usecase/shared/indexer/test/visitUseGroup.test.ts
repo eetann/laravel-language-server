@@ -20,11 +20,11 @@ class BookController extends Controller
 		targetName,
 	);
 	rootNode.accept(visitor);
-	const symbol = `${prefix}\`test.php\`/\`App\\Http\\Requests\\BookRequest\`/`;
+	const symbol = `${prefix}\`App\\Http\\Requests\\BookRequest\`/`;
 
 	// TODO: 実装したらここも変更
 	it.skip("visitUseGroup", () => {});
-	it.skip("visitUseItem", () => {
+	it("visitUseItem", () => {
 		expect(visitor.document.symbols).toContainEqual(
 			expect.objectContaining({
 				symbol,

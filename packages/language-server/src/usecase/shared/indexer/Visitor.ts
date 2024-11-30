@@ -117,6 +117,7 @@ import type {
 } from "php-parser";
 import type { AbstractVisitor } from "./visitorPatternExtensions";
 import "./visitorPatternExtensions";
+import path from "node:path";
 import {
 	type Document,
 	DocumentSchema,
@@ -133,6 +134,8 @@ import type { PackageDict } from "../composerFetcher/ComposerFetcher";
 export class Visitor implements AbstractVisitor {
 	private _document: Document;
 	private _symbol: ScipSymbol;
+	private _thisPackageName: string;
+	private _thisPackageVersion: string;
 	private _packageDict: PackageDict;
 	constructor(
 		filename: string,
@@ -149,6 +152,8 @@ export class Visitor implements AbstractVisitor {
 			thisPackageVersion,
 			filename,
 		);
+		this._thisPackageName = thisPackageName;
+		this._thisPackageVersion = thisPackageVersion;
 		this._packageDict = packageDict;
 	}
 
@@ -563,25 +568,51 @@ export class Visitor implements AbstractVisitor {
 			child.accept(this);
 		}
 	}
+
+	readComposerFile(packageName: string, filename: string) {
+		const dir = `vendor/${packageName}/${filename}`;
+	}
+	createUseItem(
+		packageName: string,
+		version: string,
+		filename: string,
+		node: UseItem,
+	): void {
+		const itemSymbol = new ScipSymbol(packageName, version, filename);
+		const symbol = itemSymbol.createNamespace(node.name);
+		console.log(symbol);
+		this.createSymbol({
+			symbol,
+			kind: SymbolInformation_Kind.Module,
+		});
+		this.createOccurrenceSameLine(symbol, node, {
+			symbolRoles: SymbolRole.Import,
+			syntaxKind: SyntaxKind.IdentifierNamespace,
+		});
+		// TODO: ここで中身をvisitしたい
+	}
 	visitUseItem(node: UseItem): void {
 		console.log("visitUseItem");
-		// TODO: useの後のキーワードとファイルの対応をどうやって知るか
-		// composer.lockからのpackagesから、それぞれの`name`・`version`・`autoload.psr-4`を読み出す
-		const filename = "TODO: ";
-		const packageName = "TODO: ";
-		const version = "0.0.1";
-		const itemSymbol = new ScipSymbol(filename, packageName, version);
-		// TODO: ここでvisitもやる？
-		// const symbol = itemSymbol.createNamespace(node.name);
-		// console.log(symbol);
-		// this.createSymbol({
-		// 	symbol,
-		// 	kind: SymbolInformation_Kind.Module,
-		// });
-		// this.createOccurrenceSameLine(symbol, node, {
-		// 	symbolRoles: SymbolRole.Import,
-		// 	syntaxKind: SyntaxKind.IdentifierNamespace,
-		// });
+		if (node.name.startsWith("App\\")) {
+			const filepath = node.name.replace(/^App/, "app").replace(/\\/g, "/");
+			const src = `${filepath}.php`;
+			this.createUseItem(
+				this._thisPackageName,
+				this._thisPackageVersion,
+				src,
+				node,
+			);
+		} else {
+			const packageInfo = this._packageDict[node.name];
+			if (packageInfo) {
+				const packageName = packageInfo.name;
+				const version = packageInfo.version;
+				const src = packageInfo.src;
+				this.createUseItem(packageName, version, src, node);
+			} else {
+				// TODO エラー
+			}
+		}
 	}
 	visitVariable(node: Variable): void {
 		console.log("visitVariable");

@@ -43,7 +43,6 @@ describe("ComposerFetcher", () => {
 	it("should correctly fetch PSR-4 mappings from a valid composer.lock", () => {
 		const fetcher = new ComposerFetcher(testComposerLockPath);
 		const packageDict = fetcher.execute();
-		console.log(packageDict);
 
 		let expectKey = "Brick\\Math\\BigDecimal";
 		expect(packageDict).toHaveProperty(expectKey);
