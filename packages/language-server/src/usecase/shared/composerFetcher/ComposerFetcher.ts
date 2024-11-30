@@ -1,14 +1,28 @@
-import { existsSync, readFileSync } from "node:fs";
+import { existsSync, readFileSync, readdirSync } from "node:fs";
+import path from "node:path";
 
 export type PackageDict = {
-	[importName: string]: {
+	/**
+	 * Example: "Illuminate\\Database\\Seeder"
+	 */
+	[nanmespace: string]: {
+		/**
+		 * Example: "laravel/framework"
+		 */
 		name: string;
+		/**
+		 * Example: "v11.29.0"
+		 */
 		version: string;
-		srcList: string | string[];
+		/**
+		 * Example: "vendor/laravel/framework/src/Illuminate/Database/Seeder.php"
+		 */
+		src: string;
 	};
 };
 
 export class ComposerFetcher {
+	private packageDict: PackageDict = {};
 	constructor(private composerLockPath: string) {}
 
 	execute(): PackageDict {
@@ -29,21 +43,62 @@ export class ComposerFetcher {
 		if (!data.packages) {
 			throw new Error("Invalid composer.lock format: `packages` not found");
 		}
-		const mapping: PackageDict = {};
 
-		for (const packageData of data.packages) {
-			const name = packageData.name ?? "";
-			const version = packageData.version ?? "";
-			if (name === "" || version === "") {
+		for (const pkg of data.packages) {
+			const name = pkg.name ?? "";
+			const version = pkg.version ?? "";
+			if (!name || !version) {
 				continue;
 			}
-			const psr4 = packageData.autoload["psr-4"];
-			for (const [importName, srcList] of Object.entries(psr4)) {
-				if (typeof srcList === "string" || Array.isArray(srcList)) {
-					mapping[importName] = { name, version, srcList };
+			const psr4 = pkg.autoload["psr-4"];
+			if (!psr4) {
+				continue;
+			}
+			for (const [namespacePrefix, _dirs] of Object.entries(psr4)) {
+				const dirs = Array.isArray(_dirs) ? _dirs : [_dirs];
+				for (const dir of dirs) {
+					this.addNamespaceMappings(dir, namespacePrefix, name, version);
 				}
 			}
 		}
-		return mapping;
+		return this.packageDict;
+	}
+
+	private addNamespaceMappings(
+		dir: string,
+		namespacePrefix: string,
+		packageName: string,
+		packageVersion: string,
+	) {
+		const dirPath = path.join("vendor", packageName, dir);
+		if (!existsSync(dirPath)) {
+			console.log("existsSync: false");
+			return;
+		}
+
+		const traverseDirectory = (currentPath: string) => {
+			const entries = readdirSync(currentPath, { withFileTypes: true });
+
+			for (const entry of entries) {
+				const fullPath = path.join(currentPath, entry.name);
+				if (entry.isDirectory()) {
+					traverseDirectory(fullPath); // 再帰
+				} else if (entry.isFile() && /\.php$/.test(entry.name)) {
+					const namespaceSuffix = fullPath
+						.replace(dirPath, "")
+						.replace(/\.php$/, "")
+						.replace(/[\\/]/g, "\\");
+					const namespace = `${namespacePrefix}${namespaceSuffix}`;
+					console.log({ namespace });
+					console.log("packageDict");
+					this.packageDict[namespace] = {
+						name: packageName,
+						version: packageVersion,
+						src: fullPath,
+					};
+				}
+			}
+		};
+		traverseDirectory(dirPath);
 	}
 }
