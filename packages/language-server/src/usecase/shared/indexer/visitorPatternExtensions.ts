@@ -116,126 +116,135 @@ import Yield from "php-parser/src/ast/yield.js";
 import YieldFrom from "php-parser/src/ast/yieldfrom.js";
 
 export interface AbstractVisitor {
-	visitPhpArray(node: PhpArray): void;
-	visitArrowFunc(node: ArrowFunc): void;
-	visitAssign(node: Assign): void;
-	visitAssignRef(node: AssignRef): void;
-	visitAttrGroup(node: AttrGroup): void;
-	visitAttribute(node: Attribute): void;
-	visitBin(node: Bin): void;
-	visitBlock(node: Block): void;
-	visitPhpBoolean(node: PhpBoolean): void;
-	visitBreak(node: Break): void;
-	visitByRef(node: ByRef): void;
-	visitCall(node: Call): void;
-	visitCase(node: Case): void;
-	visitCast(node: Cast): void;
-	visitCatch(node: Catch): void;
-	visitClass(node: Class): void;
-	visitClassConstant(node: ClassConstant): void;
-	visitClone(node: Clone): void;
-	visitClosure(node: Closure): void;
-	visitComment(node: Comment): void;
-	visitCommentBlock(node: CommentBlock): void;
-	visitCommentLine(node: CommentLine): void;
-	visitConstant(node: Constant): void;
-	visitConstantStatement(node: ConstantStatement): void;
-	visitContinue(node: Continue): void;
-	visitDeclaration(node: Declaration): void;
-	visitDeclare(node: Declare): void;
-	visitDeclareDirective(node: DeclareDirective): void;
-	visitDo(node: Do): void;
-	visitEcho(node: Echo): void;
-	visitEmpty(node: Empty): void;
-	visitEncapsed(node: Encapsed): void;
-	visitEncapsedPart(node: EncapsedPart): void;
-	visitEntry(node: Entry): void;
-	visitEnum(node: Enum): void;
-	visitEnumCase(node: EnumCase): void;
-	visitPhpError(node: PhpError): void;
-	visitEval(node: Eval): void;
-	visitExit(node: Exit): void;
-	visitExpression(node: Expression): void;
-	visitExpressionStatement(node: ExpressionStatement): void;
-	visitFor(node: For): void;
-	visitForeach(node: Foreach): void;
-	visitPhpFunction(node: PhpFunction): void;
-	visitGlobal(node: Global): void;
-	visitGoto(node: Goto): void;
-	visitHalt(node: Halt): void;
-	visitIdentifier(node: Identifier): void;
-	visitIf(node: If): void;
-	visitInclude(node: Include): void;
-	visitInline(node: Inline): void;
-	visitInterface(node: Interface): void;
-	visitIntersectionType(node: IntersectionType): void;
-	visitIsset(node: Isset): void;
-	visitLabel(node: Label): void;
-	visitList(node: List): void;
-	visitLiteral(node: Literal): void;
-	visitLocation(node: Location): void;
-	visitLookup(node: Lookup): void;
-	visitMagic(node: Magic): void;
-	visitMatch(node: Match): void;
-	visitMatchArm(node: MatchArm): void;
-	visitMethod(node: Method): void;
-	visitName(node: Name): void;
-	visitNamedargument(node: namedargument): void;
-	visitNamespace(node: Namespace): void;
-	visitNew(node: New): void;
-	visitNode(node: Node): void;
-	visitNoop(node: Noop): void;
-	visitNowDoc(node: NowDoc): void;
-	visitNullKeyword(node: NullKeyword): void;
-	visitNullSafePropertyLookup(node: NullSafePropertyLookup): void;
-	visitPhpNumber(node: PhpNumber): void;
-	visitOffsetLookup(node: OffsetLookup): void;
-	visitOperation(node: Operation): void;
-	visitParameter(node: Parameter): void;
-	visitParentReference(node: ParentReference): void;
-	visitPosition(node: Position): void;
-	visitPost(node: Post): void;
-	visitPre(node: Pre): void;
-	visitPrint(node: Print): void;
-	visitProgram(node: Program): void;
-	visitProperty(node: Property): void;
-	visitPropertyLookup(node: PropertyLookup): void;
-	visitPropertyStatement(node: PropertyStatement): void;
-	visitReference(node: Reference): void;
-	visitRetIf(node: RetIf): void;
-	visitReturn(node: Return): void;
-	visitSelfReference(node: SelfReference): void;
-	visitSilent(node: Silent): void;
-	visitStatement(node: Statement): void;
-	visitStatic(node: Static): void;
-	visitStaticLookup(node: StaticLookup): void;
-	visitStaticReference(node: StaticReference): void;
-	visitStaticVariable(node: StaticVariable): void;
-	visitPhpString(node: PhpString): void;
-	visitSwitch(node: Switch): void;
-	visitThrow(node: Throw): void;
-	visitTrait(node: Trait): void;
-	visitTraitAlias(node: TraitAlias): void;
-	visitTraitPrecedence(node: TraitPrecedence): void;
-	visitTraitUse(node: TraitUse): void;
-	visitTry(node: Try): void;
-	visitTypeReference(node: TypeReference): void;
-	visitUnary(node: Unary): void;
-	visitUnionType(node: UnionType): void;
-	visitUnset(node: Unset): void;
-	visitUseGroup(node: UseGroup): void;
-	visitUseItem(node: UseItem): void;
-	visitVariable(node: Variable): void;
-	visitVariadic(node: Variadic): void;
-	visitVariadicPlaceholder(node: VariadicPlaceholder): void;
-	visitWhile(node: While): void;
-	visitYield(node: Yield): void;
-	visitYieldFrom(node: YieldFrom): void;
+	visitPhpArray(node: PhpArray, parentSymbol: string): void;
+	visitArrowFunc(node: ArrowFunc, parentSymbol: string): void;
+	visitAssign(node: Assign, parentSymbol: string): void;
+	visitAssignRef(node: AssignRef, parentSymbol: string): void;
+	visitAttrGroup(node: AttrGroup, parentSymbol: string): void;
+	visitAttribute(node: Attribute, parentSymbol: string): void;
+	visitBin(node: Bin, parentSymbol: string): void;
+	visitBlock(node: Block, parentSymbol: string): void;
+	visitPhpBoolean(node: PhpBoolean, parentSymbol: string): void;
+	visitBreak(node: Break, parentSymbol: string): void;
+	visitByRef(node: ByRef, parentSymbol: string): void;
+	visitCall(node: Call, parentSymbol: string): void;
+	visitCase(node: Case, parentSymbol: string): void;
+	visitCast(node: Cast, parentSymbol: string): void;
+	visitCatch(node: Catch, parentSymbol: string): void;
+	visitClass(node: Class, parentSymbol: string): void;
+	visitClassConstant(node: ClassConstant, parentSymbol: string): void;
+	visitClone(node: Clone, parentSymbol: string): void;
+	visitClosure(node: Closure, parentSymbol: string): void;
+	visitComment(node: Comment, parentSymbol: string): void;
+	visitCommentBlock(node: CommentBlock, parentSymbol: string): void;
+	visitCommentLine(node: CommentLine, parentSymbol: string): void;
+	visitConstant(node: Constant, parentSymbol: string): void;
+	visitConstantStatement(node: ConstantStatement, parentSymbol: string): void;
+	visitContinue(node: Continue, parentSymbol: string): void;
+	visitDeclaration(node: Declaration, parentSymbol: string): void;
+	visitDeclare(node: Declare, parentSymbol: string): void;
+	visitDeclareDirective(node: DeclareDirective, parentSymbol: string): void;
+	visitDo(node: Do, parentSymbol: string): void;
+	visitEcho(node: Echo, parentSymbol: string): void;
+	visitEmpty(node: Empty, parentSymbol: string): void;
+	visitEncapsed(node: Encapsed, parentSymbol: string): void;
+	visitEncapsedPart(node: EncapsedPart, parentSymbol: string): void;
+	visitEntry(node: Entry, parentSymbol: string): void;
+	visitEnum(node: Enum, parentSymbol: string): void;
+	visitEnumCase(node: EnumCase, parentSymbol: string): void;
+	visitPhpError(node: PhpError, parentSymbol: string): void;
+	visitEval(node: Eval, parentSymbol: string): void;
+	visitExit(node: Exit, parentSymbol: string): void;
+	visitExpression(node: Expression, parentSymbol: string): void;
+	visitExpressionStatement(
+		node: ExpressionStatement,
+		parentSymbol: string,
+	): void;
+	visitFor(node: For, parentSymbol: string): void;
+	visitForeach(node: Foreach, parentSymbol: string): void;
+	visitPhpFunction(node: PhpFunction, parentSymbol: string): void;
+	visitGlobal(node: Global, parentSymbol: string): void;
+	visitGoto(node: Goto, parentSymbol: string): void;
+	visitHalt(node: Halt, parentSymbol: string): void;
+	visitIdentifier(node: Identifier, parentSymbol: string): void;
+	visitIf(node: If, parentSymbol: string): void;
+	visitInclude(node: Include, parentSymbol: string): void;
+	visitInline(node: Inline, parentSymbol: string): void;
+	visitInterface(node: Interface, parentSymbol: string): void;
+	visitIntersectionType(node: IntersectionType, parentSymbol: string): void;
+	visitIsset(node: Isset, parentSymbol: string): void;
+	visitLabel(node: Label, parentSymbol: string): void;
+	visitList(node: List, parentSymbol: string): void;
+	visitLiteral(node: Literal, parentSymbol: string): void;
+	visitLocation(node: Location, parentSymbol: string): void;
+	visitLookup(node: Lookup, parentSymbol: string): void;
+	visitMagic(node: Magic, parentSymbol: string): void;
+	visitMatch(node: Match, parentSymbol: string): void;
+	visitMatchArm(node: MatchArm, parentSymbol: string): void;
+	visitMethod(node: Method, parentSymbol: string): void;
+	visitName(node: Name, parentSymbol: string): void;
+	visitNamedargument(node: namedargument, parentSymbol: string): void;
+	visitNamespace(node: Namespace, parentSymbol: string): void;
+	visitNew(node: New, parentSymbol: string): void;
+	visitNode(node: Node, parentSymbol: string): void;
+	visitNoop(node: Noop, parentSymbol: string): void;
+	visitNowDoc(node: NowDoc, parentSymbol: string): void;
+	visitNullKeyword(node: NullKeyword, parentSymbol: string): void;
+	visitNullSafePropertyLookup(
+		node: NullSafePropertyLookup,
+		parentSymbol: string,
+	): void;
+	visitPhpNumber(node: PhpNumber, parentSymbol: string): void;
+	visitOffsetLookup(node: OffsetLookup, parentSymbol: string): void;
+	visitOperation(node: Operation, parentSymbol: string): void;
+	visitParameter(node: Parameter, parentSymbol: string): void;
+	visitParentReference(node: ParentReference, parentSymbol: string): void;
+	visitPosition(node: Position, parentSymbol: string): void;
+	visitPost(node: Post, parentSymbol: string): void;
+	visitPre(node: Pre, parentSymbol: string): void;
+	visitPrint(node: Print, parentSymbol: string): void;
+	visitProgram(node: Program, parentSymbol: string): void;
+	visitProperty(node: Property, parentSymbol: string): void;
+	visitPropertyLookup(node: PropertyLookup, parentSymbol: string): void;
+	visitPropertyStatement(node: PropertyStatement, parentSymbol: string): void;
+	visitReference(node: Reference, parentSymbol: string): void;
+	visitRetIf(node: RetIf, parentSymbol: string): void;
+	visitReturn(node: Return, parentSymbol: string): void;
+	visitSelfReference(node: SelfReference, parentSymbol: string): void;
+	visitSilent(node: Silent, parentSymbol: string): void;
+	visitStatement(node: Statement, parentSymbol: string): void;
+	visitStatic(node: Static, parentSymbol: string): void;
+	visitStaticLookup(node: StaticLookup, parentSymbol: string): void;
+	visitStaticReference(node: StaticReference, parentSymbol: string): void;
+	visitStaticVariable(node: StaticVariable, parentSymbol: string): void;
+	visitPhpString(node: PhpString, parentSymbol: string): void;
+	visitSwitch(node: Switch, parentSymbol: string): void;
+	visitThrow(node: Throw, parentSymbol: string): void;
+	visitTrait(node: Trait, parentSymbol: string): void;
+	visitTraitAlias(node: TraitAlias, parentSymbol: string): void;
+	visitTraitPrecedence(node: TraitPrecedence, parentSymbol: string): void;
+	visitTraitUse(node: TraitUse, parentSymbol: string): void;
+	visitTry(node: Try, parentSymbol: string): void;
+	visitTypeReference(node: TypeReference, parentSymbol: string): void;
+	visitUnary(node: Unary, parentSymbol: string): void;
+	visitUnionType(node: UnionType, parentSymbol: string): void;
+	visitUnset(node: Unset, parentSymbol: string): void;
+	visitUseGroup(node: UseGroup, parentSymbol: string): void;
+	visitUseItem(node: UseItem, parentSymbol: string): void;
+	visitVariable(node: Variable, parentSymbol: string): void;
+	visitVariadic(node: Variadic, parentSymbol: string): void;
+	visitVariadicPlaceholder(
+		node: VariadicPlaceholder,
+		parentSymbol: string,
+	): void;
+	visitWhile(node: While, parentSymbol: string): void;
+	visitYield(node: Yield, parentSymbol: string): void;
+	visitYieldFrom(node: YieldFrom, parentSymbol: string): void;
 }
 
 declare module "php-parser" {
 	interface Node {
-		accept(visitor: AbstractVisitor): void;
+		accept(visitor: AbstractVisitor, parentSymbol: string): void;
 	}
 	interface UseGroup {
 		// typo?
@@ -243,348 +252,693 @@ declare module "php-parser" {
 	}
 }
 
-PhpArray.prototype.accept = function (visitor: AbstractVisitor) {
-	visitor.visitPhpArray(this);
-};
-ArrowFunc.prototype.accept = function (visitor: AbstractVisitor) {
-	visitor.visitArrowFunc(this);
-};
-Assign.prototype.accept = function (visitor: AbstractVisitor) {
-	visitor.visitAssign(this);
-};
-AssignRef.prototype.accept = function (visitor: AbstractVisitor) {
-	visitor.visitAssignRef(this);
-};
-AttrGroup.prototype.accept = function (visitor: AbstractVisitor) {
-	visitor.visitAttrGroup(this);
-};
-Attribute.prototype.accept = function (visitor: AbstractVisitor) {
-	visitor.visitAttribute(this);
-};
-Bin.prototype.accept = function (visitor: AbstractVisitor) {
-	visitor.visitBin(this);
-};
-Block.prototype.accept = function (visitor: AbstractVisitor) {
-	visitor.visitBlock(this);
-};
-PhpBoolean.prototype.accept = function (visitor: AbstractVisitor) {
-	visitor.visitPhpBoolean(this);
-};
-Break.prototype.accept = function (visitor: AbstractVisitor) {
-	visitor.visitBreak(this);
-};
-ByRef.prototype.accept = function (visitor: AbstractVisitor) {
-	visitor.visitByRef(this);
-};
-Call.prototype.accept = function (visitor: AbstractVisitor) {
-	visitor.visitCall(this);
-};
-Case.prototype.accept = function (visitor: AbstractVisitor) {
-	visitor.visitCase(this);
-};
-Cast.prototype.accept = function (visitor: AbstractVisitor) {
-	visitor.visitCast(this);
-};
-Catch.prototype.accept = function (visitor: AbstractVisitor) {
-	visitor.visitCatch(this);
-};
-Class.prototype.accept = function (visitor: AbstractVisitor) {
-	visitor.visitClass(this);
-};
-ClassConstant.prototype.accept = function (visitor: AbstractVisitor) {
-	visitor.visitClassConstant(this);
-};
-Clone.prototype.accept = function (visitor: AbstractVisitor) {
-	visitor.visitClone(this);
-};
-Closure.prototype.accept = function (visitor: AbstractVisitor) {
-	visitor.visitClosure(this);
-};
-Comment.prototype.accept = function (visitor: AbstractVisitor) {
-	visitor.visitComment(this);
-};
-CommentBlock.prototype.accept = function (visitor: AbstractVisitor) {
-	visitor.visitCommentBlock(this);
-};
-CommentLine.prototype.accept = function (visitor: AbstractVisitor) {
-	visitor.visitCommentLine(this);
-};
-Constant.prototype.accept = function (visitor: AbstractVisitor) {
-	visitor.visitConstant(this);
-};
-ConstantStatement.prototype.accept = function (visitor: AbstractVisitor) {
-	visitor.visitConstantStatement(this);
-};
-Continue.prototype.accept = function (visitor: AbstractVisitor) {
-	visitor.visitContinue(this);
-};
-Declaration.prototype.accept = function (visitor: AbstractVisitor) {
-	visitor.visitDeclaration(this);
-};
-Declare.prototype.accept = function (visitor: AbstractVisitor) {
-	visitor.visitDeclare(this);
-};
-DeclareDirective.prototype.accept = function (visitor: AbstractVisitor) {
-	visitor.visitDeclareDirective(this);
-};
-Do.prototype.accept = function (visitor: AbstractVisitor) {
-	visitor.visitDo(this);
-};
-Echo.prototype.accept = function (visitor: AbstractVisitor) {
-	visitor.visitEcho(this);
-};
-Empty.prototype.accept = function (visitor: AbstractVisitor) {
-	visitor.visitEmpty(this);
-};
-Encapsed.prototype.accept = function (visitor: AbstractVisitor) {
-	visitor.visitEncapsed(this);
-};
-EncapsedPart.prototype.accept = function (visitor: AbstractVisitor) {
-	visitor.visitEncapsedPart(this);
-};
-Entry.prototype.accept = function (visitor: AbstractVisitor) {
-	visitor.visitEntry(this);
-};
-Enum.prototype.accept = function (visitor: AbstractVisitor) {
-	visitor.visitEnum(this);
-};
-EnumCase.prototype.accept = function (visitor: AbstractVisitor) {
-	visitor.visitEnumCase(this);
-};
-PhpError.prototype.accept = function (visitor: AbstractVisitor) {
-	visitor.visitPhpError(this);
-};
-Eval.prototype.accept = function (visitor: AbstractVisitor) {
-	visitor.visitEval(this);
-};
-Exit.prototype.accept = function (visitor: AbstractVisitor) {
-	visitor.visitExit(this);
-};
-Expression.prototype.accept = function (visitor: AbstractVisitor) {
-	visitor.visitExpression(this);
-};
-ExpressionStatement.prototype.accept = function (visitor: AbstractVisitor) {
-	visitor.visitExpressionStatement(this);
-};
-For.prototype.accept = function (visitor: AbstractVisitor) {
-	visitor.visitFor(this);
-};
-Foreach.prototype.accept = function (visitor: AbstractVisitor) {
-	visitor.visitForeach(this);
-};
-PhpFunction.prototype.accept = function (visitor: AbstractVisitor) {
-	visitor.visitPhpFunction(this);
-};
-Global.prototype.accept = function (visitor: AbstractVisitor) {
-	visitor.visitGlobal(this);
-};
-Goto.prototype.accept = function (visitor: AbstractVisitor) {
-	visitor.visitGoto(this);
-};
-Halt.prototype.accept = function (visitor: AbstractVisitor) {
-	visitor.visitHalt(this);
-};
-Identifier.prototype.accept = function (visitor: AbstractVisitor) {
-	visitor.visitIdentifier(this);
-};
-If.prototype.accept = function (visitor: AbstractVisitor) {
-	visitor.visitIf(this);
-};
-Include.prototype.accept = function (visitor: AbstractVisitor) {
-	visitor.visitInclude(this);
-};
-Inline.prototype.accept = function (visitor: AbstractVisitor) {
-	visitor.visitInline(this);
-};
-Interface.prototype.accept = function (visitor: AbstractVisitor) {
-	visitor.visitInterface(this);
-};
-IntersectionType.prototype.accept = function (visitor: AbstractVisitor) {
-	visitor.visitIntersectionType(this);
-};
-Isset.prototype.accept = function (visitor: AbstractVisitor) {
-	visitor.visitIsset(this);
-};
-Label.prototype.accept = function (visitor: AbstractVisitor) {
-	visitor.visitLabel(this);
-};
-List.prototype.accept = function (visitor: AbstractVisitor) {
-	visitor.visitList(this);
-};
-Literal.prototype.accept = function (visitor: AbstractVisitor) {
-	visitor.visitLiteral(this);
-};
-Location.prototype.accept = function (visitor: AbstractVisitor) {
-	visitor.visitLocation(this);
-};
-Lookup.prototype.accept = function (visitor: AbstractVisitor) {
-	visitor.visitLookup(this);
-};
-Magic.prototype.accept = function (visitor: AbstractVisitor) {
-	visitor.visitMagic(this);
-};
-Match.prototype.accept = function (visitor: AbstractVisitor) {
-	visitor.visitMatch(this);
-};
-MatchArm.prototype.accept = function (visitor: AbstractVisitor) {
-	visitor.visitMatchArm(this);
-};
-Method.prototype.accept = function (visitor: AbstractVisitor) {
-	visitor.visitMethod(this);
-};
-Name.prototype.accept = function (visitor: AbstractVisitor) {
-	visitor.visitName(this);
-};
-namedargument.prototype.accept = function (visitor: AbstractVisitor) {
-	visitor.visitNamedargument(this);
-};
-Namespace.prototype.accept = function (visitor: AbstractVisitor) {
-	visitor.visitNamespace(this);
-};
-New.prototype.accept = function (visitor: AbstractVisitor) {
-	visitor.visitNew(this);
-};
-Node.prototype.accept = function (visitor: AbstractVisitor) {
-	visitor.visitNode(this);
-};
-Noop.prototype.accept = function (visitor: AbstractVisitor) {
-	visitor.visitNoop(this);
-};
-NowDoc.prototype.accept = function (visitor: AbstractVisitor) {
-	visitor.visitNowDoc(this);
-};
-NullKeyword.prototype.accept = function (visitor: AbstractVisitor) {
-	visitor.visitNullKeyword(this);
-};
-NullSafePropertyLookup.prototype.accept = function (visitor: AbstractVisitor) {
-	visitor.visitNullSafePropertyLookup(this);
-};
-PhpNumber.prototype.accept = function (visitor: AbstractVisitor) {
-	visitor.visitPhpNumber(this);
-};
-OffsetLookup.prototype.accept = function (visitor: AbstractVisitor) {
-	visitor.visitOffsetLookup(this);
-};
-Operation.prototype.accept = function (visitor: AbstractVisitor) {
-	visitor.visitOperation(this);
-};
-Parameter.prototype.accept = function (visitor: AbstractVisitor) {
-	visitor.visitParameter(this);
-};
-ParentReference.prototype.accept = function (visitor: AbstractVisitor) {
-	visitor.visitParentReference(this);
-};
-Position.prototype.accept = function (visitor: AbstractVisitor) {
-	visitor.visitPosition(this);
-};
-Post.prototype.accept = function (visitor: AbstractVisitor) {
-	visitor.visitPost(this);
-};
-Pre.prototype.accept = function (visitor: AbstractVisitor) {
-	visitor.visitPre(this);
-};
-Print.prototype.accept = function (visitor: AbstractVisitor) {
-	visitor.visitPrint(this);
-};
-Program.prototype.accept = function (visitor: AbstractVisitor) {
-	visitor.visitProgram(this);
-};
-Property.prototype.accept = function (visitor: AbstractVisitor) {
-	visitor.visitProperty(this);
-};
-PropertyLookup.prototype.accept = function (visitor: AbstractVisitor) {
-	visitor.visitPropertyLookup(this);
-};
-PropertyStatement.prototype.accept = function (visitor: AbstractVisitor) {
-	visitor.visitPropertyStatement(this);
-};
-Reference.prototype.accept = function (visitor: AbstractVisitor) {
-	visitor.visitReference(this);
-};
-RetIf.prototype.accept = function (visitor: AbstractVisitor) {
-	visitor.visitRetIf(this);
-};
-Return.prototype.accept = function (visitor: AbstractVisitor) {
-	visitor.visitReturn(this);
-};
-SelfReference.prototype.accept = function (visitor: AbstractVisitor) {
-	visitor.visitSelfReference(this);
-};
-Silent.prototype.accept = function (visitor: AbstractVisitor) {
-	visitor.visitSilent(this);
-};
-Statement.prototype.accept = function (visitor: AbstractVisitor) {
-	visitor.visitStatement(this);
-};
-Static.prototype.accept = function (visitor: AbstractVisitor) {
-	visitor.visitStatic(this);
-};
-StaticLookup.prototype.accept = function (visitor: AbstractVisitor) {
-	visitor.visitStaticLookup(this);
-};
-StaticReference.prototype.accept = function (visitor: AbstractVisitor) {
-	visitor.visitStaticReference(this);
-};
-StaticVariable.prototype.accept = function (visitor: AbstractVisitor) {
-	visitor.visitStaticVariable(this);
-};
-PhpString.prototype.accept = function (visitor: AbstractVisitor) {
-	visitor.visitPhpString(this);
-};
-Switch.prototype.accept = function (visitor: AbstractVisitor) {
-	visitor.visitSwitch(this);
-};
-Throw.prototype.accept = function (visitor: AbstractVisitor) {
-	visitor.visitThrow(this);
-};
-Trait.prototype.accept = function (visitor: AbstractVisitor) {
-	visitor.visitTrait(this);
-};
-TraitAlias.prototype.accept = function (visitor: AbstractVisitor) {
-	visitor.visitTraitAlias(this);
-};
-TraitPrecedence.prototype.accept = function (visitor: AbstractVisitor) {
-	visitor.visitTraitPrecedence(this);
-};
-TraitUse.prototype.accept = function (visitor: AbstractVisitor) {
-	visitor.visitTraitUse(this);
-};
-Try.prototype.accept = function (visitor: AbstractVisitor) {
-	visitor.visitTry(this);
-};
-TypeReference.prototype.accept = function (visitor: AbstractVisitor) {
-	visitor.visitTypeReference(this);
-};
-Unary.prototype.accept = function (visitor: AbstractVisitor) {
-	visitor.visitUnary(this);
-};
-UnionType.prototype.accept = function (visitor: AbstractVisitor) {
-	visitor.visitUnionType(this);
-};
-Unset.prototype.accept = function (visitor: AbstractVisitor) {
-	visitor.visitUnset(this);
-};
-UseGroup.prototype.accept = function (visitor: AbstractVisitor) {
-	visitor.visitUseGroup(this);
-};
-UseItem.prototype.accept = function (visitor: AbstractVisitor) {
-	visitor.visitUseItem(this);
-};
-Variable.prototype.accept = function (visitor: AbstractVisitor) {
-	visitor.visitVariable(this);
-};
-Variadic.prototype.accept = function (visitor: AbstractVisitor) {
-	visitor.visitVariadic(this);
-};
-VariadicPlaceholder.prototype.accept = function (visitor: AbstractVisitor) {
-	visitor.visitVariadicPlaceholder(this);
-};
-While.prototype.accept = function (visitor: AbstractVisitor) {
-	visitor.visitWhile(this);
-};
-Yield.prototype.accept = function (visitor: AbstractVisitor) {
-	visitor.visitYield(this);
-};
-YieldFrom.prototype.accept = function (visitor: AbstractVisitor) {
-	visitor.visitYieldFrom(this);
+PhpArray.prototype.accept = function (
+	visitor: AbstractVisitor,
+	parentSymbol: string,
+) {
+	visitor.visitPhpArray(this, parentSymbol);
+};
+ArrowFunc.prototype.accept = function (
+	visitor: AbstractVisitor,
+	parentSymbol: string,
+) {
+	visitor.visitArrowFunc(this, parentSymbol);
+};
+Assign.prototype.accept = function (
+	visitor: AbstractVisitor,
+	parentSymbol: string,
+) {
+	visitor.visitAssign(this, parentSymbol);
+};
+AssignRef.prototype.accept = function (
+	visitor: AbstractVisitor,
+	parentSymbol: string,
+) {
+	visitor.visitAssignRef(this, parentSymbol);
+};
+AttrGroup.prototype.accept = function (
+	visitor: AbstractVisitor,
+	parentSymbol: string,
+) {
+	visitor.visitAttrGroup(this, parentSymbol);
+};
+Attribute.prototype.accept = function (
+	visitor: AbstractVisitor,
+	parentSymbol: string,
+) {
+	visitor.visitAttribute(this, parentSymbol);
+};
+Bin.prototype.accept = function (
+	visitor: AbstractVisitor,
+	parentSymbol: string,
+) {
+	visitor.visitBin(this, parentSymbol);
+};
+Block.prototype.accept = function (
+	visitor: AbstractVisitor,
+	parentSymbol: string,
+) {
+	visitor.visitBlock(this, parentSymbol);
+};
+PhpBoolean.prototype.accept = function (
+	visitor: AbstractVisitor,
+	parentSymbol: string,
+) {
+	visitor.visitPhpBoolean(this, parentSymbol);
+};
+Break.prototype.accept = function (
+	visitor: AbstractVisitor,
+	parentSymbol: string,
+) {
+	visitor.visitBreak(this, parentSymbol);
+};
+ByRef.prototype.accept = function (
+	visitor: AbstractVisitor,
+	parentSymbol: string,
+) {
+	visitor.visitByRef(this, parentSymbol);
+};
+Call.prototype.accept = function (
+	visitor: AbstractVisitor,
+	parentSymbol: string,
+) {
+	visitor.visitCall(this, parentSymbol);
+};
+Case.prototype.accept = function (
+	visitor: AbstractVisitor,
+	parentSymbol: string,
+) {
+	visitor.visitCase(this, parentSymbol);
+};
+Cast.prototype.accept = function (
+	visitor: AbstractVisitor,
+	parentSymbol: string,
+) {
+	visitor.visitCast(this, parentSymbol);
+};
+Catch.prototype.accept = function (
+	visitor: AbstractVisitor,
+	parentSymbol: string,
+) {
+	visitor.visitCatch(this, parentSymbol);
+};
+Class.prototype.accept = function (
+	visitor: AbstractVisitor,
+	parentSymbol: string,
+) {
+	visitor.visitClass(this, parentSymbol);
+};
+ClassConstant.prototype.accept = function (
+	visitor: AbstractVisitor,
+	parentSymbol: string,
+) {
+	visitor.visitClassConstant(this, parentSymbol);
+};
+Clone.prototype.accept = function (
+	visitor: AbstractVisitor,
+	parentSymbol: string,
+) {
+	visitor.visitClone(this, parentSymbol);
+};
+Closure.prototype.accept = function (
+	visitor: AbstractVisitor,
+	parentSymbol: string,
+) {
+	visitor.visitClosure(this, parentSymbol);
+};
+Comment.prototype.accept = function (
+	visitor: AbstractVisitor,
+	parentSymbol: string,
+) {
+	visitor.visitComment(this, parentSymbol);
+};
+CommentBlock.prototype.accept = function (
+	visitor: AbstractVisitor,
+	parentSymbol: string,
+) {
+	visitor.visitCommentBlock(this, parentSymbol);
+};
+CommentLine.prototype.accept = function (
+	visitor: AbstractVisitor,
+	parentSymbol: string,
+) {
+	visitor.visitCommentLine(this, parentSymbol);
+};
+Constant.prototype.accept = function (
+	visitor: AbstractVisitor,
+	parentSymbol: string,
+) {
+	visitor.visitConstant(this, parentSymbol);
+};
+ConstantStatement.prototype.accept = function (
+	visitor: AbstractVisitor,
+	parentSymbol: string,
+) {
+	visitor.visitConstantStatement(this, parentSymbol);
+};
+Continue.prototype.accept = function (
+	visitor: AbstractVisitor,
+	parentSymbol: string,
+) {
+	visitor.visitContinue(this, parentSymbol);
+};
+Declaration.prototype.accept = function (
+	visitor: AbstractVisitor,
+	parentSymbol: string,
+) {
+	visitor.visitDeclaration(this, parentSymbol);
+};
+Declare.prototype.accept = function (
+	visitor: AbstractVisitor,
+	parentSymbol: string,
+) {
+	visitor.visitDeclare(this, parentSymbol);
+};
+DeclareDirective.prototype.accept = function (
+	visitor: AbstractVisitor,
+	parentSymbol: string,
+) {
+	visitor.visitDeclareDirective(this, parentSymbol);
+};
+Do.prototype.accept = function (
+	visitor: AbstractVisitor,
+	parentSymbol: string,
+) {
+	visitor.visitDo(this, parentSymbol);
+};
+Echo.prototype.accept = function (
+	visitor: AbstractVisitor,
+	parentSymbol: string,
+) {
+	visitor.visitEcho(this, parentSymbol);
+};
+Empty.prototype.accept = function (
+	visitor: AbstractVisitor,
+	parentSymbol: string,
+) {
+	visitor.visitEmpty(this, parentSymbol);
+};
+Encapsed.prototype.accept = function (
+	visitor: AbstractVisitor,
+	parentSymbol: string,
+) {
+	visitor.visitEncapsed(this, parentSymbol);
+};
+EncapsedPart.prototype.accept = function (
+	visitor: AbstractVisitor,
+	parentSymbol: string,
+) {
+	visitor.visitEncapsedPart(this, parentSymbol);
+};
+Entry.prototype.accept = function (
+	visitor: AbstractVisitor,
+	parentSymbol: string,
+) {
+	visitor.visitEntry(this, parentSymbol);
+};
+Enum.prototype.accept = function (
+	visitor: AbstractVisitor,
+	parentSymbol: string,
+) {
+	visitor.visitEnum(this, parentSymbol);
+};
+EnumCase.prototype.accept = function (
+	visitor: AbstractVisitor,
+	parentSymbol: string,
+) {
+	visitor.visitEnumCase(this, parentSymbol);
+};
+PhpError.prototype.accept = function (
+	visitor: AbstractVisitor,
+	parentSymbol: string,
+) {
+	visitor.visitPhpError(this, parentSymbol);
+};
+Eval.prototype.accept = function (
+	visitor: AbstractVisitor,
+	parentSymbol: string,
+) {
+	visitor.visitEval(this, parentSymbol);
+};
+Exit.prototype.accept = function (
+	visitor: AbstractVisitor,
+	parentSymbol: string,
+) {
+	visitor.visitExit(this, parentSymbol);
+};
+Expression.prototype.accept = function (
+	visitor: AbstractVisitor,
+	parentSymbol: string,
+) {
+	visitor.visitExpression(this, parentSymbol);
+};
+ExpressionStatement.prototype.accept = function (
+	visitor: AbstractVisitor,
+	parentSymbol: string,
+) {
+	visitor.visitExpressionStatement(this, parentSymbol);
+};
+For.prototype.accept = function (
+	visitor: AbstractVisitor,
+	parentSymbol: string,
+) {
+	visitor.visitFor(this, parentSymbol);
+};
+Foreach.prototype.accept = function (
+	visitor: AbstractVisitor,
+	parentSymbol: string,
+) {
+	visitor.visitForeach(this, parentSymbol);
+};
+PhpFunction.prototype.accept = function (
+	visitor: AbstractVisitor,
+	parentSymbol: string,
+) {
+	visitor.visitPhpFunction(this, parentSymbol);
+};
+Global.prototype.accept = function (
+	visitor: AbstractVisitor,
+	parentSymbol: string,
+) {
+	visitor.visitGlobal(this, parentSymbol);
+};
+Goto.prototype.accept = function (
+	visitor: AbstractVisitor,
+	parentSymbol: string,
+) {
+	visitor.visitGoto(this, parentSymbol);
+};
+Halt.prototype.accept = function (
+	visitor: AbstractVisitor,
+	parentSymbol: string,
+) {
+	visitor.visitHalt(this, parentSymbol);
+};
+Identifier.prototype.accept = function (
+	visitor: AbstractVisitor,
+	parentSymbol: string,
+) {
+	visitor.visitIdentifier(this, parentSymbol);
+};
+If.prototype.accept = function (
+	visitor: AbstractVisitor,
+	parentSymbol: string,
+) {
+	visitor.visitIf(this, parentSymbol);
+};
+Include.prototype.accept = function (
+	visitor: AbstractVisitor,
+	parentSymbol: string,
+) {
+	visitor.visitInclude(this, parentSymbol);
+};
+Inline.prototype.accept = function (
+	visitor: AbstractVisitor,
+	parentSymbol: string,
+) {
+	visitor.visitInline(this, parentSymbol);
+};
+Interface.prototype.accept = function (
+	visitor: AbstractVisitor,
+	parentSymbol: string,
+) {
+	visitor.visitInterface(this, parentSymbol);
+};
+IntersectionType.prototype.accept = function (
+	visitor: AbstractVisitor,
+	parentSymbol: string,
+) {
+	visitor.visitIntersectionType(this, parentSymbol);
+};
+Isset.prototype.accept = function (
+	visitor: AbstractVisitor,
+	parentSymbol: string,
+) {
+	visitor.visitIsset(this, parentSymbol);
+};
+Label.prototype.accept = function (
+	visitor: AbstractVisitor,
+	parentSymbol: string,
+) {
+	visitor.visitLabel(this, parentSymbol);
+};
+List.prototype.accept = function (
+	visitor: AbstractVisitor,
+	parentSymbol: string,
+) {
+	visitor.visitList(this, parentSymbol);
+};
+Literal.prototype.accept = function (
+	visitor: AbstractVisitor,
+	parentSymbol: string,
+) {
+	visitor.visitLiteral(this, parentSymbol);
+};
+Location.prototype.accept = function (
+	visitor: AbstractVisitor,
+	parentSymbol: string,
+) {
+	visitor.visitLocation(this, parentSymbol);
+};
+Lookup.prototype.accept = function (
+	visitor: AbstractVisitor,
+	parentSymbol: string,
+) {
+	visitor.visitLookup(this, parentSymbol);
+};
+Magic.prototype.accept = function (
+	visitor: AbstractVisitor,
+	parentSymbol: string,
+) {
+	visitor.visitMagic(this, parentSymbol);
+};
+Match.prototype.accept = function (
+	visitor: AbstractVisitor,
+	parentSymbol: string,
+) {
+	visitor.visitMatch(this, parentSymbol);
+};
+MatchArm.prototype.accept = function (
+	visitor: AbstractVisitor,
+	parentSymbol: string,
+) {
+	visitor.visitMatchArm(this, parentSymbol);
+};
+Method.prototype.accept = function (
+	visitor: AbstractVisitor,
+	parentSymbol: string,
+) {
+	visitor.visitMethod(this, parentSymbol);
+};
+Name.prototype.accept = function (
+	visitor: AbstractVisitor,
+	parentSymbol: string,
+) {
+	visitor.visitName(this, parentSymbol);
+};
+namedargument.prototype.accept = function (
+	visitor: AbstractVisitor,
+	parentSymbol: string,
+) {
+	visitor.visitNamedargument(this, parentSymbol);
+};
+Namespace.prototype.accept = function (
+	visitor: AbstractVisitor,
+	parentSymbol: string,
+) {
+	visitor.visitNamespace(this, parentSymbol);
+};
+New.prototype.accept = function (
+	visitor: AbstractVisitor,
+	parentSymbol: string,
+) {
+	visitor.visitNew(this, parentSymbol);
+};
+Node.prototype.accept = function (
+	visitor: AbstractVisitor,
+	parentSymbol: string,
+) {
+	visitor.visitNode(this, parentSymbol);
+};
+Noop.prototype.accept = function (
+	visitor: AbstractVisitor,
+	parentSymbol: string,
+) {
+	visitor.visitNoop(this, parentSymbol);
+};
+NowDoc.prototype.accept = function (
+	visitor: AbstractVisitor,
+	parentSymbol: string,
+) {
+	visitor.visitNowDoc(this, parentSymbol);
+};
+NullKeyword.prototype.accept = function (
+	visitor: AbstractVisitor,
+	parentSymbol: string,
+) {
+	visitor.visitNullKeyword(this, parentSymbol);
+};
+NullSafePropertyLookup.prototype.accept = function (
+	visitor: AbstractVisitor,
+	parentSymbol: string,
+) {
+	visitor.visitNullSafePropertyLookup(this, parentSymbol);
+};
+PhpNumber.prototype.accept = function (
+	visitor: AbstractVisitor,
+	parentSymbol: string,
+) {
+	visitor.visitPhpNumber(this, parentSymbol);
+};
+OffsetLookup.prototype.accept = function (
+	visitor: AbstractVisitor,
+	parentSymbol: string,
+) {
+	visitor.visitOffsetLookup(this, parentSymbol);
+};
+Operation.prototype.accept = function (
+	visitor: AbstractVisitor,
+	parentSymbol: string,
+) {
+	visitor.visitOperation(this, parentSymbol);
+};
+Parameter.prototype.accept = function (
+	visitor: AbstractVisitor,
+	parentSymbol: string,
+) {
+	visitor.visitParameter(this, parentSymbol);
+};
+ParentReference.prototype.accept = function (
+	visitor: AbstractVisitor,
+	parentSymbol: string,
+) {
+	visitor.visitParentReference(this, parentSymbol);
+};
+Position.prototype.accept = function (
+	visitor: AbstractVisitor,
+	parentSymbol: string,
+) {
+	visitor.visitPosition(this, parentSymbol);
+};
+Post.prototype.accept = function (
+	visitor: AbstractVisitor,
+	parentSymbol: string,
+) {
+	visitor.visitPost(this, parentSymbol);
+};
+Pre.prototype.accept = function (
+	visitor: AbstractVisitor,
+	parentSymbol: string,
+) {
+	visitor.visitPre(this, parentSymbol);
+};
+Print.prototype.accept = function (
+	visitor: AbstractVisitor,
+	parentSymbol: string,
+) {
+	visitor.visitPrint(this, parentSymbol);
+};
+Program.prototype.accept = function (
+	visitor: AbstractVisitor,
+	parentSymbol: string,
+) {
+	visitor.visitProgram(this, parentSymbol);
+};
+Property.prototype.accept = function (
+	visitor: AbstractVisitor,
+	parentSymbol: string,
+) {
+	visitor.visitProperty(this, parentSymbol);
+};
+PropertyLookup.prototype.accept = function (
+	visitor: AbstractVisitor,
+	parentSymbol: string,
+) {
+	visitor.visitPropertyLookup(this, parentSymbol);
+};
+PropertyStatement.prototype.accept = function (
+	visitor: AbstractVisitor,
+	parentSymbol: string,
+) {
+	visitor.visitPropertyStatement(this, parentSymbol);
+};
+Reference.prototype.accept = function (
+	visitor: AbstractVisitor,
+	parentSymbol: string,
+) {
+	visitor.visitReference(this, parentSymbol);
+};
+RetIf.prototype.accept = function (
+	visitor: AbstractVisitor,
+	parentSymbol: string,
+) {
+	visitor.visitRetIf(this, parentSymbol);
+};
+Return.prototype.accept = function (
+	visitor: AbstractVisitor,
+	parentSymbol: string,
+) {
+	visitor.visitReturn(this, parentSymbol);
+};
+SelfReference.prototype.accept = function (
+	visitor: AbstractVisitor,
+	parentSymbol: string,
+) {
+	visitor.visitSelfReference(this, parentSymbol);
+};
+Silent.prototype.accept = function (
+	visitor: AbstractVisitor,
+	parentSymbol: string,
+) {
+	visitor.visitSilent(this, parentSymbol);
+};
+Statement.prototype.accept = function (
+	visitor: AbstractVisitor,
+	parentSymbol: string,
+) {
+	visitor.visitStatement(this, parentSymbol);
+};
+Static.prototype.accept = function (
+	visitor: AbstractVisitor,
+	parentSymbol: string,
+) {
+	visitor.visitStatic(this, parentSymbol);
+};
+StaticLookup.prototype.accept = function (
+	visitor: AbstractVisitor,
+	parentSymbol: string,
+) {
+	visitor.visitStaticLookup(this, parentSymbol);
+};
+StaticReference.prototype.accept = function (
+	visitor: AbstractVisitor,
+	parentSymbol: string,
+) {
+	visitor.visitStaticReference(this, parentSymbol);
+};
+StaticVariable.prototype.accept = function (
+	visitor: AbstractVisitor,
+	parentSymbol: string,
+) {
+	visitor.visitStaticVariable(this, parentSymbol);
+};
+PhpString.prototype.accept = function (
+	visitor: AbstractVisitor,
+	parentSymbol: string,
+) {
+	visitor.visitPhpString(this, parentSymbol);
+};
+Switch.prototype.accept = function (
+	visitor: AbstractVisitor,
+	parentSymbol: string,
+) {
+	visitor.visitSwitch(this, parentSymbol);
+};
+Throw.prototype.accept = function (
+	visitor: AbstractVisitor,
+	parentSymbol: string,
+) {
+	visitor.visitThrow(this, parentSymbol);
+};
+Trait.prototype.accept = function (
+	visitor: AbstractVisitor,
+	parentSymbol: string,
+) {
+	visitor.visitTrait(this, parentSymbol);
+};
+TraitAlias.prototype.accept = function (
+	visitor: AbstractVisitor,
+	parentSymbol: string,
+) {
+	visitor.visitTraitAlias(this, parentSymbol);
+};
+TraitPrecedence.prototype.accept = function (
+	visitor: AbstractVisitor,
+	parentSymbol: string,
+) {
+	visitor.visitTraitPrecedence(this, parentSymbol);
+};
+TraitUse.prototype.accept = function (
+	visitor: AbstractVisitor,
+	parentSymbol: string,
+) {
+	visitor.visitTraitUse(this, parentSymbol);
+};
+Try.prototype.accept = function (
+	visitor: AbstractVisitor,
+	parentSymbol: string,
+) {
+	visitor.visitTry(this, parentSymbol);
+};
+TypeReference.prototype.accept = function (
+	visitor: AbstractVisitor,
+	parentSymbol: string,
+) {
+	visitor.visitTypeReference(this, parentSymbol);
+};
+Unary.prototype.accept = function (
+	visitor: AbstractVisitor,
+	parentSymbol: string,
+) {
+	visitor.visitUnary(this, parentSymbol);
+};
+UnionType.prototype.accept = function (
+	visitor: AbstractVisitor,
+	parentSymbol: string,
+) {
+	visitor.visitUnionType(this, parentSymbol);
+};
+Unset.prototype.accept = function (
+	visitor: AbstractVisitor,
+	parentSymbol: string,
+) {
+	visitor.visitUnset(this, parentSymbol);
+};
+UseGroup.prototype.accept = function (
+	visitor: AbstractVisitor,
+	parentSymbol: string,
+) {
+	visitor.visitUseGroup(this, parentSymbol);
+};
+UseItem.prototype.accept = function (
+	visitor: AbstractVisitor,
+	parentSymbol: string,
+) {
+	visitor.visitUseItem(this, parentSymbol);
+};
+Variable.prototype.accept = function (
+	visitor: AbstractVisitor,
+	parentSymbol: string,
+) {
+	visitor.visitVariable(this, parentSymbol);
+};
+Variadic.prototype.accept = function (
+	visitor: AbstractVisitor,
+	parentSymbol: string,
+) {
+	visitor.visitVariadic(this, parentSymbol);
+};
+VariadicPlaceholder.prototype.accept = function (
+	visitor: AbstractVisitor,
+	parentSymbol: string,
+) {
+	visitor.visitVariadicPlaceholder(this, parentSymbol);
+};
+While.prototype.accept = function (
+	visitor: AbstractVisitor,
+	parentSymbol: string,
+) {
+	visitor.visitWhile(this, parentSymbol);
+};
+Yield.prototype.accept = function (
+	visitor: AbstractVisitor,
+	parentSymbol: string,
+) {
+	visitor.visitYield(this, parentSymbol);
+};
+YieldFrom.prototype.accept = function (
+	visitor: AbstractVisitor,
+	parentSymbol: string,
+) {
+	visitor.visitYieldFrom(this, parentSymbol);
 };

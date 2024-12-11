@@ -53,4 +53,12 @@ export class ScipSymbol {
 	createType(type: string) {
 		return `${this.namespace}${escapedIdentifier(type)}#`;
 	}
+
+	createMethod(parentSymbol: string, method: string) {
+		return `${parentSymbol}${escapedIdentifier(method)}()`;
+	}
+
+	createIdentifier(identifier: string) {
+		return `${this.namespace}${escapedIdentifier(identifier)}#`;
+	}
 }
