@@ -442,6 +442,7 @@ export class Visitor implements AbstractVisitor {
 	visitMethod(node: Method, parentSymbol: string): void {
 		console.log("visitMethod");
 		// TODO: 同名の場合引数で曖昧さ回避
+		// TODO: public、static、
 		const symbol = this._symbol.createMethod(
 			parentSymbol,
 			this.getName(node.name),
@@ -451,7 +452,10 @@ export class Visitor implements AbstractVisitor {
 			symbol,
 			kind: SymbolInformation_Kind.Method,
 		});
-		this.createOccurrenceMultipleLine(symbol, node);
+		this.createOccurrenceMultipleLine(symbol, node, {
+			symbolRoles: SymbolRole.Definition,
+			syntaxKind: SyntaxKind.IdentifierFunctionDefinition,
+		});
 		node.body.accept(this, parentSymbol);
 	}
 
