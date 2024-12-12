@@ -282,7 +282,7 @@ export class Visitor implements AbstractVisitor {
 			syntaxKind: SyntaxKind.IdentifierType,
 		});
 		for (const child of node.body) {
-			child.accept(this, parentSymbol);
+			child.accept(this, symbol);
 		}
 	}
 
@@ -442,15 +442,16 @@ export class Visitor implements AbstractVisitor {
 	visitMethod(node: Method, parentSymbol: string): void {
 		console.log("visitMethod");
 		// TODO: 同名の場合引数で曖昧さ回避
-		// 親の名前はどこで保持する？
-		//   thisで持たせるか、 acceptで全部渡す
 		const symbol = this._symbol.createMethod(
 			parentSymbol,
 			this.getName(node.name),
 		);
-		// TODO: ここから
-		// symbol
-		// occurrence
+		console.log(symbol);
+		this.createSymbol({
+			symbol,
+			kind: SymbolInformation_Kind.Method,
+		});
+		this.createOccurrenceMultipleLine(symbol, node);
 		node.body.accept(this, parentSymbol);
 	}
 
