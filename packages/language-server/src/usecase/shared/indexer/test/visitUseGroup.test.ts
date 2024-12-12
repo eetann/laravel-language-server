@@ -19,7 +19,7 @@ class BookController extends Controller
 }`,
 		targetName,
 	);
-	rootNode.accept(visitor);
+	rootNode.accept(visitor, "");
 	const symbol = `${prefix}\`App\\Http\\Requests\\BookRequest\`/`;
 
 	// TODO: 実装したらここも変更

@@ -19,7 +19,7 @@ class BookController extends Controller
 }`,
 		targetName,
 	);
-	rootNode.accept(visitor);
+	rootNode.accept(visitor, "");
 	const namespace = `${prefix}\`App\\Http\\Controllers\`/`;
 	const symbol = `${namespace}BookController#`;
 

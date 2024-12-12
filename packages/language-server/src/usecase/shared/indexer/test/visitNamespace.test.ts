@@ -19,7 +19,7 @@ class BookController extends Controller
 }`,
 		targetName,
 	);
-	rootNode.accept(visitor);
+	rootNode.accept(visitor, "");
 	const symbol = `${prefix}\`App\\Http\\Controllers\`/`;
 	expect(visitor.document.symbols[1]).toMatchObject({
 		symbol,

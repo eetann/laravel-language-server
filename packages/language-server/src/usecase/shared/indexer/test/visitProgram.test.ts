@@ -20,7 +20,7 @@ class BookController extends Controller
 		targetName,
 	);
 	it("Run without error", () => {
-		expect(() => rootNode.accept(visitor)).not.toThrow();
+		expect(() => rootNode.accept(visitor, "")).not.toThrow();
 		expect(visitor.document.language).toBe("php");
 	});
 	it("SCIP Document is generated as expected", () => {
