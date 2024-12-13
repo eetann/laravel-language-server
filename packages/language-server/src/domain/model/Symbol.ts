@@ -24,6 +24,7 @@ export class ScipSymbol {
 	private version = "0.0.0";
 	private _filename: string;
 	private _namespace = "";
+	private _local_id = 1;
 	constructor(packageName: string, version: string, filename: string) {
 		this.packageName = escapePackage(packageName);
 		this.version = escapePackage(version);
@@ -53,12 +54,19 @@ export class ScipSymbol {
 	createType(type: string) {
 		return `${this.namespace}${escapedIdentifier(type)}#`;
 	}
+	createTerm(parentSymbol: string, term: string) {
+		return `${parentSymbol}${escapedIdentifier(term)}.`;
+	}
 
 	createMethod(parentSymbol: string, method: string) {
-		return `${parentSymbol}${escapedIdentifier(method)}()`;
+		return `${parentSymbol}${escapedIdentifier(method)}().`;
 	}
 
 	createIdentifier(identifier: string) {
 		return `${this.namespace}${escapedIdentifier(identifier)}#`;
+	}
+
+	createLocalId() {
+		return `local ${this._local_id++}`;
 	}
 }
