@@ -1,41 +1,40 @@
 import { SymbolInformation_Kind, SymbolRole, SyntaxKind } from "@/gen/scip_pb";
 import { createParser, createVisitor, prefix, targetName } from "./helper";
 
-describe("visitMethod", () => {
+describe("visitVariable", () => {
 	const visitor = createVisitor();
 	const parser = createParser();
 	const rootNode = parser.parseCode(
 		`<?php
-namespace App\\Http\\Controllers;
-use App\\Http\\Requests\\BookRequest;
-use App\\Models\\Book;
-class BookController extends Controller
+function foo()
 {
-  public function index()
-  {
-    $books = Book::all();
-    return view('book/index', compact('books'));
-  }
+  $a = 1;
+  return $a;
+}
+function bar()
+{
+  $b = foo();
+  return $b;
 }`,
 		targetName,
 	);
 	rootNode.accept(visitor, "");
-	const namespace = `${prefix}\`App\\Http\\Controllers\`/`;
-	const symbol = `${namespace}BookController#index().`;
+	const namespace = `${prefix}\`${targetName}\`/`;
+	const symbol = `${namespace}foo().a.`;
 
-	it("visitMethod", () => {
+	it("visitVariable", () => {
 		expect(visitor.document.symbols).toContainEqual(
 			expect.objectContaining({
 				symbol,
-				kind: SymbolInformation_Kind.Method,
+				kind: SymbolInformation_Kind.Variable,
 			}),
 		);
 		expect(visitor.document.occurrences).toContainEqual(
 			expect.objectContaining({
 				symbol,
-				range: [7, 2, 11, 3],
+				range: [4, 2, 4],
 				symbolRoles: SymbolRole.Definition,
-				syntaxKind: SyntaxKind.IdentifierFunctionDefinition,
+				syntaxKind: SyntaxKind.Identifier,
 			}),
 		);
 	});

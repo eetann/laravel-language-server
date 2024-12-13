@@ -117,7 +117,6 @@ import type {
 } from "php-parser";
 import type { AbstractVisitor } from "./visitorPatternExtensions";
 import "./visitorPatternExtensions";
-import path from "node:path";
 import {
 	type Document,
 	DocumentSchema,
@@ -131,12 +130,28 @@ import { type MessageInitShape, create } from "@bufbuild/protobuf";
 import { ScipSymbol } from "../../../domain/model/Symbol";
 import type { PackageDict } from "../composerFetcher/ComposerFetcher";
 
+export type ViewCaller = {
+	parentSymbol: string;
+	callerLocation: number;
+	viewPath: string;
+	arguments: string[];
+};
+
+function isCall(node: Node): node is Call {
+	return node.kind === "call";
+}
+
+function isPhpString(node: Node): node is PhpString {
+	return node.kind === "string";
+}
+
 export class Visitor implements AbstractVisitor {
 	private _document: Document;
 	private _symbol: ScipSymbol;
 	private _thisPackageName: string;
 	private _thisPackageVersion: string;
 	private _packageDict: PackageDict;
+	private _viewCallerList: ViewCaller[] = [];
 	constructor(
 		filename: string,
 		packageDict: PackageDict,
@@ -202,54 +217,125 @@ export class Visitor implements AbstractVisitor {
 		);
 	}
 
-	visitPhpArray(node: PhpArray, parentSymbol: string): void {
+	visitPhpArray(node: PhpArray, parentSymbol: string) {
 		console.log("visitPhpArray");
+		return "";
 	}
-	visitArrowFunc(node: ArrowFunc, parentSymbol: string): void {
+	visitArrowFunc(node: ArrowFunc, parentSymbol: string) {
 		console.log("visitArrowFunc");
-	}
-	visitAssign(node: Assign, parentSymbol: string): void {
-		console.log("visitAssign");
-	}
-	visitAssignRef(node: AssignRef, parentSymbol: string): void {
-		console.log("visitAssignRef");
-	}
-	visitAttrGroup(node: AttrGroup, parentSymbol: string): void {
-		console.log("visitAttrGroup");
-	}
-	visitAttribute(node: Attribute, parentSymbol: string): void {
-		console.log("visitAttribute");
-	}
-	visitBin(node: Bin, parentSymbol: string): void {
-		console.log("visitBin");
-	}
-	visitBlock(node: Block, parentSymbol: string): void {
-		console.log("visitBlock");
-	}
-	visitPhpBoolean(node: PhpBoolean, parentSymbol: string): void {
-		console.log("visitPhpBoolean");
-	}
-	visitBreak(node: Break, parentSymbol: string): void {
-		console.log("visitBreak");
-	}
-	visitByRef(node: ByRef, parentSymbol: string): void {
-		console.log("visitByRef");
-	}
-	visitCall(node: Call, parentSymbol: string): void {
-		console.log("visitCall");
-	}
-	visitCase(node: Case, parentSymbol: string): void {
-		console.log("visitCase");
-	}
-	visitCast(node: Cast, parentSymbol: string): void {
-		console.log("visitCast");
-	}
-	visitCatch(node: Catch, parentSymbol: string): void {
-		console.log("visitCatch");
+		return "";
 	}
 
-	visitClass(node: Class, parentSymbol: string): void {
-		console.log("visitClass");
+	visitAssign(node: Assign, parentSymbol: string) {
+		// Laravelの場合はBladeに向けて変数を送り出すのでlocalにはならない
+		// if (/\(.*\)/.test(parentSymbol)) {
+		// 	// local
+		// 	const symbol = this._symbol.createLocalId();
+		// 	this.createSymbol({ symbol });
+		// 	this.createOccurrenceSameLine(symbol, node.left, {
+		// 		symbolRoles: SymbolRole.Definition,
+		// 		syntaxKind: SyntaxKind.IdentifierLocal,
+		// 	});
+		// 	return;
+		// }
+		// TODO: class変数
+		// TODO: グローバル変数
+		// どうやってleftがrightの型を知るか
+		// rightが呼び出しだと、その時点では型がわからない
+		// indexerはあくまでもindexにとどめて、型情報は後で取ってくるのでは？
+		// TODO: たとえばrightが数値だと、
+		node.left.accept(this, parentSymbol);
+		node.right.accept(this, parentSymbol);
+		return "";
+	}
+	visitAssignRef(node: AssignRef, parentSymbol: string) {
+		console.log("visitAssignRef");
+		return "";
+	}
+	visitAttrGroup(node: AttrGroup, parentSymbol: string) {
+		console.log("visitAttrGroup");
+		return "";
+	}
+	visitAttribute(node: Attribute, parentSymbol: string) {
+		console.log("visitAttribute");
+		return "";
+	}
+	visitBin(node: Bin, parentSymbol: string) {
+		console.log("visitBin");
+		return "";
+	}
+	visitBlock(node: Block, parentSymbol: string) {
+		let returnType = "";
+		for (const child of node.children) {
+			returnType = child.accept(this, parentSymbol);
+		}
+		return returnType;
+	}
+	visitPhpBoolean(node: PhpBoolean, parentSymbol: string) {
+		console.log("visitPhpBoolean");
+		return "bool";
+	}
+	visitBreak(node: Break, parentSymbol: string) {
+		console.log("visitBreak");
+		return "";
+	}
+	visitByRef(node: ByRef, parentSymbol: string) {
+		console.log("visitByRef");
+		return "";
+	}
+	visitCall(node: Call, parentSymbol: string) {
+		// 呼び出し側なので詳しく書かない
+		// node.what.accept(this, parentSymbol);
+		// for (const arg of node.arguments) {
+		// 	arg.accept(this, parentSymbol);
+		// }
+		if (node.what.name === "view") {
+			// TODO: ここでviewを呼び出していたらリスト化？
+			const viewPathNode = node.arguments[0];
+			// stringだったら
+			if (isPhpString(viewPathNode)) {
+				const args: string[] = [];
+				const argsNode = node.arguments[1];
+				if (isCall(argsNode) && argsNode.what.name === "compact") {
+					for (const arg of argsNode.arguments) {
+						if (isPhpString(arg)) {
+							args.push(arg.value);
+						} else {
+							// TODO: 配列だったら
+						}
+					}
+					// TODO: compactの結果が複雑なとき
+				}
+				// TODO: compact以外だったら
+				this._viewCallerList.push({
+					parentSymbol: parentSymbol,
+					callerLocation: node.loc.start.line,
+					viewPath: viewPathNode.value,
+					arguments: args,
+				});
+				return "";
+			}
+			// TODO: variableだったら
+			// TODO: callerだったら
+			return "";
+		}
+		console.log("visitCall view以外");
+		return "";
+	}
+	visitCase(node: Case, parentSymbol: string) {
+		console.log("visitCase");
+		return "";
+	}
+	visitCast(node: Cast, parentSymbol: string) {
+		console.log("visitCast");
+		return "";
+	}
+	visitCatch(node: Catch, parentSymbol: string) {
+		console.log("visitCatch");
+		return "";
+	}
+
+	visitClass(node: Class, parentSymbol: string) {
 		let symbol = "";
 		if (typeof node.name === "string") {
 			symbol = node.name;
@@ -284,152 +370,205 @@ export class Visitor implements AbstractVisitor {
 		for (const child of node.body) {
 			child.accept(this, symbol);
 		}
+		return this.getName(node.name);
 	}
 
-	visitClassConstant(node: ClassConstant, parentSymbol: string): void {
+	visitClassConstant(node: ClassConstant, parentSymbol: string) {
 		console.log("visitClassConstant");
+		return "";
 	}
-	visitClone(node: Clone, parentSymbol: string): void {
+	visitClone(node: Clone, parentSymbol: string) {
 		console.log("visitClone");
+		return "";
 	}
-	visitClosure(node: Closure, parentSymbol: string): void {
+	visitClosure(node: Closure, parentSymbol: string) {
 		console.log("visitClosure");
+		return "";
 	}
-	visitComment(node: Comment, parentSymbol: string): void {
+	visitComment(node: Comment, parentSymbol: string) {
 		console.log("visitComment");
+		return "";
 	}
-	visitCommentBlock(node: CommentBlock, parentSymbol: string): void {
+	visitCommentBlock(node: CommentBlock, parentSymbol: string) {
 		console.log("visitCommentBlock");
+		return "";
 	}
-	visitCommentLine(node: CommentLine, parentSymbol: string): void {
+	visitCommentLine(node: CommentLine, parentSymbol: string) {
 		console.log("visitCommentLine");
+		return "";
 	}
-	visitConstant(node: Constant, parentSymbol: string): void {
+	visitConstant(node: Constant, parentSymbol: string) {
 		console.log("visitConstant");
+		return "";
 	}
-	visitConstantStatement(node: ConstantStatement, parentSymbol: string): void {
+	visitConstantStatement(node: ConstantStatement, parentSymbol: string) {
 		console.log("visitConstantStatement");
+		return "";
 	}
-	visitContinue(node: Continue, parentSymbol: string): void {
+	visitContinue(node: Continue, parentSymbol: string) {
 		console.log("visitContinue");
+		return "";
 	}
-	visitDeclaration(node: Declaration, parentSymbol: string): void {
+	visitDeclaration(node: Declaration, parentSymbol: string) {
 		console.log("visitDeclaration");
+		return "";
 	}
-	visitDeclare(node: Declare, parentSymbol: string): void {
+	visitDeclare(node: Declare, parentSymbol: string) {
 		console.log("visitDeclare");
+		return "";
 	}
-	visitDeclareDirective(node: DeclareDirective, parentSymbol: string): void {
+	visitDeclareDirective(node: DeclareDirective, parentSymbol: string) {
 		console.log("visitDeclareDirective");
+		return "";
 	}
-	visitDo(node: Do, parentSymbol: string): void {
+	visitDo(node: Do, parentSymbol: string) {
 		console.log("visitDo");
+		return "";
 	}
-	visitEcho(node: Echo, parentSymbol: string): void {
+	visitEcho(node: Echo, parentSymbol: string) {
 		console.log("visitEcho");
+		return "";
 	}
-	visitEmpty(node: Empty, parentSymbol: string): void {
+	visitEmpty(node: Empty, parentSymbol: string) {
 		console.log("visitEmpty");
+		return "";
 	}
-	visitEncapsed(node: Encapsed, parentSymbol: string): void {
+	visitEncapsed(node: Encapsed, parentSymbol: string) {
 		console.log("visitEncapsed");
+		return "";
 	}
-	visitEncapsedPart(node: EncapsedPart, parentSymbol: string): void {
+	visitEncapsedPart(node: EncapsedPart, parentSymbol: string) {
 		console.log("visitEncapsedPart");
+		return "";
 	}
-	visitEntry(node: Entry, parentSymbol: string): void {
+	visitEntry(node: Entry, parentSymbol: string) {
 		console.log("visitEntry");
+		return "";
 	}
-	visitEnum(node: Enum, parentSymbol: string): void {
+	visitEnum(node: Enum, parentSymbol: string) {
 		console.log("visitEnum");
+		return "";
 	}
-	visitEnumCase(node: EnumCase, parentSymbol: string): void {
+	visitEnumCase(node: EnumCase, parentSymbol: string) {
 		console.log("visitEnumCase");
+		return "";
 	}
-	visitPhpError(node: PhpError, parentSymbol: string): void {
+	visitPhpError(node: PhpError, parentSymbol: string) {
 		console.log("visitPhpError");
+		return "error";
 	}
-	visitEval(node: Eval, parentSymbol: string): void {
+	visitEval(node: Eval, parentSymbol: string) {
 		console.log("visitEval");
+		return "";
 	}
-	visitExit(node: Exit, parentSymbol: string): void {
+	visitExit(node: Exit, parentSymbol: string) {
 		console.log("visitExit");
+		return "";
 	}
-	visitExpression(node: Expression, parentSymbol: string): void {
-		console.log("visitExpression");
+	visitExpression(node: Expression, parentSymbol: string) {
+		// Expressionは継承されるのでvisitExpressionは実装しない？
+		// console.log("visitExpression");
+		return "";
 	}
-	visitExpressionStatement(
-		node: ExpressionStatement,
-		parentSymbol: string,
-	): void {
-		console.log("visitExpressionStatement");
+	visitExpressionStatement(node: ExpressionStatement, parentSymbol: string) {
+		return node.expression.accept(this, parentSymbol);
 	}
-	visitFor(node: For, parentSymbol: string): void {
+	visitFor(node: For, parentSymbol: string) {
 		console.log("visitFor");
+		return "";
 	}
-	visitForeach(node: Foreach, parentSymbol: string): void {
+	visitForeach(node: Foreach, parentSymbol: string) {
 		console.log("visitForeach");
+		return "";
 	}
-	visitPhpFunction(node: PhpFunction, parentSymbol: string): void {
+	visitPhpFunction(node: PhpFunction, parentSymbol: string) {
 		console.log("visitPhpFunction");
+		const symbol = this._symbol.createMethod(
+			parentSymbol,
+			this.getName(node.name),
+		);
+		this.createSymbol({ symbol, kind: SymbolInformation_Kind.Function });
+		this.createOccurrenceMultipleLine(symbol, node, {
+			syntaxKind: SyntaxKind.IdentifierFunctionDefinition,
+			symbolRoles: SymbolRole.Definition,
+		});
+		node.body.accept(this, symbol);
+		return "";
 	}
-	visitGlobal(node: Global, parentSymbol: string): void {
+	visitGlobal(node: Global, parentSymbol: string) {
 		console.log("visitGlobal");
+		return "";
 	}
-	visitGoto(node: Goto, parentSymbol: string): void {
+	visitGoto(node: Goto, parentSymbol: string) {
 		console.log("visitGoto");
+		return "";
 	}
-	visitHalt(node: Halt, parentSymbol: string): void {
+	visitHalt(node: Halt, parentSymbol: string) {
 		console.log("visitHalt");
+		return "";
 	}
-	visitIdentifier(node: Identifier, parentSymbol: string): void {
-		console.log("visitIdentifier");
+	visitIdentifier(node: Identifier, parentSymbol: string) {
 		const symbol = this._symbol.createIdentifier(node.name);
 		// this.createSymbol({symbol,
 		//   kind: SymbolInformation_Kind.Class
 		// })
+		return "";
 	}
-	visitIf(node: If, parentSymbol: string): void {
+	visitIf(node: If, parentSymbol: string) {
 		console.log("visitIf");
+		return "";
 	}
-	visitInclude(node: Include, parentSymbol: string): void {
+	visitInclude(node: Include, parentSymbol: string) {
 		console.log("visitInclude");
+		return "";
 	}
-	visitInline(node: Inline, parentSymbol: string): void {
+	visitInline(node: Inline, parentSymbol: string) {
 		console.log("visitInline");
+		return "";
 	}
-	visitInterface(node: Interface, parentSymbol: string): void {
+	visitInterface(node: Interface, parentSymbol: string) {
 		console.log("visitInterface");
+		return "";
 	}
-	visitIntersectionType(node: IntersectionType, parentSymbol: string): void {
+	visitIntersectionType(node: IntersectionType, parentSymbol: string) {
 		console.log("visitIntersectionType");
+		return "";
 	}
-	visitIsset(node: Isset, parentSymbol: string): void {
+	visitIsset(node: Isset, parentSymbol: string) {
 		console.log("visitIsset");
+		return "";
 	}
-	visitLabel(node: Label, parentSymbol: string): void {
+	visitLabel(node: Label, parentSymbol: string) {
 		console.log("visitLabel");
+		return "";
 	}
-	visitList(node: List, parentSymbol: string): void {
+	visitList(node: List, parentSymbol: string) {
 		console.log("visitList");
+		return "";
 	}
-	visitLiteral(node: Literal, parentSymbol: string): void {
+	visitLiteral(node: Literal, parentSymbol: string) {
 		console.log("visitLiteral");
+		return "";
 	}
-	visitLocation(node: Location, parentSymbol: string): void {
+	visitLocation(node: Location, parentSymbol: string) {
 		console.log("visitLocation");
+		return "";
 	}
-	visitLookup(node: Lookup, parentSymbol: string): void {
+	visitLookup(node: Lookup, parentSymbol: string) {
 		console.log("visitLookup");
+		return "";
 	}
-	visitMagic(node: Magic, parentSymbol: string): void {
+	visitMagic(node: Magic, parentSymbol: string) {
 		console.log("visitMagic");
+		return "";
 	}
-	visitMatch(node: Match, parentSymbol: string): void {
+	visitMatch(node: Match, parentSymbol: string) {
 		console.log("visitMatch");
+		return "";
 	}
-	visitMatchArm(node: MatchArm, parentSymbol: string): void {
+	visitMatchArm(node: MatchArm, parentSymbol: string) {
 		console.log("visitMatchArm");
+		return "";
 	}
 
 	getName(name: string | Identifier) {
@@ -439,10 +578,10 @@ export class Visitor implements AbstractVisitor {
 		return name.name;
 	}
 
-	visitMethod(node: Method, parentSymbol: string): void {
-		console.log("visitMethod");
+	visitMethod(node: Method, parentSymbol: string) {
 		// TODO: 同名の場合引数で曖昧さ回避
 		// TODO: public、static、
+		// TODO: 引数の考慮
 		const symbol = this._symbol.createMethod(
 			parentSymbol,
 			this.getName(node.name),
@@ -456,17 +595,18 @@ export class Visitor implements AbstractVisitor {
 			symbolRoles: SymbolRole.Definition,
 			syntaxKind: SyntaxKind.IdentifierFunctionDefinition,
 		});
-		node.body.accept(this, parentSymbol);
+		return node.body.accept(this, symbol);
 	}
 
-	visitName(node: Name, parentSymbol: string): void {
+	visitName(node: Name, parentSymbol: string) {
 		console.log("visitName");
+		return "";
 	}
-	visitNamedargument(node: namedargument, parentSymbol: string): void {
+	visitNamedargument(node: namedargument, parentSymbol: string) {
 		console.log("visitNamedargument");
+		return "";
 	}
-	visitNamespace(node: Namespace, parentSymbol: string): void {
-		console.log("visitNamespace");
+	visitNamespace(node: Namespace, parentSymbol: string) {
 		// TODO: ここでファイル名とnamespaceの対応を保持するリストへ入れる
 		const symbol = this._symbol.createNamespace(node.name);
 		console.log(symbol);
@@ -478,57 +618,78 @@ export class Visitor implements AbstractVisitor {
 		for (const child of node.children) {
 			child.accept(this, parentSymbol);
 		}
+		return "";
 	}
-	visitNew(node: New, parentSymbol: string): void {
+	visitNew(node: New, parentSymbol: string) {
 		console.log("visitNew");
+		return "";
 	}
-	visitNode(node: Node, parentSymbol: string): void {
+	visitNode(node: Node, parentSymbol: string) {
 		console.log("visitNode");
+		return "";
 	}
-	visitNoop(node: Noop, parentSymbol: string): void {
+	visitNoop(node: Noop, parentSymbol: string) {
 		console.log("visitNoop");
+		return "";
 	}
-	visitNowDoc(node: NowDoc, parentSymbol: string): void {
+	visitNowDoc(node: NowDoc, parentSymbol: string) {
 		console.log("visitNowDoc");
+		return "";
 	}
-	visitNullKeyword(node: NullKeyword, parentSymbol: string): void {
+	visitNullKeyword(node: NullKeyword, parentSymbol: string) {
 		console.log("visitNullKeyword");
+		return "null";
 	}
 	visitNullSafePropertyLookup(
 		node: NullSafePropertyLookup,
 		parentSymbol: string,
-	): void {
+	) {
 		console.log("visitNullSafePropertyLookup");
+		return "";
 	}
-	visitPhpNumber(node: PhpNumber, parentSymbol: string): void {
+	visitPhpNumber(node: PhpNumber, parentSymbol: string) {
 		console.log("visitPhpNumber");
+		// numberかfloat
+		// TypeScriptに渡っている時点で正確ではないかも？
+		// node.valueはstringだが型定義でnumberになってしまっている
+		if (/\./.test(String(node.value))) {
+			return "float";
+		}
+		return "int";
 	}
-	visitOffsetLookup(node: OffsetLookup, parentSymbol: string): void {
+	visitOffsetLookup(node: OffsetLookup, parentSymbol: string) {
 		console.log("visitOffsetLookup");
+		return "";
 	}
-	visitOperation(node: Operation, parentSymbol: string): void {
+	visitOperation(node: Operation, parentSymbol: string) {
 		console.log("visitOperation");
+		return "";
 	}
-	visitParameter(node: Parameter, parentSymbol: string): void {
+	visitParameter(node: Parameter, parentSymbol: string) {
 		console.log("visitParameter");
+		return "";
 	}
-	visitParentReference(node: ParentReference, parentSymbol: string): void {
+	visitParentReference(node: ParentReference, parentSymbol: string) {
 		console.log("visitParentReference");
+		return "";
 	}
-	visitPosition(node: Position, parentSymbol: string): void {
+	visitPosition(node: Position, parentSymbol: string) {
 		console.log("visitPosition");
+		return "";
 	}
-	visitPost(node: Post, parentSymbol: string): void {
+	visitPost(node: Post, parentSymbol: string) {
 		console.log("visitPost");
+		return "";
 	}
-	visitPre(node: Pre, parentSymbol: string): void {
+	visitPre(node: Pre, parentSymbol: string) {
 		console.log("visitPre");
+		return "";
 	}
-	visitPrint(node: Print, parentSymbol: string): void {
+	visitPrint(node: Print, parentSymbol: string) {
 		console.log("visitPrint");
+		return "";
 	}
-	visitProgram(node: Program, parentSymbol: string): void {
-		console.log("visitProgram");
+	visitProgram(node: Program, parentSymbol: string) {
 		const symbol = this._symbol.filename;
 		console.log(symbol);
 		this.createSymbol({
@@ -539,98 +700,120 @@ export class Visitor implements AbstractVisitor {
 		for (const child of node.children) {
 			child.accept(this, parentSymbol);
 		}
+		return "";
 	}
-	visitProperty(node: Property, parentSymbol: string): void {
+	visitProperty(node: Property, parentSymbol: string) {
 		console.log("visitProperty");
+		return "";
 	}
-	visitPropertyLookup(node: PropertyLookup, parentSymbol: string): void {
+	visitPropertyLookup(node: PropertyLookup, parentSymbol: string) {
 		console.log("visitPropertyLookup");
+		return "";
 	}
-	visitPropertyStatement(node: PropertyStatement, parentSymbol: string): void {
+	visitPropertyStatement(node: PropertyStatement, parentSymbol: string) {
 		console.log("visitPropertyStatement");
+		return "";
 	}
-	visitReference(node: Reference, parentSymbol: string): void {
+	visitReference(node: Reference, parentSymbol: string) {
 		console.log("visitReference");
+		return "";
 	}
-	visitRetIf(node: RetIf, parentSymbol: string): void {
+	visitRetIf(node: RetIf, parentSymbol: string) {
 		console.log("visitRetIf");
+		return "";
 	}
-	visitReturn(node: Return, parentSymbol: string): void {
-		console.log("visitReturn");
+	visitReturn(node: Return, parentSymbol: string) {
+		return node.expr.accept(this, parentSymbol);
 	}
-	visitSelfReference(node: SelfReference, parentSymbol: string): void {
+	visitSelfReference(node: SelfReference, parentSymbol: string) {
 		console.log("visitSelfReference");
+		return "";
 	}
-	visitSilent(node: Silent, parentSymbol: string): void {
+	visitSilent(node: Silent, parentSymbol: string) {
 		console.log("visitSilent");
+		return "";
 	}
-	visitStatement(node: Statement, parentSymbol: string): void {
+	visitStatement(node: Statement, parentSymbol: string) {
 		console.log("visitStatement");
+		return "";
 	}
-	visitStatic(node: Static, parentSymbol: string): void {
+	visitStatic(node: Static, parentSymbol: string) {
 		console.log("visitStatic");
+		return "";
 	}
-	visitStaticLookup(node: StaticLookup, parentSymbol: string): void {
+	visitStaticLookup(node: StaticLookup, parentSymbol: string) {
 		console.log("visitStaticLookup");
+		return "";
 	}
-	visitStaticReference(node: StaticReference, parentSymbol: string): void {
+	visitStaticReference(node: StaticReference, parentSymbol: string) {
 		console.log("visitStaticReference");
+		return "";
 	}
-	visitStaticVariable(node: StaticVariable, parentSymbol: string): void {
+	visitStaticVariable(node: StaticVariable, parentSymbol: string) {
 		console.log("visitStaticVariable");
+		return "";
 	}
-	visitPhpString(node: PhpString, parentSymbol: string): void {
+	visitPhpString(node: PhpString, parentSymbol: string) {
 		console.log("visitPhpString");
+		return "string";
 	}
-	visitSwitch(node: Switch, parentSymbol: string): void {
+	visitSwitch(node: Switch, parentSymbol: string) {
 		console.log("visitSwitch");
+		return "";
 	}
-	visitThrow(node: Throw, parentSymbol: string): void {
+	visitThrow(node: Throw, parentSymbol: string) {
 		console.log("visitThrow");
+		return "";
 	}
-	visitTrait(node: Trait, parentSymbol: string): void {
+	visitTrait(node: Trait, parentSymbol: string) {
 		console.log("visitTrait");
+		return "";
 	}
-	visitTraitAlias(node: TraitAlias, parentSymbol: string): void {
+	visitTraitAlias(node: TraitAlias, parentSymbol: string) {
 		console.log("visitTraitAlias");
+		return "";
 	}
-	visitTraitPrecedence(node: TraitPrecedence, parentSymbol: string): void {
+	visitTraitPrecedence(node: TraitPrecedence, parentSymbol: string) {
 		console.log("visitTraitPrecedence");
+		return "";
 	}
-	visitTraitUse(node: TraitUse, parentSymbol: string): void {
+	visitTraitUse(node: TraitUse, parentSymbol: string) {
 		console.log("visitTraitUse");
+		return "";
 	}
-	visitTry(node: Try, parentSymbol: string): void {
+	visitTry(node: Try, parentSymbol: string) {
 		console.log("visitTry");
+		return "";
 	}
-	visitTypeReference(node: TypeReference, parentSymbol: string): void {
+	visitTypeReference(node: TypeReference, parentSymbol: string) {
 		console.log("visitTypeReference");
+		return "";
 	}
-	visitUnary(node: Unary, parentSymbol: string): void {
+	visitUnary(node: Unary, parentSymbol: string) {
 		console.log("visitUnary");
+		return "";
 	}
-	visitUnionType(node: UnionType, parentSymbol: string): void {
+	visitUnionType(node: UnionType, parentSymbol: string) {
 		console.log("visitUnionType");
+		return "";
 	}
-	visitUnset(node: Unset, parentSymbol: string): void {
+	visitUnset(node: Unset, parentSymbol: string) {
 		console.log("visitUnset");
+		return "";
 	}
-	visitUseGroup(node: UseGroup, parentSymbol: string): void {
-		console.log("visitUseGroup");
+	visitUseGroup(node: UseGroup, parentSymbol: string) {
 		for (const child of node.items) {
 			child.accept(this, parentSymbol);
 		}
+		return "";
 	}
 
-	readComposerFile(packageName: string, filename: string) {
-		const dir = `vendor/${packageName}/${filename}`;
-	}
 	createUseItem(
 		packageName: string,
 		version: string,
 		filename: string,
 		node: UseItem,
-	): void {
+	) {
 		const itemSymbol = new ScipSymbol(packageName, version, filename);
 		const symbol = itemSymbol.createNamespace(node.name);
 		console.log(symbol);
@@ -643,9 +826,10 @@ export class Visitor implements AbstractVisitor {
 			syntaxKind: SyntaxKind.IdentifierNamespace,
 		});
 		// TODO: ここで中身をvisitしたい
+		return "";
 	}
-	visitUseItem(node: UseItem, parentSymbol: string): void {
-		console.log("visitUseItem");
+
+	visitUseItem(node: UseItem, parentSymbol: string) {
 		if (node.name.startsWith("App\\")) {
 			const filepath = node.name.replace(/^App/, "app").replace(/\\/g, "/");
 			const src = `${filepath}.php`;
@@ -666,27 +850,44 @@ export class Visitor implements AbstractVisitor {
 				// TODO エラー
 			}
 		}
+		return "";
 	}
-	visitVariable(node: Variable, parentSymbol: string): void {
-		console.log("visitVariable");
+	visitVariable(node: Variable, parentSymbol: string) {
+		if (typeof node.name !== "string") {
+			return;
+		}
+		const symbol = this._symbol.createTerm(parentSymbol, node.name);
+		console.log(symbol);
+		this.createSymbol({
+			symbol,
+			kind: SymbolInformation_Kind.Variable,
+		});
+		this.createOccurrenceSameLine(symbol, node, {
+			symbolRoles: SymbolRole.Definition,
+			// TODO: IdentifierLocalなどで分岐
+			syntaxKind: SyntaxKind.Identifier,
+		});
+		return "";
 	}
-	visitVariadic(node: Variadic, parentSymbol: string): void {
+	visitVariadic(node: Variadic, parentSymbol: string) {
 		console.log("visitVariadic");
+		return "";
 	}
-	visitVariadicPlaceholder(
-		node: VariadicPlaceholder,
-		parentSymbol: string,
-	): void {
+	visitVariadicPlaceholder(node: VariadicPlaceholder, parentSymbol: string) {
 		console.log("visitVariadicPlaceholder");
+		return "";
 	}
-	visitWhile(node: While, parentSymbol: string): void {
+	visitWhile(node: While, parentSymbol: string) {
 		console.log("visitWhile");
+		return "";
 	}
-	visitYield(node: Yield, parentSymbol: string): void {
+	visitYield(node: Yield, parentSymbol: string) {
 		console.log("visitYield");
+		return "";
 	}
-	visitYieldFrom(node: YieldFrom, parentSymbol: string): void {
+	visitYieldFrom(node: YieldFrom, parentSymbol: string) {
 		console.log("visitYieldFrom");
+		return "";
 	}
 }
 
