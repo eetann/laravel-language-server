@@ -288,52 +288,62 @@ If.prototype.getChildren = function () {
 	return [this.test, this.body];
 };
 Include.prototype.getChildren = function () {
-	return [];
+	return [this.target];
 };
-Inline.prototype.getChildren = function () {
-	return [];
-};
+// Inline.prototype.getChildren = function () {
+// 	return [];
+// };
 Interface.prototype.getChildren = function () {
-	return [];
+	return [...this.body, ...this.attrGroups];
 };
-IntersectionType.prototype.getChildren = function () {
-	return [];
-};
+// IntersectionType.prototype.getChildren = function () {
+// 	return [];
+// };
 Isset.prototype.getChildren = function () {
-	return [];
+	return this.variables;
 };
+// biome-ignore lint/complexity/useArrowFunction: <explanation>
 Label.prototype.getChildren = function () {
 	return [];
 };
 List.prototype.getChildren = function () {
-	return [];
+	return this.items;
 };
-Literal.prototype.getChildren = function () {
-	return [];
-};
-Location.prototype.getChildren = function () {
-	return [];
-};
-Lookup.prototype.getChildren = function () {
-	return [];
-};
-Magic.prototype.getChildren = function () {
-	return [];
-};
+// Literal.prototype.getChildren = function () {
+// 	return [];
+// };
+// Location.prototype.getChildren = function () {
+// 	return [];
+// };
+// Lookup.prototype.getChildren = function () {
+// 	return [];
+// };
+// Magic.prototype.getChildren = function () {
+// 	return [];
+// };
 Match.prototype.getChildren = function () {
-	return [];
+	return [this.cond, ...this.arms];
 };
 MatchArm.prototype.getChildren = function () {
-	return [];
+	const children = [];
+	if (this.conds) {
+		children.push(...this.conds);
+	}
+	children.push(this.body);
+	return children;
 };
 Method.prototype.getChildren = function () {
-	return [...this.arguments, this.body];
+	const children = [...this.arguments];
+	if (this.body) {
+		children.push(this.body);
+	}
+	return children;
 };
-Name.prototype.getChildren = function () {
-	return [];
-};
+// Name.prototype.getChildren = function () {
+// 	return [];
+// };
 namedargument.prototype.getChildren = function () {
-	return [];
+	return [this.value];
 };
 Namespace.prototype.getChildren = function () {
 	return this.children;
@@ -341,92 +351,98 @@ Namespace.prototype.getChildren = function () {
 New.prototype.getChildren = function () {
 	return [this.what, ...this.arguments];
 };
-Node.prototype.getChildren = function () {
-	return [];
-};
+// Node.prototype.getChildren = function () {
+// 	return [];
+// };
+// biome-ignore lint/complexity/useArrowFunction: <explanation>
 Noop.prototype.getChildren = function () {
 	return [];
 };
+// biome-ignore lint/complexity/useArrowFunction: <explanation>
 NowDoc.prototype.getChildren = function () {
 	return [];
 };
+// biome-ignore lint/complexity/useArrowFunction: <explanation>
 NullKeyword.prototype.getChildren = function () {
 	return [];
 };
 NullSafePropertyLookup.prototype.getChildren = function () {
-	return [];
+	return [this.what, this.offset];
 };
 // biome-ignore lint/complexity/useArrowFunction: <explanation>
 PhpNumber.prototype.getChildren = function () {
 	return [];
 };
 OffsetLookup.prototype.getChildren = function () {
-	return [];
+	return [this.what, this.offset];
 };
-Operation.prototype.getChildren = function () {
-	return [];
-};
+// Operation.prototype.getChildren = function () {
+// 	return [];
+// };
 // biome-ignore lint/complexity/useArrowFunction: <explanation>
 Parameter.prototype.getChildren = function () {
 	return this.attrGroups;
 };
+// biome-ignore lint/complexity/useArrowFunction: <explanation>
 ParentReference.prototype.getChildren = function () {
 	return [];
 };
-Position.prototype.getChildren = function () {
-	return [];
-};
+// Position.prototype.getChildren = function () {
+// 	return [];
+// };
 // 後置インクリメント i++
 Post.prototype.getChildren = function () {
 	return [this.what];
 };
 Pre.prototype.getChildren = function () {
-	return [];
+	return [this.what];
 };
 Print.prototype.getChildren = function () {
-	return [];
+	return [this.expression];
 };
 Program.prototype.getChildren = function () {
 	return this.children;
 };
 Property.prototype.getChildren = function () {
-	return [];
+	return this.attrGroups;
 };
 PropertyLookup.prototype.getChildren = function () {
 	return [this.what];
 };
 PropertyStatement.prototype.getChildren = function () {
-	return [];
+	return this.properties;
 };
+// biome-ignore lint/complexity/useArrowFunction: <explanation>
 Reference.prototype.getChildren = function () {
 	return [];
 };
 RetIf.prototype.getChildren = function () {
-	return [];
+	return [this.test, this.trueExpr, this.falseExpr];
 };
 Return.prototype.getChildren = function () {
-	return [];
+	return [this.expr];
 };
+// biome-ignore lint/complexity/useArrowFunction: <explanation>
 SelfReference.prototype.getChildren = function () {
 	return [];
 };
 Silent.prototype.getChildren = function () {
-	return [];
+	return [this.expr];
 };
-Statement.prototype.getChildren = function () {
-	return [];
-};
+// Statement.prototype.getChildren = function () {
+// 	return [];
+// };
 Static.prototype.getChildren = function () {
-	return [];
+	return this.variables;
 };
 StaticLookup.prototype.getChildren = function () {
-	return [];
+	return [this.what, this.offset];
 };
-StaticReference.prototype.getChildren = function () {
-	return [];
-};
+// StaticReference.prototype.getChildren = function () {
+// 	return [];
+// };
 StaticVariable.prototype.getChildren = function () {
-	return [];
+	return [this.variable, this.defaultValue];
 };
 // biome-ignore lint/complexity/useArrowFunction: <explanation>
 PhpString.prototype.getChildren = function () {
@@ -439,53 +455,60 @@ Throw.prototype.getChildren = function () {
 	return [this.what];
 };
 Trait.prototype.getChildren = function () {
-	return [];
+	return this.body;
 };
 TraitAlias.prototype.getChildren = function () {
-	return [];
+	return [this.trait];
 };
-TraitPrecedence.prototype.getChildren = function () {
-	return [];
-};
+// TraitPrecedence.prototype.getChildren = function () {
+// 	return [];
+// };
 TraitUse.prototype.getChildren = function () {
-	return [];
+	const children = [...this.traits];
+	if (this.adaptations) {
+		children.push(...this.adaptations);
+	}
+	return children;
 };
 Try.prototype.getChildren = function () {
 	return [this.body, ...this.catches];
 };
+// biome-ignore lint/complexity/useArrowFunction: <explanation>
 TypeReference.prototype.getChildren = function () {
 	return [];
 };
 Unary.prototype.getChildren = function () {
-	return [];
+	return [this.what];
 };
 UnionType.prototype.getChildren = function () {
-	return [];
+	return this.types;
 };
 Unset.prototype.getChildren = function () {
-	return [];
+	return this.variables;
 };
 UseGroup.prototype.getChildren = function () {
-	return [];
+	return this.items;
 };
+// biome-ignore lint/complexity/useArrowFunction: <explanation>
 UseItem.prototype.getChildren = function () {
 	return [];
 };
+// biome-ignore lint/complexity/useArrowFunction: <explanation>
 Variable.prototype.getChildren = function () {
 	return [];
 };
-Variadic.prototype.getChildren = function () {
-	return [];
-};
-VariadicPlaceholder.prototype.getChildren = function () {
-	return [];
-};
+// Variadic.prototype.getChildren = function () {
+// 	return [];
+// };
+// VariadicPlaceholder.prototype.getChildren = function () {
+// 	return [];
+// };
 While.prototype.getChildren = function () {
-	return [];
+	return [this.test, this.body];
 };
 Yield.prototype.getChildren = function () {
-	return [];
+	return [this.value];
 };
 YieldFrom.prototype.getChildren = function () {
-	return [];
+	return [this.value];
 };

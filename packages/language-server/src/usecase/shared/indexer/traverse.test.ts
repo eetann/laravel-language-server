@@ -170,204 +170,185 @@ if ($bool) {
 // Include
 include 'file.php';
 
+// Interface
+interface ExampleInterface
+{
+    public function setVariable($name, $var);
+    public function getHtml($template);
+}
+// IntersectionType
+// class IntersectionExample implements ExampleInterface, Countable {}
 
-		// // Inline
-		// // Inline is usually used internally, not directly in PHP code
-		//
-		// // Interface
-		// interface ExampleInterface {}
-		//
-		// // IntersectionType
-		// class IntersectionExample implements ExampleInterface, Countable {}
-		//
-		// // Isset
-		// if (isset($var)) {
-		//     echo "Variable is set";
-		// }
-		//
-		// // Label
-		// myLabel:
-		// echo "Label example";
-		//
-		// // List
-		// list($a, $b) = [1, 2];
-		//
-		// // Literal
-		// $literal = "This is a string";
-		//
-		// // Match and MatchArm
-		// $result = match($value) {
-		//     1 => 'one',
-		//     2 => 'two',
-		//     default => 'other',
-		// };
-		//
-		// // Method
-		// class MyClassWithMethod {
-		//     public function myMethod() {
-		//         return "Hello";
-		//     }
-		// }
-		//
-		// // New
-		// $instance = new MyClass();
-		//
-		// // Node
-		// class CustomNode {}
-		//
-		// // Noop
-		// // Empty statement;
-		//
-		// // NowDoc
-		// $nowdoc = <<<'EOD'
-		// NowDoc example
-		// EOD;
-		//
-		// // NullKeyword
-		// $nullValue = null;
-		//
-		// // NullSafePropertyLookup
-		// $result = $object?->property;
-		//
-		// // Number
-		// $number = 123;
-		//
-		// // OffsetLookup
-		// $value = $array[0];
-		//
-		// // Operation
-		// $result = $a + $b;
-		//
-		// // Parameter
-		// function withParameter($param) {}
-		//
-		// // ParentReference
-		// class ParentExample {
-		//     public function example() {
-		//         parent::example();
-		//     }
-		// }
-		//
-		// // Position
-		// // Position is internal to AST
-		//
-		// // Post and Pre
-		// $i++;
-		// ++$i;
-		//
-		// // Print
-		// print "Print example";
-		//
-		// // Program
-		// // Entire PHP script is a Program
-		//
-		// // Property
-		// class ExampleWithProperty {
-		//     public $property;
-		// }
-		//
-		// // PropertyLookup
-		// $value = $object->property;
-		//
-		// // Reference
-		// $ref = &$var;
-		//
-		// // RetIf
-		// $result = $bool ? 'True' : 'False';
-		//
-		// // Return
-		// return $value;
-		//
-		// // SelfReference
-		// class SelfExample {
-		//     public function example() {
-		//         return self::class;
-		//     }
-		// }
-		//
-		// // Silent
-		// @unlink('nonexistent_file.txt');
-		//
-		// // Static
-		// static $staticVar = 42;
-		//
-		// // StaticLookup
-		// $value = MyClass::MY_CONSTANT;
-		//
-		// // StaticReference
-		// class StaticExample {
-		//     public static function example() {}
-		// }
-		//
-		// // StaticVariable
-		// static $counter = 0;
-		//
-		// // String
-		// $string = "This is a string";
-		//
-		// // Switch
-		// switch ($value) {
-		//     case 1:
-		//         echo "One";
-		//         break;
-		//     default:
-		//         echo "Other";
-		// }
-		//
-		// // Throw
-		// throw new \\Exception("Error");
-		//
-		// // Trait and TraitUse
-		// trait ExampleTrait {}
-		// class UsesTrait {
-		//     use ExampleTrait;
-		// }
-		//
-		// // Try
-		// try {
-		//     // Something
-		// } catch (\\Exception $e) {}
-		//
-		// // TypeReference
-		// function typeReferenceExample(int $param) {}
-		//
-		// // Unary
-		// $result = -$a;
-		//
-		// // UnionType
-		// function unionExample(int|string $param) {}
-		//
-		// // Unset
-		// unset($var);
-		//
-		// // UseGroup and UseItem
-		// use ExampleNamespace\\{ClassA, ClassB as AliasB};
-		//
-		// // Variable
-		// $variable = "value";
-		//
-		// // Variadic and VariadicPlaceholder
-		// function variadicExample(...$args) {}
-		//
-		// // While
-		// while ($condition) {
-		//     echo "Loop";
-		// }
-		//
-		// // Yield
-		// function generatorExample() {
-		//     yield 1;
-		// }
-		//
-		// // YieldFrom
-		// function generatorFrom() {
-		//     yield from [1, 2, 3];
-		// }
-		// `,
+// Isset
+if (isset($var)) {
+    echo "Variable is set";
+}
+
+// Label
+myLabel:
+echo "Label example";
+
+// List
+list($a, $b) = [1, 2];
+
+// Match and MatchArm
+$result = match($value) {
+    1 => 'one',
+    2 => 'two',
+    default => 'other',
+};
+
+// Method
+class MyClassWithMethod {
+    public function myMethod() {
+        return "Hello";
+    }
+}
+
+// namedargument
+function greet(string $name, string $greeting = "Hello", string $punctuation = "!") {
+    echo "{$greeting}, {$name}{$punctuation}\n";
+}
+greet(name: "Bob", punctuation: ".");
+
+// New
+$instance = new MyClass();
+
+// NowDoc
+$nowdoc = <<<'EOD'
+NowDoc example
+EOD;
+
+// NullKeyword
+$nullValue = null;
+
+// NullSafePropertyLookup
+$result = $object?->property;
+
+// Number
+$number = 123;
+
+// OffsetLookup
+$value = $array[0];
+
+// ParentReference
+class ParentExample {
+    public function example() {
+        parent::example();
+    }
+}
+
+// Post and Pre
+$i++;
+++$i;
+
+// Print
+print "Print example";
+
+// Program
+// Entire PHP script is a Program
+
+// Property
+class ExampleWithProperty {
+    public $property;
+}
+
+// PropertyLookup
+$value = $object->property;
+
+// Reference
+$ref = &$var;
+
+// RetIf
+$result = $bool ? 'True' : 'False';
+
+// Return
+function myMethod() {
+    return "Hello";
+}
+
+// SelfReference
+class SelfExample {
+    public function example() {
+        return self::class;
+    }
+}
+
+// Silent
+@unlink('nonexistent_file.txt');
+
+// Static
+static $staticVar = 42;
+
+// StaticLookup
+$value = MyClass::MY_CONSTANT;
+
+// StaticReference
+class StaticExample {
+    public static function example() {}
+}
+
+// StaticVariable
+static $counter = 0;
+
+// Switch
+switch ($value) {
+    case 1:
+        echo "One";
+        break;
+    default:
+        echo "Other";
+}
+
+
+// Trait and TraitUse
+trait ExampleTrait {}
+class UsesTrait {
+    use ExampleTrait;
+}
+
+// Try
+try {
+    // Something
+} catch (\\Exception $e) {}
+
+// TypeReference
+function typeReferenceExample(int $param) {}
+
+// Unary
+$result = -$a;
+
+// UnionType
+function unionExample(int|string $param) {}
+
+// Unset
+unset($var);
+
+// UseGroup and UseItem
+use ExampleNamespace\\{ClassA, ClassB as AliasB};
+
+// Variadic and VariadicPlaceholder
+function variadicExample(...$args) {}
+
+// While
+while ($condition) {
+    echo "Loop";
+}
+
+// Yield
+function generatorExample() {
+    yield 1;
+}
+
+// YieldFrom
+function generatorFrom() {
+    yield from [1, 2, 3];
+}
+`,
 		targetName,
 	);
 
-	it("visitClass", () => {
+	it("visit", () => {
 		expect(() =>
 			traverse(rootNode, (node) => console.log(node.kind)),
 		).not.toThrow();
