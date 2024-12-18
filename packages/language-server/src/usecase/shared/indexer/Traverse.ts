@@ -3,6 +3,7 @@ import "./traverseExtensions";
 
 type OnFunction = (node: Node) => void;
 
+// 走査関数
 export function traverse(
 	node: Node,
 	onEnter?: OnFunction,
@@ -17,4 +18,19 @@ export function traverse(
 	if (typeof onLeave !== "undefined") {
 		onLeave(node);
 	}
+}
+
+// 抽出関数
+export function findNodes(node: Node, condition: (node: Node) => boolean) {
+	const foundNodes: Node[] = [];
+
+	const collectNodes = (enteredNode: Node) => {
+		if (!condition(enteredNode)) {
+			return;
+		}
+		foundNodes.push(enteredNode);
+	};
+
+	traverse(node, collectNodes);
+	return foundNodes;
 }

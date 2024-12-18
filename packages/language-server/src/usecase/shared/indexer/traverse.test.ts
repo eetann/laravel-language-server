@@ -1,4 +1,4 @@
-import { traverse } from "./Traverse";
+import { findNodes, traverse } from "./Traverse";
 import { createParser, targetName } from "./test/helper";
 
 describe("traverse Class", () => {
@@ -348,9 +348,13 @@ function generatorFrom() {
 		targetName,
 	);
 
-	it("visit", () => {
+	it("traverse", () => {
 		expect(() =>
 			traverse(rootNode, (node) => console.log(node.kind)),
 		).not.toThrow();
+	});
+	it("findNodes", () => {
+		const foundNodes = findNodes(rootNode, (node) => node.kind === "while");
+		expect(foundNodes.length).toBe(1);
 	});
 });
