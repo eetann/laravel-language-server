@@ -1,8 +1,12 @@
-import { NodeStrategy } from "./NodeStrategy";
 import type { If } from "php-parser";
+import { NodeStrategy } from "./NodeStrategy";
 
 export class IfStrategy extends NodeStrategy {
 	getChildren(node: If) {
-		return [node.test, node.body];
+		const children = [node.test];
+		if (node.body) {
+			children.push(node.body);
+		}
+		return children;
 	}
 }

@@ -1,15 +1,18 @@
 import type { Occurrence, SymbolInformation } from "@/gen/scip_pb";
 import type { Node } from "php-parser";
+import { SymbolCreator } from "../shared/SymbolCreator";
 
 declare module "php-parser" {
 	interface Node {
 		getChildren(): Node[];
 		symbol: string;
-		type: string;
+		typeInfo: string;
 	}
 }
 
 export class NodeStrategy {
+	constructor(protected symbolCreator: SymbolCreator) {}
+
 	getSymbol(node: Node, parentSymbol: string): string {
 		return "";
 	}
@@ -18,7 +21,7 @@ export class NodeStrategy {
 	}
 	onEnter(node: Node, parentSymbol: string): void {
 		node.symbol = this.getSymbol(node, parentSymbol);
-		node.type = this.getType(node);
+		node.typeInfo = this.getType(node);
 	}
 
 	getChildren(node: Node): Node[] {

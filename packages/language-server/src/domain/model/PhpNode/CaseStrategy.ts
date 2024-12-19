@@ -1,5 +1,5 @@
-import { NodeStrategy } from "./NodeStrategy";
 import type { Case } from "php-parser";
+import { NodeStrategy } from "./NodeStrategy";
 
 export class CaseStrategy extends NodeStrategy {
 	getChildren(node: Case) {
@@ -7,7 +7,9 @@ export class CaseStrategy extends NodeStrategy {
 		if (node.test) {
 			children.push(node.test);
 		}
-		children.push(node.body);
+		if (node.body) {
+			children.push(node.body);
+		}
 		return children;
 	}
 }

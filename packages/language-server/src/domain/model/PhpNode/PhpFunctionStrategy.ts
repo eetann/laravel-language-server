@@ -1,8 +1,13 @@
+import type { Function as PhpFunction, Node } from "php-parser";
 import { NodeStrategy } from "./NodeStrategy";
-import type { Function as PhpFunction } from "php-parser";
 
 export class PhpFunctionStrategy extends NodeStrategy {
-	getChildren(node: PhpFunction) {
-		return [...node.arguments, node.body, ...node.attrGroups];
+	getChildren(node: PhpFunction): Node[] {
+		const children: Node[] = [...node.arguments];
+		if (node.body) {
+			children.push(node.body);
+		}
+		children.push(...node.attrGroups);
+		return children;
 	}
 }

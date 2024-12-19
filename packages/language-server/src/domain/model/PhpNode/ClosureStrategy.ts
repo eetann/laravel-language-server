@@ -1,8 +1,12 @@
+import type { Closure, Node } from "php-parser";
 import { NodeStrategy } from "./NodeStrategy";
-import type { Closure } from "php-parser";
 
 export class ClosureStrategy extends NodeStrategy {
 	getChildren(node: Closure) {
-		return [...node.arguments, node.body];
+		const children: Node[] = [...node.arguments];
+		if (node.body) {
+			children.push(node.body);
+		}
+		return children;
 	}
 }

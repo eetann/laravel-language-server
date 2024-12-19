@@ -1,8 +1,12 @@
+import type { Do, Node } from "php-parser";
 import { NodeStrategy } from "./NodeStrategy";
-import type { Do } from "php-parser";
 
 export class DoStrategy extends NodeStrategy {
 	getChildren(node: Do) {
-		return [node.test, node.body];
+		const children: Node[] = [node.test];
+		if (node.body) {
+			children.push(node.body);
+		}
+		return children;
 	}
 }

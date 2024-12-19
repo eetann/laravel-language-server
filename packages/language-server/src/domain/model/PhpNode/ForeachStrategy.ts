@@ -1,8 +1,12 @@
+import type { Foreach, Node } from "php-parser";
 import { NodeStrategy } from "./NodeStrategy";
-import type { Foreach } from "php-parser";
 
 export class ForeachStrategy extends NodeStrategy {
 	getChildren(node: Foreach) {
-		return [node.source, node.value, node.body];
+		const children: Node[] = [node.source, node.value];
+		if (node.body) {
+			children.push(node.body);
+		}
+		return children;
 	}
 }
