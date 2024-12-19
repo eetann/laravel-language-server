@@ -99,7 +99,7 @@ import { create } from "@bufbuild/protobuf";
 import type { Node } from "php-parser";
 
 // 走査関数
-export function traverse(
+export function traverseForIndex(
 	node: Node,
 	parentSymbol: string,
 	getChildren: (node: Node) => Node[],
@@ -110,7 +110,7 @@ export function traverse(
 		onEnter(node, parentSymbol);
 	}
 	for (const child of getChildren(node)) {
-		traverse(child, node.symbol, getChildren, onEnter, onLeave);
+		traverseForIndex(child, node.symbol, getChildren, onEnter, onLeave);
 	}
 	if (typeof onLeave !== "undefined") {
 		onLeave(node);
@@ -278,7 +278,7 @@ export class IndexStrategy extends NodeStrategy {
 		if (typeof strategy === "undefined") {
 			return;
 		}
-		this.document.symbols.concat(strategy.createSymbolInformations(node));
-		this.document.occurrences.concat(strategy.createOccurrences(node));
+		this.document.symbols.push(...strategy.createSymbolInformations(node));
+		this.document.occurrences.push(...strategy.createOccurrences(node));
 	};
 }

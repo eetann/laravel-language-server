@@ -3,7 +3,7 @@ import { type Document, DocumentSchema } from "@/gen/scip_pb";
 import { create } from "@bufbuild/protobuf";
 import { Engine } from "php-parser";
 import type { PackageDict } from "../shared/composerFetcher/ComposerFetcher";
-import { IndexStrategy, traverse } from "./IndexStrategy";
+import { IndexStrategy, traverseForIndex } from "./IndexStrategy";
 
 export type ViewCaller = {
 	parentSymbol: string;
@@ -59,7 +59,7 @@ class BookController extends Controller
 		);
 		const parentSymbol = "";
 		const strategy = new IndexStrategy("test.php");
-		traverse(
+		traverseForIndex(
 			rootNode,
 			parentSymbol,
 			strategy.getChildren,

@@ -1,6 +1,7 @@
 import { SymbolCreator } from "@/domain/model/shared/SymbolCreator";
+import { SymbolInformation_Kind, SymbolRole, SyntaxKind } from "@/gen/scip_pb";
 import { createParser, targetName } from "../shared/indexer/test/helper";
-import { IndexStrategy, traverse } from "./IndexStrategy";
+import { IndexStrategy, traverseForIndex } from "./IndexStrategy";
 
 describe("IndexStrategy", () => {
 	const parser = createParser();
@@ -351,7 +352,7 @@ function generatorFrom() {
 
 	it("IndexStrategy", () => {
 		const packageName = "example";
-		const packageVersion = "0.0.1";
+		const packageVersion = "0.0.0";
 		const filename = "test.php";
 		const parentSymbol = "";
 		const symbolCreator = new SymbolCreator(
@@ -361,7 +362,7 @@ function generatorFrom() {
 		);
 		const strategy = new IndexStrategy(filename, symbolCreator);
 		expect(() =>
-			traverse(
+			traverseForIndex(
 				rootNode,
 				parentSymbol,
 				strategy.getChildren,
@@ -369,5 +370,21 @@ function generatorFrom() {
 				strategy.onLeave,
 			),
 		).not.toThrow();
+		const prefix = "laravel-language-server composer example 0.0.0 ";
+		const namespace = `${prefix}ExampleNamespace/`;
+		const symbol = `${namespace}exampleFunction().`;
+		expect(strategy.document.symbols).toContainEqual(
+			expect.objectContaining({
+				symbol,
+				kind: SymbolInformation_Kind.Function,
+			}),
+		);
+		expect(strategy.document.occurrences).toContainEqual(
+			expect.objectContaining({
+				symbol,
+				syntaxKind: SyntaxKind.IdentifierFunctionDefinition,
+				symbolRoles: SymbolRole.Definition,
+			}),
+		);
 	});
 });
