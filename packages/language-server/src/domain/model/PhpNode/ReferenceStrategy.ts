@@ -1,4 +1,4 @@
-import { NodeStrategy } from "@/domain/model/PhpNode/NodeStrategy";
+import { NodeStrategy } from "./NodeStrategy";
 import type { Reference } from "php-parser";
 
 export class ReferenceStrategy extends NodeStrategy {

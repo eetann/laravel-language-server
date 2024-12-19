@@ -1,4 +1,4 @@
-import { NodeStrategy } from "@/domain/model/PhpNode/NodeStrategy";
+import { NodeStrategy } from "./NodeStrategy";
 import type { Break } from "php-parser";
 
 export class BreakStrategy extends NodeStrategy {

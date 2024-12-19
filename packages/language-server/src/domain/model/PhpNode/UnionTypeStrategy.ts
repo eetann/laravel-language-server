@@ -1,4 +1,4 @@
-import { NodeStrategy } from "@/domain/model/PhpNode/NodeStrategy";
+import { NodeStrategy } from "./NodeStrategy";
 import type { UnionType } from "php-parser";
 
 export class UnionTypeStrategy extends NodeStrategy {

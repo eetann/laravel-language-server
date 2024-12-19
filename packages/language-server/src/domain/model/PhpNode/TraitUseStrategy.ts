@@ -1,4 +1,4 @@
-import { NodeStrategy } from "@/domain/model/PhpNode/NodeStrategy";
+import { NodeStrategy } from "./NodeStrategy";
 import type { Node, TraitUse } from "php-parser";
 
 export class TraitUseStrategy extends NodeStrategy {

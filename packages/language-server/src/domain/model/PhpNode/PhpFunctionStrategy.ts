@@ -1,4 +1,4 @@
-import { NodeStrategy } from "@/domain/model/PhpNode/NodeStrategy";
+import { NodeStrategy } from "./NodeStrategy";
 import type { Function as PhpFunction } from "php-parser";
 
 export class PhpFunctionStrategy extends NodeStrategy {

@@ -1,4 +1,4 @@
-import { NodeStrategy } from "@/domain/model/PhpNode/NodeStrategy";
+import { NodeStrategy } from "./NodeStrategy";
 import type { NowDoc } from "php-parser";
 
 export class NowDocStrategy extends NodeStrategy {

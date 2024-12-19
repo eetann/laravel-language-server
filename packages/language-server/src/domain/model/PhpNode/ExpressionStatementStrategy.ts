@@ -1,4 +1,4 @@
-import { NodeStrategy } from "@/domain/model/PhpNode/NodeStrategy";
+import { NodeStrategy } from "./NodeStrategy";
 import type { ExpressionStatement } from "php-parser";
 
 export class ExpressionStatementStrategy extends NodeStrategy {
