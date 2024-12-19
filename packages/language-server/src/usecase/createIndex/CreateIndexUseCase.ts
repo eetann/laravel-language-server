@@ -1,4 +1,4 @@
-import { ScipSymbol } from "@/domain/model/Symbol";
+import { SymbolCreator } from "@/domain/model/shared/SymbolCreator";
 import { type Document, DocumentSchema } from "@/gen/scip_pb";
 import { create } from "@bufbuild/protobuf";
 import { Engine } from "php-parser";
@@ -22,7 +22,7 @@ export class CreateIndexUseCase {
 			withPositions: true,
 		},
 	});
-	private symbol: ScipSymbol;
+	private symbol: SymbolCreator;
 	constructor(
 		private filename: string,
 		private packageDict: PackageDict,
@@ -33,7 +33,11 @@ export class CreateIndexUseCase {
 			language: "php",
 			relativePath: filename,
 		});
-		this.symbol = new ScipSymbol(thisPackageName, thisPackageVersion, filename);
+		this.symbol = new SymbolCreator(
+			thisPackageName,
+			thisPackageVersion,
+			filename,
+		);
 	}
 
 	execute() {

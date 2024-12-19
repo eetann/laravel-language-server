@@ -1,7 +1,7 @@
 import { type Document, DocumentSchema } from "@/gen/scip_pb";
 import { create } from "@bufbuild/protobuf";
 import { Engine } from "php-parser";
-import { ScipSymbol } from "../../../domain/model/Symbol";
+import { SymbolCreator } from "../../../domain/model/shared/SymbolCreator";
 import type { PackageDict } from "../composerFetcher/ComposerFetcher";
 import { traverse } from "./Traverse";
 
@@ -13,7 +13,7 @@ export type ViewCaller = {
 };
 export class Indexer {
 	private document: Document;
-	private symbol: ScipSymbol;
+	private symbol: SymbolCreator;
 	private viewCallerList: ViewCaller[] = [];
 	private phpParser = new Engine({
 		parser: {
@@ -33,7 +33,11 @@ export class Indexer {
 			language: "php",
 			relativePath: filename,
 		});
-		this.symbol = new ScipSymbol(thisPackageName, thisPackageVersion, filename);
+		this.symbol = new SymbolCreator(
+			thisPackageName,
+			thisPackageVersion,
+			filename,
+		);
 	}
 
 	index() {

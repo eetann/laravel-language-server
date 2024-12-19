@@ -127,7 +127,7 @@ import {
 	SyntaxKind,
 } from "@/gen/scip_pb";
 import { type MessageInitShape, create } from "@bufbuild/protobuf";
-import { ScipSymbol } from "../../../domain/model/Symbol";
+import { SymbolCreator } from "../../../domain/model/shared/SymbolCreator";
 import type { PackageDict } from "../composerFetcher/ComposerFetcher";
 
 export type ViewCaller = {
@@ -147,7 +147,7 @@ function isPhpString(node: Node): node is PhpString {
 
 export class Visitor implements AbstractVisitor {
 	private _document: Document;
-	private _symbol: ScipSymbol;
+	private _symbol: SymbolCreator;
 	private _thisPackageName: string;
 	private _thisPackageVersion: string;
 	private _packageDict: PackageDict;
@@ -162,7 +162,7 @@ export class Visitor implements AbstractVisitor {
 			language: "php",
 			relativePath: filename,
 		});
-		this._symbol = new ScipSymbol(
+		this._symbol = new SymbolCreator(
 			thisPackageName,
 			thisPackageVersion,
 			filename,
@@ -814,7 +814,7 @@ export class Visitor implements AbstractVisitor {
 		filename: string,
 		node: UseItem,
 	) {
-		const itemSymbol = new ScipSymbol(packageName, version, filename);
+		const itemSymbol = new SymbolCreator(packageName, version, filename);
 		const symbol = itemSymbol.createNamespace(node.name);
 		console.log(symbol);
 		this.createSymbol({

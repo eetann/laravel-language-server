@@ -18,7 +18,7 @@ function escapedIdentifier(value: string) {
 	return `\`${value.replace(/`/g, "``")}\``;
 }
 
-export class ScipSymbol {
+export class SymbolCreator {
 	private scheme = "laravel-language-server";
 	private packageName = "example";
 	private version = "0.0.0";

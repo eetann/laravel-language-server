@@ -1,5 +1,5 @@
 import type { Occurrence, SymbolInformation } from "@/gen/scip_pb";
-import type Node from "php-parser/src/ast/node.js";
+import type { Node } from "php-parser";
 
 declare module "php-parser" {
 	interface Node {
