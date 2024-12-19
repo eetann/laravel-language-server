@@ -1,4 +1,12 @@
 // @ts-nocheck
+import { createMethod } from "@/domain/model/Symbol";
+import {
+	type Occurrence,
+	type SymbolInformation,
+	type SymbolInformation_Kind,
+	SymbolRole,
+	SyntaxKind,
+} from "@/gen/scip_pb";
 import PhpArray from "php-parser/src/ast/array.js";
 import ArrowFunc from "php-parser/src/ast/arrowfunc.js";
 import Assign from "php-parser/src/ast/assign.js";
@@ -118,6 +126,8 @@ import YieldFrom from "php-parser/src/ast/yieldfrom.js";
 declare module "php-parser" {
 	interface Node {
 		getChildren(): Node[];
+		symbol: string;
+		type: string;
 	}
 	interface UseGroup {
 		// typo?
@@ -125,6 +135,42 @@ declare module "php-parser" {
 	}
 }
 
+function createSymbol(
+	symbol: MessageInitShape<typeof SymbolInformationSchema>,
+) {
+	return create(SymbolInformationSchema, symbol);
+}
+
+function createOccurrenceSameLine(
+	symbol: string,
+	node: Node,
+	occurrence?: MessageInitShape<typeof OccurrenceSchema>,
+) {
+	return create(OccurrenceSchema, {
+		symbol,
+		range: [node.loc.start.line, node.loc.start.column, node.loc.end.column],
+		...occurrence,
+	});
+}
+
+function createOccurrenceMultipleLine(
+	symbol: string,
+	node: Node,
+	occurrence?: MessageInitShape<typeof OccurrenceSchema>,
+) {
+	return create(OccurrenceSchema, {
+		symbol,
+		range: [
+			node.loc.start.line,
+			node.loc.start.column,
+			node.loc.end.line,
+			node.loc.end.column,
+		],
+		...occurrence,
+	});
+}
+Node.prototype.symbol = () => "";
+Node.prototype.type = () => "";
 PhpArray.prototype.getChildren = function () {
 	return this.items;
 };
@@ -164,6 +210,21 @@ Break.prototype.getChildren = function () {
 Call.prototype.getChildren = function () {
 	return [this.what, ...this.arguments];
 };
+// Call.prototype.createSymbolInformations = function () {
+// 	return [
+// 		createSymbol({
+// 			symbol: this.symbol(),
+// 			kind: SymbolInformation_Kind.Function,
+// 		}),
+// 	];
+// };
+// Call.prototype.createOccurrences = function () {
+// 	return [
+// 		createOccurrenceMultipleLine(this.symbol(), this, {
+// 			syntaxKind: SyntaxKind.IdentifierFunction,
+// 		}),
+// 	];
+// };
 Case.prototype.getChildren = function () {
 	const children = [];
 	if (this.test) {
@@ -351,9 +412,6 @@ Namespace.prototype.getChildren = function () {
 New.prototype.getChildren = function () {
 	return [this.what, ...this.arguments];
 };
-// Node.prototype.getChildren = function () {
-// 	return [];
-// };
 // biome-ignore lint/complexity/useArrowFunction: <explanation>
 Noop.prototype.getChildren = function () {
 	return [];

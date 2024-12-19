@@ -4,8 +4,10 @@ export abstract class Policy {
 	abstract getViolations(node: Node): string[];
 }
 
-export class Policies implements Policy {
-	constructor(private policies: Policy[]) {}
+export class Policies extends Policy {
+	constructor(private policies: Policy[]) {
+		super();
+	}
 
 	getViolations(node: Node): string[] {
 		return this.policies.reduce((violations, policy) => {
