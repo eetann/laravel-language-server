@@ -352,7 +352,13 @@ function generatorFrom() {
 		const parentSymbol = "";
 		const strategy = new IndexStrategy("test.php");
 		expect(() =>
-			traverse(rootNode, parentSymbol, strategy.onEnter, strategy.onLeave),
+			traverse(
+				rootNode,
+				parentSymbol,
+				strategy.getChildren,
+				strategy.onEnter,
+				strategy.onLeave,
+			),
 		).not.toThrow();
 	});
 });
