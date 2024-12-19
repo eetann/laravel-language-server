@@ -1,6 +1,6 @@
 import type { LanguagePlugin } from "@volar/language-core";
 import type { URI } from "vscode-uri";
-import { createVirtualCodeUseCase } from "./usecase/createVirtualCode/createVirtualCodeUseCase";
+import { createVirtualCodeUseCase } from "./usecase/createVirtualCode/CreateVirtualCodeUseCase";
 
 export const laravelLanguagePlugin: LanguagePlugin<URI> = {
 	getLanguageId(uri) {

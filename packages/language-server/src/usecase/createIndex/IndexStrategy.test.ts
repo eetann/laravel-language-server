@@ -1,5 +1,5 @@
+import { createParser, targetName } from "../shared/indexer/test/helper";
 import { IndexStrategy, traverse } from "./IndexStrategy";
-import { createParser, targetName } from "./test/helper";
 
 describe("IndexStrategy", () => {
 	const parser = createParser();

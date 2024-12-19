@@ -1,9 +1,9 @@
+import { ScipSymbol } from "@/domain/model/Symbol";
 import { type Document, DocumentSchema } from "@/gen/scip_pb";
 import { create } from "@bufbuild/protobuf";
 import { Engine } from "php-parser";
-import { ScipSymbol } from "../../../domain/model/Symbol";
-import type { PackageDict } from "../composerFetcher/ComposerFetcher";
-import { traverse } from "./Traverse";
+import type { PackageDict } from "../shared/composerFetcher/ComposerFetcher";
+import { IndexStrategy, traverse } from "./IndexStrategy";
 
 export type ViewCaller = {
 	parentSymbol: string;
@@ -11,9 +11,8 @@ export type ViewCaller = {
 	viewPath: string;
 	arguments: string[];
 };
-export class Indexer {
+export class CreateIndexUseCase {
 	private document: Document;
-	private symbol: ScipSymbol;
 	private viewCallerList: ViewCaller[] = [];
 	private phpParser = new Engine({
 		parser: {
@@ -23,6 +22,7 @@ export class Indexer {
 			withPositions: true,
 		},
 	});
+	private symbol: ScipSymbol;
 	constructor(
 		private filename: string,
 		private packageDict: PackageDict,
@@ -36,7 +36,7 @@ export class Indexer {
 		this.symbol = new ScipSymbol(thisPackageName, thisPackageVersion, filename);
 	}
 
-	index() {
+	execute() {
 		// TODO: filenameからコードを取得
 		const rootNode = this.phpParser.parseCode(
 			`<?php
@@ -53,9 +53,15 @@ class BookController extends Controller
 }`,
 			this.filename,
 		);
-		traverse(rootNode, undefined, (node) => {
-			// TODO: ここにポリシーのやつを突っ込む
-			console.log(node.kind);
-		});
+		const parentSymbol = "";
+		const strategy = new IndexStrategy("test.php");
+		traverse(
+			rootNode,
+			parentSymbol,
+			strategy.getChildren,
+			strategy.onEnter,
+			strategy.onLeave,
+		);
+		return strategy.document;
 	}
 }

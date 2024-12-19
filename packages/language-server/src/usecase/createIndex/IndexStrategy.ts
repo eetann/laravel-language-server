@@ -245,16 +245,3 @@ export class IndexStrategy extends NodeStrategy {
 		this.document.occurrences.concat(strategy.createOccurrences(node));
 	};
 }
-
-export function executeIndexStrategy(rootNode: Node) {
-	const parentSymbol = "";
-	const strategy = new IndexStrategy("test.php");
-	traverse(
-		rootNode,
-		parentSymbol,
-		strategy.getChildren,
-		strategy.onEnter,
-		strategy.onLeave,
-	);
-	return strategy.document;
-}
