@@ -1,6 +1,12 @@
-import type { Occurrence, SymbolInformation } from "@/gen/scip_pb";
+import {
+	type Occurrence,
+	OccurrenceSchema,
+	type SymbolInformation,
+	SymbolInformationSchema,
+} from "@/gen/scip_pb";
+import { type MessageInitShape, create } from "@bufbuild/protobuf";
 import type { Node } from "php-parser";
-import { SymbolCreator } from "../shared/SymbolCreator";
+import type { SymbolCreator } from "../shared/SymbolCreator";
 
 declare module "php-parser" {
 	interface Node {
@@ -8,6 +14,41 @@ declare module "php-parser" {
 		symbol: string;
 		typeInfo: string;
 	}
+}
+
+export function createSymbolInformation(
+	symbol: MessageInitShape<typeof SymbolInformationSchema>,
+) {
+	return create(SymbolInformationSchema, symbol);
+}
+
+export function createOccurrenceSameLine(
+	symbol: string,
+	node: Node,
+	occurrence?: MessageInitShape<typeof OccurrenceSchema>,
+) {
+	return create(OccurrenceSchema, {
+		symbol,
+		range: [node.loc.start.line, node.loc.start.column, node.loc.end.column],
+		...occurrence,
+	});
+}
+
+export function createOccurrenceMultipleLine(
+	symbol: string,
+	node: Node,
+	occurrence?: MessageInitShape<typeof OccurrenceSchema>,
+) {
+	return create(OccurrenceSchema, {
+		symbol,
+		range: [
+			node.loc.start.line,
+			node.loc.start.column,
+			node.loc.end.line,
+			node.loc.end.column,
+		],
+		...occurrence,
+	});
 }
 
 export class NodeStrategy {

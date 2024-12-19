@@ -1,3 +1,4 @@
+import { SymbolCreator } from "@/domain/model/shared/SymbolCreator";
 import { createParser, targetName } from "../shared/indexer/test/helper";
 import { IndexStrategy, traverse } from "./IndexStrategy";
 
@@ -349,8 +350,16 @@ function generatorFrom() {
 	);
 
 	it("IndexStrategy", () => {
+		const packageName = "example";
+		const packageVersion = "0.0.1";
+		const filename = "test.php";
 		const parentSymbol = "";
-		const strategy = new IndexStrategy("test.php");
+		const symbolCreator = new SymbolCreator(
+			packageName,
+			packageVersion,
+			filename,
+		);
+		const strategy = new IndexStrategy(filename, symbolCreator);
 		expect(() =>
 			traverse(
 				rootNode,

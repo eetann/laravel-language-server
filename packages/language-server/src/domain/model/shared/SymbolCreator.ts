@@ -1,3 +1,5 @@
+import { Identifier } from "php-parser";
+
 function escapePackage(value: string) {
 	if (value === "") {
 		return ".";
@@ -8,7 +10,8 @@ function escapePackage(value: string) {
 	return value.replace(/ /g, "  ");
 }
 
-function escapedIdentifier(value: string) {
+function escapedIdentifier(_value: string | Identifier) {
+	const value = getName(_value);
 	if (!value) {
 		return "";
 	}
@@ -16,6 +19,13 @@ function escapedIdentifier(value: string) {
 		return value;
 	}
 	return `\`${value.replace(/`/g, "``")}\``;
+}
+
+function getName(name: string | Identifier) {
+	if (typeof name === "string") {
+		return name;
+	}
+	return name.name;
 }
 
 export class SymbolCreator {
@@ -58,7 +68,7 @@ export class SymbolCreator {
 		return `${parentSymbol}${escapedIdentifier(term)}.`;
 	}
 
-	createMethod(parentSymbol: string, method: string) {
+	createMethod(parentSymbol: string, method: string | Identifier) {
 		return `${parentSymbol}${escapedIdentifier(method)}().`;
 	}
 

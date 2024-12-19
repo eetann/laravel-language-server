@@ -93,6 +93,7 @@ import {
 	namedargumentStrategy,
 } from "@/domain/model/PhpNode";
 import { NodeStrategy } from "@/domain/model/PhpNode/NodeStrategy";
+import type { SymbolCreator } from "@/domain/model/shared/SymbolCreator";
 import { type Document, DocumentSchema } from "@/gen/scip_pb";
 import { create } from "@bufbuild/protobuf";
 import type { Node } from "php-parser";
@@ -120,110 +121,146 @@ export class IndexStrategy extends NodeStrategy {
 	public document: Document;
 	private strategies = new Map<string, NodeStrategy>();
 
-	constructor(filename: string) {
-		super();
+	constructor(filename: string, symbolCreator: SymbolCreator) {
+		super(symbolCreator);
 		this.document = create(DocumentSchema, {
 			language: "php",
 			relativePath: filename,
 		});
-		this.strategies.set("array", new PhpArrayStrategy());
-		this.strategies.set("arrowfunc", new ArrowFuncStrategy());
-		this.strategies.set("assign", new AssignStrategy());
-		this.strategies.set("assignref", new AssignRefStrategy());
-		this.strategies.set("attrgroup", new AttrGroupStrategy());
-		this.strategies.set("attribute", new AttributeStrategy());
-		this.strategies.set("bin", new BinStrategy());
-		this.strategies.set("block", new BlockStrategy());
-		this.strategies.set("boolean", new PhpBooleanStrategy());
-		this.strategies.set("break", new BreakStrategy());
-		this.strategies.set("call", new CallStrategy());
-		this.strategies.set("case", new CaseStrategy());
-		this.strategies.set("cast", new CastStrategy());
-		this.strategies.set("catch", new CatchStrategy());
-		this.strategies.set("class", new ClassStrategy());
-		this.strategies.set("classconstant", new ClassConstantStrategy());
-		this.strategies.set("clone", new CloneStrategy());
-		this.strategies.set("closure", new ClosureStrategy());
-		this.strategies.set("constant", new ConstantStrategy());
-		this.strategies.set("continue", new ContinueStrategy());
-		this.strategies.set("declare", new DeclareStrategy());
-		this.strategies.set("declaredirective", new DeclareDirectiveStrategy());
-		this.strategies.set("do", new DoStrategy());
-		this.strategies.set("echo", new EchoStrategy());
-		this.strategies.set("empty", new EmptyStrategy());
-		this.strategies.set("encapsed", new EncapsedStrategy());
-		this.strategies.set("encapsedpart", new EncapsedPartStrategy());
-		this.strategies.set("entry", new EntryStrategy());
-		this.strategies.set("enum", new EnumStrategy());
-		this.strategies.set("enumcase", new EnumCaseStrategy());
-		this.strategies.set("eval", new EvalStrategy());
-		this.strategies.set("exit", new ExitStrategy());
+		this.strategies.set("array", new PhpArrayStrategy(symbolCreator));
+		this.strategies.set("arrowfunc", new ArrowFuncStrategy(symbolCreator));
+		this.strategies.set("assign", new AssignStrategy(symbolCreator));
+		this.strategies.set("assignref", new AssignRefStrategy(symbolCreator));
+		this.strategies.set("attrgroup", new AttrGroupStrategy(symbolCreator));
+		this.strategies.set("attribute", new AttributeStrategy(symbolCreator));
+		this.strategies.set("bin", new BinStrategy(symbolCreator));
+		this.strategies.set("block", new BlockStrategy(symbolCreator));
+		this.strategies.set("boolean", new PhpBooleanStrategy(symbolCreator));
+		this.strategies.set("break", new BreakStrategy(symbolCreator));
+		this.strategies.set("call", new CallStrategy(symbolCreator));
+		this.strategies.set("case", new CaseStrategy(symbolCreator));
+		this.strategies.set("cast", new CastStrategy(symbolCreator));
+		this.strategies.set("catch", new CatchStrategy(symbolCreator));
+		this.strategies.set("class", new ClassStrategy(symbolCreator));
+		this.strategies.set(
+			"classconstant",
+			new ClassConstantStrategy(symbolCreator),
+		);
+		this.strategies.set("clone", new CloneStrategy(symbolCreator));
+		this.strategies.set("closure", new ClosureStrategy(symbolCreator));
+		this.strategies.set("constant", new ConstantStrategy(symbolCreator));
+		this.strategies.set("continue", new ContinueStrategy(symbolCreator));
+		this.strategies.set("declare", new DeclareStrategy(symbolCreator));
+		this.strategies.set(
+			"declaredirective",
+			new DeclareDirectiveStrategy(symbolCreator),
+		);
+		this.strategies.set("do", new DoStrategy(symbolCreator));
+		this.strategies.set("echo", new EchoStrategy(symbolCreator));
+		this.strategies.set("empty", new EmptyStrategy(symbolCreator));
+		this.strategies.set("encapsed", new EncapsedStrategy(symbolCreator));
+		this.strategies.set(
+			"encapsedpart",
+			new EncapsedPartStrategy(symbolCreator),
+		);
+		this.strategies.set("entry", new EntryStrategy(symbolCreator));
+		this.strategies.set("enum", new EnumStrategy(symbolCreator));
+		this.strategies.set("enumcase", new EnumCaseStrategy(symbolCreator));
+		this.strategies.set("eval", new EvalStrategy(symbolCreator));
+		this.strategies.set("exit", new ExitStrategy(symbolCreator));
 		this.strategies.set(
 			"expressionstatement",
-			new ExpressionStatementStrategy(),
+			new ExpressionStatementStrategy(symbolCreator),
 		);
-		this.strategies.set("for", new ForStrategy());
-		this.strategies.set("foreach", new ForeachStrategy());
-		this.strategies.set("function", new PhpFunctionStrategy());
-		this.strategies.set("global", new GlobalStrategy());
-		this.strategies.set("goto", new GotoStrategy());
-		this.strategies.set("halt", new HaltStrategy());
-		this.strategies.set("identifier", new IdentifierStrategy());
-		this.strategies.set("if", new IfStrategy());
-		this.strategies.set("include", new IncludeStrategy());
-		this.strategies.set("interface", new InterfaceStrategy());
-		this.strategies.set("isset", new IssetStrategy());
-		this.strategies.set("label", new LabelStrategy());
-		this.strategies.set("list", new ListStrategy());
-		this.strategies.set("match", new MatchStrategy());
-		this.strategies.set("matcharm", new MatchArmStrategy());
-		this.strategies.set("method", new MethodStrategy());
-		this.strategies.set("namedargument", new namedargumentStrategy());
-		this.strategies.set("namespace", new NamespaceStrategy());
-		this.strategies.set("new", new NewStrategy());
-		this.strategies.set("noop", new NoopStrategy());
-		this.strategies.set("nowdoc", new NowDocStrategy());
-		this.strategies.set("nullkeyword", new NullKeywordStrategy());
+		this.strategies.set("for", new ForStrategy(symbolCreator));
+		this.strategies.set("foreach", new ForeachStrategy(symbolCreator));
+		this.strategies.set("function", new PhpFunctionStrategy(symbolCreator));
+		this.strategies.set("global", new GlobalStrategy(symbolCreator));
+		this.strategies.set("goto", new GotoStrategy(symbolCreator));
+		this.strategies.set("halt", new HaltStrategy(symbolCreator));
+		this.strategies.set("identifier", new IdentifierStrategy(symbolCreator));
+		this.strategies.set("if", new IfStrategy(symbolCreator));
+		this.strategies.set("include", new IncludeStrategy(symbolCreator));
+		this.strategies.set("interface", new InterfaceStrategy(symbolCreator));
+		this.strategies.set("isset", new IssetStrategy(symbolCreator));
+		this.strategies.set("label", new LabelStrategy(symbolCreator));
+		this.strategies.set("list", new ListStrategy(symbolCreator));
+		this.strategies.set("match", new MatchStrategy(symbolCreator));
+		this.strategies.set("matcharm", new MatchArmStrategy(symbolCreator));
+		this.strategies.set("method", new MethodStrategy(symbolCreator));
+		this.strategies.set(
+			"namedargument",
+			new namedargumentStrategy(symbolCreator),
+		);
+		this.strategies.set("namespace", new NamespaceStrategy(symbolCreator));
+		this.strategies.set("new", new NewStrategy(symbolCreator));
+		this.strategies.set("noop", new NoopStrategy(symbolCreator));
+		this.strategies.set("nowdoc", new NowDocStrategy(symbolCreator));
+		this.strategies.set("nullkeyword", new NullKeywordStrategy(symbolCreator));
 		this.strategies.set(
 			"nullsafepropertylookup",
-			new NullSafePropertyLookupStrategy(),
+			new NullSafePropertyLookupStrategy(symbolCreator),
 		);
-		this.strategies.set("number", new PhpNumberStrategy());
-		this.strategies.set("offsetlookup", new OffsetLookupStrategy());
-		this.strategies.set("parameter", new ParameterStrategy());
-		this.strategies.set("parentreference", new ParentReferenceStrategy());
-		this.strategies.set("post", new PostStrategy());
-		this.strategies.set("pre", new PreStrategy());
-		this.strategies.set("print", new PrintStrategy());
-		this.strategies.set("program", new ProgramStrategy());
-		this.strategies.set("property", new PropertyStrategy());
-		this.strategies.set("propertylookup", new PropertyLookupStrategy());
-		this.strategies.set("propertystatement", new PropertyStatementStrategy());
-		this.strategies.set("reference", new ReferenceStrategy());
-		this.strategies.set("retif", new RetIfStrategy());
-		this.strategies.set("return", new ReturnStrategy());
-		this.strategies.set("selfreference", new SelfReferenceStrategy());
-		this.strategies.set("silent", new SilentStrategy());
-		this.strategies.set("static", new StaticStrategy());
-		this.strategies.set("staticlookup", new StaticLookupStrategy());
-		this.strategies.set("staticvariable", new StaticVariableStrategy());
-		this.strategies.set("string", new PhpStringStrategy());
-		this.strategies.set("switch", new SwitchStrategy());
-		this.strategies.set("throw", new ThrowStrategy());
-		this.strategies.set("trait", new TraitStrategy());
-		this.strategies.set("traitalias", new TraitAliasStrategy());
-		this.strategies.set("traituse", new TraitUseStrategy());
-		this.strategies.set("try", new TryStrategy());
-		this.strategies.set("typereference", new TypeReferenceStrategy());
-		this.strategies.set("unary", new UnaryStrategy());
-		this.strategies.set("uniontype", new UnionTypeStrategy());
-		this.strategies.set("unset", new UnsetStrategy());
-		this.strategies.set("usegroup", new UseGroupStrategy());
-		this.strategies.set("useitem", new UseItemStrategy());
-		this.strategies.set("variable", new VariableStrategy());
-		this.strategies.set("while", new WhileStrategy());
-		this.strategies.set("yield", new YieldStrategy());
-		this.strategies.set("yieldfrom", new YieldFromStrategy());
+		this.strategies.set("number", new PhpNumberStrategy(symbolCreator));
+		this.strategies.set(
+			"offsetlookup",
+			new OffsetLookupStrategy(symbolCreator),
+		);
+		this.strategies.set("parameter", new ParameterStrategy(symbolCreator));
+		this.strategies.set(
+			"parentreference",
+			new ParentReferenceStrategy(symbolCreator),
+		);
+		this.strategies.set("post", new PostStrategy(symbolCreator));
+		this.strategies.set("pre", new PreStrategy(symbolCreator));
+		this.strategies.set("print", new PrintStrategy(symbolCreator));
+		this.strategies.set("program", new ProgramStrategy(symbolCreator));
+		this.strategies.set("property", new PropertyStrategy(symbolCreator));
+		this.strategies.set(
+			"propertylookup",
+			new PropertyLookupStrategy(symbolCreator),
+		);
+		this.strategies.set(
+			"propertystatement",
+			new PropertyStatementStrategy(symbolCreator),
+		);
+		this.strategies.set("reference", new ReferenceStrategy(symbolCreator));
+		this.strategies.set("retif", new RetIfStrategy(symbolCreator));
+		this.strategies.set("return", new ReturnStrategy(symbolCreator));
+		this.strategies.set(
+			"selfreference",
+			new SelfReferenceStrategy(symbolCreator),
+		);
+		this.strategies.set("silent", new SilentStrategy(symbolCreator));
+		this.strategies.set("static", new StaticStrategy(symbolCreator));
+		this.strategies.set(
+			"staticlookup",
+			new StaticLookupStrategy(symbolCreator),
+		);
+		this.strategies.set(
+			"staticvariable",
+			new StaticVariableStrategy(symbolCreator),
+		);
+		this.strategies.set("string", new PhpStringStrategy(symbolCreator));
+		this.strategies.set("switch", new SwitchStrategy(symbolCreator));
+		this.strategies.set("throw", new ThrowStrategy(symbolCreator));
+		this.strategies.set("trait", new TraitStrategy(symbolCreator));
+		this.strategies.set("traitalias", new TraitAliasStrategy(symbolCreator));
+		this.strategies.set("traituse", new TraitUseStrategy(symbolCreator));
+		this.strategies.set("try", new TryStrategy(symbolCreator));
+		this.strategies.set(
+			"typereference",
+			new TypeReferenceStrategy(symbolCreator),
+		);
+		this.strategies.set("unary", new UnaryStrategy(symbolCreator));
+		this.strategies.set("uniontype", new UnionTypeStrategy(symbolCreator));
+		this.strategies.set("unset", new UnsetStrategy(symbolCreator));
+		this.strategies.set("usegroup", new UseGroupStrategy(symbolCreator));
+		this.strategies.set("useitem", new UseItemStrategy(symbolCreator));
+		this.strategies.set("variable", new VariableStrategy(symbolCreator));
+		this.strategies.set("while", new WhileStrategy(symbolCreator));
+		this.strategies.set("yield", new YieldStrategy(symbolCreator));
+		this.strategies.set("yieldfrom", new YieldFromStrategy(symbolCreator));
 	}
 
 	// thisを固定するためにarrow functionを使う

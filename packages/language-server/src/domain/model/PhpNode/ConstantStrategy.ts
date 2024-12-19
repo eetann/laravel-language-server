@@ -1,8 +1,11 @@
-import { NodeStrategy } from "./NodeStrategy";
 import type { Constant } from "php-parser";
+import { NodeStrategy } from "./NodeStrategy";
 
 export class ConstantStrategy extends NodeStrategy {
 	getChildren(node: Constant) {
-		return [node.value];
+		if (typeof node.value === "object") {
+			return [node.value];
+		}
+		return [];
 	}
 }

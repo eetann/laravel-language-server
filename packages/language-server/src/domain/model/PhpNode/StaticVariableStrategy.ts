@@ -1,8 +1,12 @@
+import type { Node, StaticVariable } from "php-parser";
 import { NodeStrategy } from "./NodeStrategy";
-import type { StaticVariable } from "php-parser";
 
 export class StaticVariableStrategy extends NodeStrategy {
 	getChildren(node: StaticVariable) {
-		return [node.variable, node.defaultValue];
+		const children: Node[] = [node.variable];
+		if (typeof node.defaultValue === "object") {
+			children.push(node.defaultValue);
+		}
+		return children;
 	}
 }
