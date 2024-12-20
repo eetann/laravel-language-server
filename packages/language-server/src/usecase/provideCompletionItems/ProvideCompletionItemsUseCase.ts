@@ -1,13 +1,13 @@
+import type { Document } from "@/gen/scip_pb";
 import {
 	type CompletionItem,
 	CompletionItemKind,
 	type LanguageServicePluginInstance,
 } from "@volar/language-server";
-import type { Indexer } from "../shared/indexer/Indexer";
 import { BladeCompletionItemsProvider } from "./bladeCompletionItemsProvider/BladeCompletionItemsProvider";
 
 export class ProvideCompletionItemsUseCase {
-	constructor(private indexer: Indexer) {}
+	constructor(private index: Document) {}
 	execute: LanguageServicePluginInstance["provideCompletionItems"] = (
 		textDocument,
 		position,
@@ -34,13 +34,16 @@ export class ProvideCompletionItemsUseCase {
 
 	createItemFromIndexer(): CompletionItem[] {
 		const items: CompletionItem[] = [];
-		for (const symbol of this.indexer.getSymbols()) {
+		if (typeof this.index === "undefined") {
+			return items;
+		}
+		for (const symbol of this.index.symbols) {
+			// TODO: symbolを変更
 			items.push({
 				label: symbol.symbol,
-				// 後で SymbolInformation_Kind -> LSPのやつの変換関数を作る
+				// TODO: 後で SymbolInformation_Kind -> LSPのやつの変換関数を作る
 				kind: CompletionItemKind.Text,
-				// $は削除
-				insertText: symbol.symbol.slice(1),
+				insertText: symbol.symbol,
 			});
 		}
 		return items;
