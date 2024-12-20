@@ -128,7 +128,7 @@ import {
 } from "@/gen/scip_pb";
 import { type MessageInitShape, create } from "@bufbuild/protobuf";
 import { SymbolCreator } from "../../../domain/model/shared/SymbolCreator";
-import type { PackageDict } from "../composerFetcher/ComposerLockFetcher";
+import type { PackageDict } from "../composerLockFetcher/ComposerLockFetcher";
 
 export type ViewCaller = {
 	parentSymbol: string;
