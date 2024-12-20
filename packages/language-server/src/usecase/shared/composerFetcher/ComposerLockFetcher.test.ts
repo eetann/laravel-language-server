@@ -1,7 +1,7 @@
 import fs, { type Dirent } from "node:fs";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
-import { ComposerFetcher } from "./ComposerFetcher";
+import { ComposerLockFetcher } from "./ComposerLockFetcher";
 
 const testComposerLockPath = path.resolve(__dirname, "./test-composer.lock");
 
@@ -39,9 +39,9 @@ vi.mock("node:fs", async (importOriginal) => {
 		}),
 	};
 });
-describe("ComposerFetcher", () => {
+describe("ComposerLockFetcher", () => {
 	it("should correctly fetch PSR-4 mappings from a valid composer.lock", () => {
-		const fetcher = new ComposerFetcher(testComposerLockPath);
+		const fetcher = new ComposerLockFetcher(testComposerLockPath);
 		const packageDict = fetcher.execute();
 
 		let expectKey = "Brick\\Math\\BigDecimal";
@@ -74,7 +74,7 @@ describe("ComposerFetcher", () => {
 			__dirname,
 			"non-existent-composer.lock",
 		);
-		const fetcher = new ComposerFetcher(nonExistentPath);
+		const fetcher = new ComposerLockFetcher(nonExistentPath);
 		expect(() => fetcher.execute()).toThrow();
 	});
 
@@ -86,7 +86,7 @@ describe("ComposerFetcher", () => {
 		const invalidContent = '{"invalid": "data"}';
 		fs.writeFileSync(invalidComposerLockPath, invalidContent);
 
-		const fetcher = new ComposerFetcher(invalidComposerLockPath);
+		const fetcher = new ComposerLockFetcher(invalidComposerLockPath);
 		expect(() => fetcher.execute()).toThrow(
 			"Invalid composer.lock format: `packages` not found",
 		);

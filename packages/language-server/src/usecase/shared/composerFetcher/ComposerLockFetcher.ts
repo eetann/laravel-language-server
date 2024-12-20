@@ -21,7 +21,7 @@ export type PackageDict = {
 	};
 };
 
-export class ComposerFetcher {
+export class ComposerLockFetcher {
 	private packageDict: PackageDict = {};
 	constructor(private composerLockPath: string) {}
 
