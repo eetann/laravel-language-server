@@ -61,7 +61,7 @@ export class SymbolCreator {
 		return this._namespace;
 	}
 
-	createType(type: string) {
+	createType(type: string | Identifier) {
 		return `${this.namespace}${escapedIdentifier(type)}#`;
 	}
 	createTerm(parentSymbol: string, term: string) {

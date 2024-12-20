@@ -1,8 +1,12 @@
+import type { String as PhpString } from "php-parser";
 import { NodeStrategy } from "./NodeStrategy";
-import type { PhpString } from "php-parser";
 
 export class PhpStringStrategy extends NodeStrategy {
-	getChildren(node: PhpString) {
+	getChildren(_node: PhpString) {
 		return [];
+	}
+
+	getType(_node: PhpString) {
+		return "string";
 	}
 }

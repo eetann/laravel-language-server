@@ -1,6 +1,4 @@
 import { SymbolCreator } from "@/domain/model/shared/SymbolCreator";
-import { type Document, DocumentSchema } from "@/gen/scip_pb";
-import { create } from "@bufbuild/protobuf";
 import { Engine } from "php-parser";
 import type { PackageDict } from "../shared/composerFetcher/ComposerFetcher";
 import { IndexStrategy, traverseForIndex } from "./IndexStrategy";
@@ -12,8 +10,6 @@ export type ViewCaller = {
 	arguments: string[];
 };
 export class CreateIndexUseCase {
-	private document: Document;
-	private viewCallerList: ViewCaller[] = [];
 	private phpParser = new Engine({
 		parser: {
 			extractDoc: true,
@@ -22,43 +18,36 @@ export class CreateIndexUseCase {
 			withPositions: true,
 		},
 	});
-	private symbol: SymbolCreator;
-	constructor(
-		private filename: string,
-		private packageDict: PackageDict,
-		private thisPackageName: string,
-		private thisPackageVersion: string,
-	) {
-		this.document = create(DocumentSchema, {
-			language: "php",
-			relativePath: filename,
-		});
-		this.symbol = new SymbolCreator(
-			thisPackageName,
-			thisPackageVersion,
-			filename,
-		);
-	}
 
-	execute() {
+	execute(
+		filename: string,
+		packageDict: PackageDict,
+		packageName: string,
+		packageVersion: string,
+	) {
 		// TODO: filenameからコードを取得
 		const rootNode = this.phpParser.parseCode(
 			`<?php
 namespace App\\Http\\Controllers;
-use App\\Http\\Requests\\BookRequest;
-use App\\Models\\Book;
 class BookController extends Controller
 {
   public function index()
   {
-    $books = Book::all();
-    return view('book/index', compact('books'));
+    $books = [1, 2];
+    return view('book/index', ['books' => $books]);
   }
 }`,
-			this.filename,
+			filename,
 		);
+		// TODO: 実際のcomposer.jsonから取得する
+
 		const parentSymbol = "";
-		const strategy = new IndexStrategy("test.php");
+		const symbolCreator = new SymbolCreator(
+			packageName,
+			packageVersion,
+			filename,
+		);
+		const strategy = new IndexStrategy(filename, symbolCreator);
 		traverseForIndex(
 			rootNode,
 			parentSymbol,

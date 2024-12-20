@@ -278,7 +278,12 @@ export class IndexStrategy extends NodeStrategy {
 		if (typeof strategy === "undefined") {
 			return;
 		}
-		this.document.symbols.push(...strategy.createSymbolInformations(node));
-		this.document.occurrences.push(...strategy.createOccurrences(node));
+		const { symbolInfomations, occurrences } = strategy.onLeave(node);
+		this.document.symbols.push(...symbolInfomations);
+		this.document.occurrences.push(...occurrences);
+		return {
+			symbolInfomations: [],
+			occurrences: [],
+		};
 	};
 }

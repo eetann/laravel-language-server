@@ -54,26 +54,31 @@ export function createOccurrenceMultipleLine(
 export class NodeStrategy {
 	constructor(protected symbolCreator: SymbolCreator) {}
 
-	getSymbol(node: Node, parentSymbol: string): string {
-		return "";
-	}
-	getType(node: Node): string {
-		return "";
+	getSymbol(_node: Node, parentSymbol: string): string {
+		return parentSymbol;
 	}
 	onEnter(node: Node, parentSymbol: string): void {
 		node.symbol = this.getSymbol(node, parentSymbol);
-		node.typeInfo = this.getType(node);
 	}
 
 	getChildren(node: Node): Node[] {
 		return [];
 	}
 
-	// onLeaveとして呼び出す
+	getType(node: Node): string {
+		return "";
+	}
 	createSymbolInformations(node: Node): SymbolInformation[] {
 		return [];
 	}
 	createOccurrences(node: Node): Occurrence[] {
 		return [];
+	}
+	onLeave(node: Node) {
+		node.typeInfo = this.getType(node);
+		return {
+			symbolInfomations: this.createSymbolInformations(node),
+			occurrences: this.createOccurrences(node),
+		};
 	}
 }

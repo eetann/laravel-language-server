@@ -18,7 +18,6 @@ export class ProgramStrategy extends NodeStrategy {
 	}
 
 	getChildren(node: Program) {
-		console.log("program getChildren");
 		return node.children;
 	}
 
