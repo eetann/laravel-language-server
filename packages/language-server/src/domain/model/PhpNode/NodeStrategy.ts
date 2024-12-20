@@ -5,7 +5,12 @@ import {
 	SymbolInformationSchema,
 } from "@/gen/scip_pb";
 import { type MessageInitShape, create } from "@bufbuild/protobuf";
-import type { Node } from "php-parser";
+import type {
+	Call,
+	Node,
+	Array as PhpArray,
+	String as PhpString,
+} from "php-parser";
 import type { SymbolCreator } from "../shared/SymbolCreator";
 
 declare module "php-parser" {
@@ -14,6 +19,16 @@ declare module "php-parser" {
 		symbol: string;
 		typeInfo: string;
 	}
+}
+
+export function isPhpArray(node: Node): node is PhpArray {
+	return node.kind === "array";
+}
+export function isPhpString(node: Node): node is PhpString {
+	return node.kind === "string";
+}
+export function isCall(node: Node): node is Call {
+	return node.kind === "call";
 }
 
 export function createSymbolInformation(
