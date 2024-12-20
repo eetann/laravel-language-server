@@ -121,11 +121,11 @@ export class IndexStrategy extends NodeStrategy {
 	public document: Document;
 	private strategies = new Map<string, NodeStrategy>();
 
-	constructor(filename: string, symbolCreator: SymbolCreator) {
+	constructor(relativePath: string, symbolCreator: SymbolCreator) {
 		super(symbolCreator);
 		this.document = create(DocumentSchema, {
 			language: "php",
-			relativePath: filename,
+			relativePath,
 		});
 		this.strategies.set("array", new PhpArrayStrategy(symbolCreator));
 		this.strategies.set("arrowfunc", new ArrowFuncStrategy(symbolCreator));
@@ -265,7 +265,6 @@ export class IndexStrategy extends NodeStrategy {
 
 	// thisを固定するためにarrow functionを使う
 	onEnter = (node: Node, parentSymbol: string) => {
-		console.log(node.kind);
 		this.strategies.get(node.kind)?.onEnter(node, parentSymbol);
 	};
 

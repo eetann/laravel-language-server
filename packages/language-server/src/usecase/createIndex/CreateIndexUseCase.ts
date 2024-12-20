@@ -1,6 +1,13 @@
+import { readFileSync, readdirSync } from "node:fs";
+import path from "node:path";
 import { SymbolCreator } from "@/domain/model/shared/SymbolCreator";
+import { type Document, type Index, IndexSchema } from "@/gen/scip_pb";
+import { create } from "@bufbuild/protobuf";
 import { Engine } from "php-parser";
-import type { PackageDict } from "../shared/composerFetcher/ComposerFetcher";
+import {
+	ComposerLockFetcher,
+	type PackageDict,
+} from "../shared/composerLockFetcher/ComposerLockFetcher";
 import { IndexStrategy, traverseForIndex } from "./IndexStrategy";
 
 export type ViewCaller = {
@@ -19,38 +26,47 @@ export class CreateIndexUseCase {
 		},
 	});
 
-	execute(
-		filename: string,
-		packageDict: PackageDict,
-		packageName: string,
-		packageVersion: string,
-	) {
-		// TODO: filenameからコードを取得
-		const rootNode = this.phpParser.parseCode(
-			`<?php
-namespace App\\Http\\Controllers;
-class BookController extends Controller
-{
-  public function index()
-  {
-    $books = [1, 2];
-    return view('book/index', ['books' => $books]);
-  }
-}`,
-			filename,
-		);
-		// TODO: 実際のcomposer.jsonから取得する
+	execute(workspaceFolder: string): Index {
+		const index = create(IndexSchema, {
+			metadata: {
+				projectRoot: workspaceFolder,
+			},
+		});
+		const files = readdirSync(path.join(workspaceFolder, "app"), {
+			recursive: true,
+			withFileTypes: true,
+		}).filter((f) => f.isFile() && f.name.endsWith(".php"));
+		// TODO: できればライブラリも取得
+		for (const absoluteFile of files) {
+			index.documents.push(
+				this.indexOneFile(
+					workspaceFolder,
+					path.join(absoluteFile.parentPath, absoluteFile.name),
+				),
+			);
+		}
+		return index;
+	}
 
-		const parentSymbol = "";
+	getPackageDict(workspaceFolder: string): PackageDict {
+		const composerLockPath = path.join(workspaceFolder, "composer.lock");
+		return new ComposerLockFetcher(composerLockPath).execute();
+	}
+
+	indexOneFile(workspaceFolder: string, absolutePath: string): Document {
+		const content = readFileSync(absolutePath, "utf-8");
+		const relativePath = path.relative(workspaceFolder, absolutePath);
+		const rootNode = this.phpParser.parseCode(content, relativePath);
 		const symbolCreator = new SymbolCreator(
-			packageName,
-			packageVersion,
-			filename,
+			"laravel/laravel",
+			"0.0.0",
+			relativePath,
 		);
-		const strategy = new IndexStrategy(filename, symbolCreator);
+
+		const strategy = new IndexStrategy(relativePath, symbolCreator);
 		traverseForIndex(
 			rootNode,
-			parentSymbol,
+			"",
 			strategy.getChildren,
 			strategy.onEnter,
 			strategy.onLeave,

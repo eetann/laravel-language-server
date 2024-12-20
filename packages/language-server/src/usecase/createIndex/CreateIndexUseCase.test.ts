@@ -1,29 +1,26 @@
+import path from "node:path";
 import { CreateIndexUseCase } from "./CreateIndexUseCase";
 
 describe("CreateIndexUseCase", () => {
 	it("normal", () => {
-		const filename = "test.php";
-		const packageName = "example";
-		const packageVersion = "0.0.0";
-		const scipDocument = new CreateIndexUseCase().execute(
-			filename,
-			{},
-			packageName,
-			packageVersion,
-		);
+		const workspaceFolder = path.resolve("../laravel-sample/");
+		const index = new CreateIndexUseCase().execute(workspaceFolder);
 
-		const prefix = `laravel-language-server composer ${packageName} ${packageVersion} `;
+		const prefix = "laravel-language-server composer laravel/laravel 0.0.0 ";
 		const namespace = `${prefix}\`App\\Http\\Controllers\`/BookController#`;
 		const symbol = `${namespace}index().view().`;
 		const documentation = [
 			JSON.stringify({
 				viewPath: "book/index",
-				arguments: {
-					books: "",
-				},
+				// TODO: 後でcompactを実装したら変更する
+				arguments: {},
 			}),
 		];
-		expect(scipDocument.symbols).toContainEqual(
+		const bookControllerDocument = index.documents.find(
+			(d) => d.relativePath === "app/Http/Controllers/BookController.php",
+		);
+		expect(bookControllerDocument).not.toBeUndefined();
+		expect(bookControllerDocument.symbols).toContainEqual(
 			expect.objectContaining({
 				symbol,
 				documentation,
