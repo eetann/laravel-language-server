@@ -22,11 +22,13 @@ export class ViewCompletionItemsProvider {
 		const currentNode = bladeParser.getCurrentNode(position);
 
 		const viewPathMatch = textDocument.uri.match(
-			"resources/views/(.*).blade.php",
+			/resources%252Fviews%252F(.*).blade.php/,
 		);
-		console.log(viewPathMatch);
 		if (viewPathMatch && 2 <= viewPathMatch.length) {
-			items.push(...this.getEchoNodeItems(viewPathMatch[1], currentNode));
+			const currentViewPath = decodeURIComponent(
+				decodeURIComponent(viewPathMatch[1]),
+			);
+			items.push(...this.getEchoNodeItems(currentViewPath, currentNode));
 		}
 		return items;
 	}
@@ -59,10 +61,11 @@ export class ViewCompletionItemsProvider {
 		symbolInformation: SymbolInformation,
 	): CompletionItem[] {
 		const items: CompletionItem[] = [];
-		console.log(currentViewPath);
 		try {
 			const bladeFile = JSON.parse(symbolInformation.documentation[0]);
-			// TODO: ここでファイル名と一致するか確認
+			if (currentViewPath !== bladeFile.viewPath) {
+				return items;
+			}
 			for (const [argName, typeInfo] of Object.entries(bladeFile.arguments)) {
 				items.push({
 					label: argName,
@@ -77,6 +80,7 @@ export class ViewCompletionItemsProvider {
 				`ViewCompletionItemsProvider.createItemForArguments: ${error}`,
 			);
 		}
+		console.log(items);
 		return items;
 	}
 }
