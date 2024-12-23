@@ -35,7 +35,12 @@ export class CallStrategy extends NodeStrategy {
 			bladeFile.viewPath = viewPathNode.value;
 		}
 		if (isCall(argumentsNode) && argumentsNode.what.name === "compact") {
-			//
+			for (const arg of argumentsNode.arguments) {
+				if (isPhpString(arg)) {
+					// TODO: 同じ名前のsymbolを取得し、typeInfoを入れる
+					bladeFile.arguments[arg.value] = "";
+				}
+			}
 		} else if (isPhpArray(argumentsNode)) {
 			for (const item of argumentsNode.items as Entry[]) {
 				if (isPhpString(item.key)) {

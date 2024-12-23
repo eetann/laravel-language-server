@@ -23,7 +23,7 @@ describe("CallStrategy", () => {
 		packageVersion,
 		filename,
 	);
-	it("view", () => {
+	it("view array", () => {
 		const rootNode = parser.parseCode(
 			`<?php
 namespace App\\Http\\Controllers;
@@ -56,6 +56,52 @@ class BookController extends Controller
 				viewPath: "book/index",
 				arguments: {
 					books: "",
+				},
+			}),
+		];
+		expect(strategy.document.symbols).toContainEqual(
+			expect.objectContaining({
+				symbol,
+				documentation,
+			}),
+		);
+	});
+
+	it("view compact", () => {
+		const rootNode = parser.parseCode(
+			`<?php
+namespace App\\Http\\Controllers;
+class BookController extends Controller
+{
+  public function index()
+  {
+    $books = [1, 2];
+    $test = 'foo';
+    return view('book/index', compact('books', 'test'));
+  }
+}
+`,
+			filename,
+		);
+		const strategy = new IndexStrategy(filename, symbolCreator);
+		expect(() =>
+			traverseForIndex(
+				rootNode,
+				parentSymbol,
+				strategy.getChildren,
+				strategy.onEnter,
+				strategy.onLeave,
+			),
+		).not.toThrow();
+		const prefix = `laravel-language-server composer ${packageName} ${packageVersion} `;
+		const namespace = `${prefix}\`App\\Http\\Controllers\`/BookController#`;
+		const symbol = `${namespace}index().view().`;
+		const documentation = [
+			JSON.stringify({
+				viewPath: "book/index",
+				arguments: {
+					books: "",
+					test: "",
 				},
 			}),
 		];
