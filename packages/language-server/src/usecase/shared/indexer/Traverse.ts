@@ -1,5 +1,4 @@
 import type { Node } from "php-parser";
-import "./traverseExtensions";
 
 type OnFunction = (node: Node) => void;
 

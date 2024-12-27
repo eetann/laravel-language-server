@@ -13,7 +13,9 @@ describe("CreateIndexUseCase", () => {
 			JSON.stringify({
 				viewPath: "book/index",
 				// TODO: 後でcompactを実装したら変更する
-				arguments: {},
+				arguments: {
+					books: "",
+				},
 			}),
 		];
 		const bookControllerDocument = index.documents.find(

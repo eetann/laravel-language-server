@@ -1,10 +1,18 @@
 import { SymbolCreator } from "@/domain/model/shared/SymbolCreator";
 import { SymbolInformation_Kind, SymbolRole, SyntaxKind } from "@/gen/scip_pb";
-import { createParser, targetName } from "../shared/indexer/test/helper";
+import { Engine } from "php-parser";
 import { IndexStrategy, traverseForIndex } from "./IndexStrategy";
 
 describe("IndexStrategy", () => {
-	const parser = createParser();
+	const parser = new Engine({
+		parser: {
+			extractDoc: true,
+		},
+		ast: {
+			withPositions: true,
+		},
+	});
+	const filename = "test.php";
 	const rootNode = parser.parseCode(
 		`<?php
 namespace ExampleNamespace;
@@ -347,13 +355,12 @@ function generatorFrom() {
     yield from [1, 2, 3];
 }
 `,
-		targetName,
+		filename,
 	);
 
 	it("IndexStrategy", () => {
 		const packageName = "example";
 		const packageVersion = "0.0.0";
-		const filename = "test.php";
 		const parentSymbol = "";
 		const symbolCreator = new SymbolCreator(
 			packageName,
