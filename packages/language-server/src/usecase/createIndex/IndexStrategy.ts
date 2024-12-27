@@ -94,7 +94,7 @@ import {
 } from "@/domain/model/PhpNode";
 import { NodeStrategy } from "@/domain/model/PhpNode/NodeStrategy";
 import type { SymbolCreator } from "@/domain/model/shared/SymbolCreator";
-import { type Document, DocumentSchema } from "@/gen/scip_pb";
+import { type Document, DocumentSchema } from "@/domain/model/scip";
 import { create } from "@bufbuild/protobuf";
 import type { Node } from "php-parser";
 

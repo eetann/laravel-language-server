@@ -4,7 +4,7 @@ import {
 	SymbolInformation_Kind,
 	SymbolRole,
 	SyntaxKind,
-} from "@/gen/scip_pb";
+} from "@/domain/model/scip";
 import type { Node, Function as PhpFunction } from "php-parser";
 import {
 	NodeStrategy,

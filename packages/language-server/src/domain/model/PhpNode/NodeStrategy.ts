@@ -3,7 +3,7 @@ import {
 	OccurrenceSchema,
 	type SymbolInformation,
 	SymbolInformationSchema,
-} from "@/gen/scip_pb";
+} from "@/domain/model/scip";
 import { type MessageInitShape, create } from "@bufbuild/protobuf";
 import type {
 	Call,

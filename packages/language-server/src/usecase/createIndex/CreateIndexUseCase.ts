@@ -1,7 +1,7 @@
 import { readFileSync, readdirSync } from "node:fs";
 import path from "node:path";
+import { type Document, type Index, IndexSchema } from "@/domain/model/scip";
 import { SymbolCreator } from "@/domain/model/shared/SymbolCreator";
-import { type Document, type Index, IndexSchema } from "@/gen/scip_pb";
 import { create } from "@bufbuild/protobuf";
 import { Engine } from "php-parser";
 import {

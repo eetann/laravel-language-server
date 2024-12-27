@@ -1,4 +1,4 @@
-import type { Index, SymbolInformation } from "@/gen/scip_pb";
+import type { Index, SymbolInformation } from "@/domain/model/scip";
 import { BladeParser } from "@/usecase/shared/BladeParser";
 import {
 	type CompletionItem,

@@ -1,5 +1,9 @@
 import { SymbolCreator } from "@/domain/model/shared/SymbolCreator";
-import { SymbolInformation_Kind, SymbolRole, SyntaxKind } from "@/gen/scip_pb";
+import {
+	SymbolInformation_Kind,
+	SymbolRole,
+	SyntaxKind,
+} from "@/domain/model/scip";
 import { Engine } from "php-parser";
 import { IndexStrategy, traverseForIndex } from "./IndexStrategy";
 

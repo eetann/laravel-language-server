@@ -1,4 +1,4 @@
-import { Identifier } from "php-parser";
+import type { Identifier } from "php-parser";
 
 function escapePackage(value: string) {
 	if (value === "") {

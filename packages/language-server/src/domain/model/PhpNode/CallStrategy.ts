@@ -1,4 +1,4 @@
-import { SymbolInformation_Kind, SyntaxKind } from "@/gen/scip_pb";
+import { SymbolInformation_Kind, SyntaxKind } from "@/domain/model/scip";
 import type { Call, Entry } from "php-parser";
 import {
 	NodeStrategy,

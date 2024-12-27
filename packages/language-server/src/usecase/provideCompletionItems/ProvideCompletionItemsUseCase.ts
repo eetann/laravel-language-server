@@ -1,4 +1,4 @@
-import type { Index } from "@/gen/scip_pb";
+import type { Index } from "@/domain/model/scip";
 import {
 	type CompletionItem,
 	CompletionItemKind,
