@@ -23,7 +23,7 @@ export class CallStrategy extends NodeStrategy {
 
 	createSymbolInformations(node: Call) {
 		if (node.what.name !== "view") {
-			return [];
+			return {};
 		}
 		const bladeFile = {
 			viewPath: "",
@@ -48,13 +48,12 @@ export class CallStrategy extends NodeStrategy {
 				}
 			}
 		}
-		return [
-			createSymbolInformation({
-				symbol: node.symbol,
+		return {
+			[node.symbol]: createSymbolInformation({
 				kind: SymbolInformation_Kind.Function,
 				documentation: [JSON.stringify(bladeFile)],
 			}),
-		];
+		};
 	}
 	createOccurrences(node: Call) {
 		if (node.what.name !== "view") {

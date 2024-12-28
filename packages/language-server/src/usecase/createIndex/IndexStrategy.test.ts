@@ -1,9 +1,9 @@
-import { SymbolCreator } from "@/domain/model/shared/SymbolCreator";
 import {
 	SymbolInformation_Kind,
 	SymbolRole,
 	SyntaxKind,
 } from "@/domain/model/scip";
+import { SymbolCreator } from "@/domain/model/shared/SymbolCreator";
 import { Engine } from "php-parser";
 import { IndexStrategy, traverseForIndex } from "./IndexStrategy";
 
@@ -384,9 +384,9 @@ function generatorFrom() {
 		const prefix = "laravel-language-server composer example 0.0.0 ";
 		const namespace = `${prefix}ExampleNamespace/`;
 		const symbol = `${namespace}exampleFunction().`;
-		expect(strategy.document.symbols).toContainEqual(
+		expect(strategy.document.symbols).toHaveProperty(symbol);
+		expect(strategy.document.symbols[symbol]).toEqual(
 			expect.objectContaining({
-				symbol,
 				kind: SymbolInformation_Kind.Function,
 			}),
 		);

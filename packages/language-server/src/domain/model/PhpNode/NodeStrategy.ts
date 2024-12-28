@@ -1,8 +1,9 @@
 import {
 	type Occurrence,
 	OccurrenceSchema,
-	type SymbolInformation,
+	type SymbolDict,
 	SymbolInformationSchema,
+	type ViewArgumentDict,
 } from "@/domain/model/scip";
 import { type MessageInitShape, create } from "@bufbuild/protobuf";
 import type {
@@ -66,6 +67,12 @@ export function createOccurrenceMultipleLine(
 	});
 }
 
+type ReturnOnLeave = {
+	symbolDict: SymbolDict;
+	occurrences: Occurrence[];
+	viewArgumentDict: ViewArgumentDict;
+};
+
 export class NodeStrategy {
 	constructor(protected symbolCreator: SymbolCreator) {}
 
@@ -83,17 +90,18 @@ export class NodeStrategy {
 	getType(node: Node): string {
 		return "";
 	}
-	createSymbolInformations(node: Node): SymbolInformation[] {
-		return [];
+	createSymbolInformations(node: Node): SymbolDict {
+		return {};
 	}
 	createOccurrences(node: Node): Occurrence[] {
 		return [];
 	}
-	onLeave(node: Node) {
+	onLeave(node: Node): ReturnOnLeave {
 		node.typeInfo = this.getType(node);
 		return {
-			symbolInfomations: this.createSymbolInformations(node),
+			symbolDict: this.createSymbolInformations(node),
 			occurrences: this.createOccurrences(node),
+			viewArgumentDict: {},
 		};
 	}
 }

@@ -93,8 +93,12 @@ import {
 	namedargumentStrategy,
 } from "@/domain/model/PhpNode";
 import { NodeStrategy } from "@/domain/model/PhpNode/NodeStrategy";
+import {
+	type Document,
+	DocumentSchema,
+	type ViewArgumentDict,
+} from "@/domain/model/scip";
 import type { SymbolCreator } from "@/domain/model/shared/SymbolCreator";
-import { type Document, DocumentSchema } from "@/domain/model/scip";
 import { create } from "@bufbuild/protobuf";
 import type { Node } from "php-parser";
 
@@ -119,6 +123,7 @@ export function traverseForIndex(
 
 export class IndexStrategy extends NodeStrategy {
 	public document: Document;
+	public viewArgumentDict: ViewArgumentDict = {};
 	private strategies = new Map<string, NodeStrategy>();
 
 	constructor(relativePath: string, symbolCreator: SymbolCreator) {
@@ -277,12 +282,15 @@ export class IndexStrategy extends NodeStrategy {
 		if (typeof strategy === "undefined") {
 			return;
 		}
-		const { symbolInfomations, occurrences } = strategy.onLeave(node);
-		this.document.symbols.push(...symbolInfomations);
+		const { symbolDict, occurrences, viewArgumentDict } =
+			strategy.onLeave(node);
+		Object.assign(this.document.symbols, symbolDict);
 		this.document.occurrences.push(...occurrences);
+		Object.assign(this.viewArgumentDict, viewArgumentDict);
 		return {
-			symbolInfomations: [],
+			symbolDict: {},
 			occurrences: [],
+			viewArgumentDict: {},
 		};
 	};
 }

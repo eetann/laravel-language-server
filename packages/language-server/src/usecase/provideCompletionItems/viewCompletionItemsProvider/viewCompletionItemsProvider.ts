@@ -47,9 +47,11 @@ export class ViewCompletionItemsProvider {
 	getItemsFromView(currentViewPath: string): CompletionItem[] {
 		const items: CompletionItem[] = [];
 		for (const doc of this.index.documents) {
-			for (const symbol of doc.symbols) {
-				if (symbol.symbol.match("view().")) {
-					items.push(...this.createItemForArguments(currentViewPath, symbol));
+			for (const [symbol, symbolInformation] of Object.entries(doc.symbols)) {
+				if (symbol.match("view().")) {
+					items.push(
+						...this.createItemForArguments(currentViewPath, symbolInformation),
+					);
 				}
 			}
 		}
@@ -67,11 +69,25 @@ export class ViewCompletionItemsProvider {
 				return items;
 			}
 			for (const [argName, typeInfo] of Object.entries(bladeFile.arguments)) {
+				let documentation = "";
+				if (typeInfo === "") {
+					for (const doc of this.index.documents) {
+						// argNameはsymbolではないのでただしく値を取得できない
+						const symbolInfomation = doc.symbols[argName];
+						console.log({ symbolInfomation });
+						if (symbolInfomation) {
+							documentation = (symbolInfomation.documentation ?? []).join("\n");
+							break;
+						}
+					}
+				} else {
+					documentation = `@var ${typeInfo}`;
+				}
 				items.push({
 					label: argName,
 					// TODO: 後で SymbolInformation_Kind -> LSPのやつの変換関数を作る
 					kind: CompletionItemKind.Text,
-					documentation: `@var ${typeInfo}`,
+					documentation,
 					insertText: argName,
 				});
 			}

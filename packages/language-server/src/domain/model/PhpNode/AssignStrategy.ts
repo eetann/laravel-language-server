@@ -21,14 +21,13 @@ export class AssignStrategy extends NodeStrategy {
 		return [node.left, node.right];
 	}
 
-	createSymbolInformations(node: Assign): SymbolInformation[] {
-		return [
-			createSymbolInformation({
-				symbol: node.left.symbol,
+	createSymbolInformations(node: Assign) {
+		return {
+			[node.left.symbol]: createSymbolInformation({
 				kind: SymbolInformation_Kind.Variable,
 				documentation: [`@var ${node.typeInfo}`],
 			}),
-		];
+		};
 	}
 
 	createOccurrences(node: Assign): Occurrence[] {

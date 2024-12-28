@@ -59,9 +59,9 @@ class BookController extends Controller
 				},
 			}),
 		];
-		expect(strategy.document.symbols).toContainEqual(
+		expect(strategy.document.symbols).toHaveProperty(symbol);
+		expect(strategy.document.symbols[symbol]).toEqual(
 			expect.objectContaining({
-				symbol,
 				documentation,
 			}),
 		);
@@ -105,9 +105,9 @@ class BookController extends Controller
 				},
 			}),
 		];
-		expect(strategy.document.symbols).toContainEqual(
+		expect(strategy.document.symbols).toHaveProperty(symbol);
+		expect(strategy.document.symbols[symbol]).toEqual(
 			expect.objectContaining({
-				symbol,
 				documentation,
 			}),
 		);
@@ -130,8 +130,8 @@ $result = max(1, 2, 3);
 				strategy.onLeave,
 			),
 		).not.toThrow();
-		const node = strategy.document.symbols.filter((v) =>
-			v.symbol.match("view"),
+		const node = Object.keys(strategy.document.symbols).filter((v) =>
+			v.match("view"),
 		);
 		expect(node.length).toBe(0);
 	});

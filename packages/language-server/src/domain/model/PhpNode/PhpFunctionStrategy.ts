@@ -26,13 +26,12 @@ export class PhpFunctionStrategy extends NodeStrategy {
 		return children;
 	}
 
-	createSymbolInformations(node: PhpFunction): SymbolInformation[] {
-		return [
-			createSymbolInformation({
-				symbol: node.symbol,
+	createSymbolInformations(node: PhpFunction) {
+		return {
+			[node.symbol]: createSymbolInformation({
 				kind: SymbolInformation_Kind.Function,
 			}),
-		];
+		};
 	}
 
 	createOccurrences(node: PhpFunction): Occurrence[] {

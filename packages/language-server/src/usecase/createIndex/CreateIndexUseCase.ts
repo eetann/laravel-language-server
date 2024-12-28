@@ -1,6 +1,11 @@
 import { readFileSync, readdirSync } from "node:fs";
 import path from "node:path";
-import { type Document, type Index, IndexSchema } from "@/domain/model/scip";
+import {
+	type Document,
+	type Index,
+	IndexSchema,
+	type ViewArgumentDict,
+} from "@/domain/model/scip";
 import { SymbolCreator } from "@/domain/model/shared/SymbolCreator";
 import { create } from "@bufbuild/protobuf";
 import { Engine } from "php-parser";
@@ -32,18 +37,19 @@ export class CreateIndexUseCase {
 				projectRoot: workspaceFolder,
 			},
 		});
+		index.viewArgumentDict = {};
 		const files = readdirSync(path.join(workspaceFolder, "app"), {
 			recursive: true,
 			withFileTypes: true,
 		}).filter((f) => f.isFile() && f.name.endsWith(".php"));
 		// TODO: できればライブラリも取得
 		for (const absoluteFile of files) {
-			index.documents.push(
-				this.indexOneFile(
-					workspaceFolder,
-					path.join(absoluteFile.parentPath, absoluteFile.name),
-				),
+			const { document, viewArgumentDict } = this.indexOneFile(
+				workspaceFolder,
+				path.join(absoluteFile.parentPath, absoluteFile.name),
 			);
+			index.documents.push(document);
+			Object.assign(index.viewArgumentDict, viewArgumentDict);
 		}
 		return index;
 	}
@@ -53,7 +59,13 @@ export class CreateIndexUseCase {
 		return new ComposerLockFetcher(composerLockPath).execute();
 	}
 
-	indexOneFile(workspaceFolder: string, absolutePath: string): Document {
+	indexOneFile(
+		workspaceFolder: string,
+		absolutePath: string,
+	): {
+		document: Document;
+		viewArgumentDict: ViewArgumentDict;
+	} {
 		const content = readFileSync(absolutePath, "utf-8");
 		const relativePath = path.relative(workspaceFolder, absolutePath);
 		const rootNode = this.phpParser.parseCode(content, relativePath);
@@ -71,6 +83,9 @@ export class CreateIndexUseCase {
 			strategy.onEnter,
 			strategy.onLeave,
 		);
-		return strategy.document;
+		return {
+			document: strategy.document,
+			viewArgumentDict: strategy.viewArgumentDict,
+		};
 	}
 }

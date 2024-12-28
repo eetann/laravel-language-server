@@ -22,9 +22,9 @@ describe("CreateIndexUseCase", () => {
 			(d) => d.relativePath === "app/Http/Controllers/BookController.php",
 		);
 		expect(bookControllerDocument).not.toBeUndefined();
-		expect(bookControllerDocument.symbols).toContainEqual(
+		expect(bookControllerDocument.symbols).toHaveProperty(symbol);
+		expect(bookControllerDocument.symbols[symbol]).toEqual(
 			expect.objectContaining({
-				symbol,
 				documentation,
 			}),
 		);
