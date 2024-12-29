@@ -46,42 +46,24 @@ export class ViewCompletionItemsProvider {
 
 	getItemsFromView(currentViewPath: string): CompletionItem[] {
 		const items: CompletionItem[] = [];
-		for (const doc of this.index.documents) {
-			for (const [symbol, symbolInformation] of Object.entries(doc.symbols)) {
-				if (symbol.match("view().")) {
-					items.push(
-						...this.createItemForArguments(currentViewPath, symbolInformation),
-					);
-				}
+		for (const [viewPath, args] of Object.entries(
+			this.index.viewArgumentDict,
+		)) {
+			if (currentViewPath !== viewPath) {
+				continue;
 			}
-		}
-		return items;
-	}
-
-	createItemForArguments(
-		currentViewPath: string,
-		symbolInformation: SymbolInformation,
-	): CompletionItem[] {
-		const items: CompletionItem[] = [];
-		try {
-			const bladeFile = JSON.parse(symbolInformation.documentation[0]);
-			if (currentViewPath !== bladeFile.viewPath) {
-				return items;
-			}
-			for (const [argName, typeInfo] of Object.entries(bladeFile.arguments)) {
+			for (const [argName, arg] of Object.entries(args)) {
 				let documentation = "";
-				if (typeInfo === "") {
+				if (arg.typeInfo === "") {
 					for (const doc of this.index.documents) {
-						// argNameはsymbolではないのでただしく値を取得できない
-						const symbolInfomation = doc.symbols[argName];
-						console.log({ symbolInfomation });
+						const symbolInfomation = doc.symbols[arg.symbol];
 						if (symbolInfomation) {
 							documentation = (symbolInfomation.documentation ?? []).join("\n");
 							break;
 						}
 					}
 				} else {
-					documentation = `@var ${typeInfo}`;
+					documentation = `@var ${arg.typeInfo}`;
 				}
 				items.push({
 					label: argName,
@@ -91,12 +73,7 @@ export class ViewCompletionItemsProvider {
 					insertText: argName,
 				});
 			}
-		} catch (error) {
-			console.log(
-				`ViewCompletionItemsProvider.createItemForArguments: ${error}`,
-			);
 		}
-		console.log(items);
 		return items;
 	}
 }
