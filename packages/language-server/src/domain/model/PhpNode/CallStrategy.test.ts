@@ -51,18 +51,12 @@ class BookController extends Controller
 		const prefix = `laravel-language-server composer ${packageName} ${packageVersion} `;
 		const namespace = `${prefix}\`App\\Http\\Controllers\`/BookController#`;
 		const symbol = `${namespace}index().view().`;
-		const documentation = [
-			JSON.stringify({
-				viewPath: "book/index",
-				arguments: {
+		expect(strategy.document.symbols).toHaveProperty(symbol);
+		expect(strategy.viewArgumentDict).toEqual(
+			expect.objectContaining({
+				"book/index": {
 					books: "",
 				},
-			}),
-		];
-		expect(strategy.document.symbols).toHaveProperty(symbol);
-		expect(strategy.document.symbols[symbol]).toEqual(
-			expect.objectContaining({
-				documentation,
 			}),
 		);
 	});
@@ -96,19 +90,13 @@ class BookController extends Controller
 		const prefix = `laravel-language-server composer ${packageName} ${packageVersion} `;
 		const namespace = `${prefix}\`App\\Http\\Controllers\`/BookController#`;
 		const symbol = `${namespace}index().view().`;
-		const documentation = [
-			JSON.stringify({
-				viewPath: "book/index",
-				arguments: {
+		expect(strategy.document.symbols).toHaveProperty(symbol);
+		expect(strategy.viewArgumentDict).toEqual(
+			expect.objectContaining({
+				"book/index": {
 					books: "",
 					test: "",
 				},
-			}),
-		];
-		expect(strategy.document.symbols).toHaveProperty(symbol);
-		expect(strategy.document.symbols[symbol]).toEqual(
-			expect.objectContaining({
-				documentation,
 			}),
 		);
 	});

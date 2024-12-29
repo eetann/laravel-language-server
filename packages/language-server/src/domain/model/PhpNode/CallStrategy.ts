@@ -1,4 +1,8 @@
-import { SymbolInformation_Kind, SyntaxKind } from "@/domain/model/scip";
+import {
+	SymbolInformation_Kind,
+	SyntaxKind,
+	type ViewArgumentDict,
+} from "@/domain/model/scip";
 import type { Call, Entry } from "php-parser";
 import {
 	NodeStrategy,
@@ -25,36 +29,13 @@ export class CallStrategy extends NodeStrategy {
 		if (node.what.name !== "view") {
 			return {};
 		}
-		const bladeFile = {
-			viewPath: "",
-			arguments: {},
-		};
-		const viewPathNode = node.arguments[0];
-		const argumentsNode = node.arguments[1];
-		if (isPhpString(viewPathNode)) {
-			bladeFile.viewPath = viewPathNode.value;
-		}
-		if (isCall(argumentsNode) && argumentsNode.what.name === "compact") {
-			for (const arg of argumentsNode.arguments) {
-				if (isPhpString(arg)) {
-					// TODO: 同じ名前のsymbolを取得し、typeInfoを入れる
-					bladeFile.arguments[arg.value] = "";
-				}
-			}
-		} else if (isPhpArray(argumentsNode)) {
-			for (const item of argumentsNode.items as Entry[]) {
-				if (isPhpString(item.key)) {
-					bladeFile.arguments[item.key.value] = item.typeInfo;
-				}
-			}
-		}
 		return {
 			[node.symbol]: createSymbolInformation({
 				kind: SymbolInformation_Kind.Function,
-				documentation: [JSON.stringify(bladeFile)],
 			}),
 		};
 	}
+
 	createOccurrences(node: Call) {
 		if (node.what.name !== "view") {
 			return [];
@@ -64,5 +45,42 @@ export class CallStrategy extends NodeStrategy {
 				syntaxKind: SyntaxKind.IdentifierFunction,
 			}),
 		];
+	}
+
+	createViewArgumentDict(node: Call): ViewArgumentDict {
+		if (node.what.name !== "view") {
+			return {};
+		}
+		const viewArgumentDict: ViewArgumentDict = {};
+		const viewPathNode = node.arguments[0];
+		const argumentsNode = node.arguments[1];
+		let viewPath = "";
+		if (isPhpString(viewPathNode)) {
+			viewPath = viewPathNode.value;
+			viewArgumentDict[viewPath] = {};
+		}
+		if (isCall(argumentsNode) && argumentsNode.what.name === "compact") {
+			for (const arg of argumentsNode.arguments) {
+				if (isPhpString(arg)) {
+					// TODO: 同じ名前のsymbolを取得し、typeInfoを入れる
+					viewArgumentDict[viewPath][arg.value] = "";
+				}
+			}
+		} else if (isPhpArray(argumentsNode)) {
+			for (const item of argumentsNode.items as Entry[]) {
+				if (isPhpString(item.key)) {
+					viewArgumentDict[viewPath][item.key.value] = item.typeInfo;
+				}
+			}
+		}
+		return viewArgumentDict;
+	}
+	onLeave(node: Call) {
+		node.typeInfo = this.getType(node);
+		return {
+			symbolDict: this.createSymbolInformations(node),
+			occurrences: this.createOccurrences(node),
+			viewArgumentDict: this.createViewArgumentDict(node),
+		};
 	}
 }
