@@ -55,7 +55,10 @@ class BookController extends Controller
 		expect(strategy.viewArgumentDict).toEqual(
 			expect.objectContaining({
 				"book/index": {
-					books: "",
+					books: {
+						symbol: `${namespace}index().books.`,
+						typeInfo: "",
+					},
 				},
 			}),
 		);
@@ -94,8 +97,11 @@ class BookController extends Controller
 		expect(strategy.viewArgumentDict).toEqual(
 			expect.objectContaining({
 				"book/index": {
-					books: "",
-					test: "",
+					books: {
+						symbol: `${namespace}index().books.`,
+						typeInfo: "",
+					},
+					test: { symbol: `${namespace}index().test.`, typeInfo: "" },
 				},
 			}),
 		);

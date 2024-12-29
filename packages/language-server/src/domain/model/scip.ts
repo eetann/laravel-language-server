@@ -82,7 +82,10 @@ export const IndexSchema: GenMessage<Index> =
 	messageDesc(file_scip, 0);
 
 export type ViewArgument = {
-	[variableName: string]: string;
+	[variableName: string]: {
+		symbol: string;
+		typeInfo: string;
+	};
 };
 export type ViewArgumentDict = {
 	[viewPath: string]: ViewArgument;

@@ -63,13 +63,22 @@ export class CallStrategy extends NodeStrategy {
 			for (const arg of argumentsNode.arguments) {
 				if (isPhpString(arg)) {
 					// TODO: 同じ名前のsymbolを取得し、typeInfoを入れる
-					viewArgumentDict[viewPath][arg.value] = "";
+					viewArgumentDict[viewPath][arg.value] = {
+						symbol: this.symbolCreator.createTerm(
+							node.symbol.slice(0, -7),
+							arg.value,
+						),
+						typeInfo: "",
+					};
 				}
 			}
 		} else if (isPhpArray(argumentsNode)) {
 			for (const item of argumentsNode.items as Entry[]) {
 				if (isPhpString(item.key)) {
-					viewArgumentDict[viewPath][item.key.value] = item.typeInfo;
+					viewArgumentDict[viewPath][item.key.value] = {
+						symbol: item.value.symbol.replace(/view\(\)\./, ""),
+						typeInfo: item.value.typeInfo,
+					};
 				}
 			}
 		}

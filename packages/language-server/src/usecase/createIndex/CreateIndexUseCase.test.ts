@@ -17,7 +17,10 @@ describe("CreateIndexUseCase", () => {
 		expect(index.viewArgumentDict).toEqual(
 			expect.objectContaining({
 				"book/index": {
-					books: "",
+					books: {
+						symbol: `${namespace}index().books.`,
+						typeInfo: "",
+					},
 				},
 			}),
 		);
