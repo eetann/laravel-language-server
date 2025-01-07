@@ -31,6 +31,9 @@ export async function activate(context: vscode.ExtensionContext) {
 	const clientOptions: lsp.LanguageClientOptions = {
 		documentSelector: [{ language: "blade" }],
 		initializationOptions: {},
+		synchronize: {
+			fileEvents: vscode.workspace.createFileSystemWatcher("**/*.php"),
+		},
 	};
 
 	// Create the language client with all the options we've defined, and start it.
