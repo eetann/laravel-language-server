@@ -8,7 +8,7 @@
 			"runtimeExecutable": "${execPath}",
 			"args": [
 				"${workspaceFolder}/packages/laravel-sample/",
-				"${workspaceFolder}/packages/laravel-sample/resources/views/book/test.blade.php",
+				"${workspaceFolder}/packages/laravel-sample/resources/views/book/index.blade.php",
 				"--disable-updates",
 				"--disable-workspace-trust",
 				"--skip-release-notes",
