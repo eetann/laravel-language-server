@@ -6,6 +6,7 @@ export const createBladeService = (
 ): LanguageServicePlugin => {
 	return {
 		capabilities: {
+			// textDocumentSyncはvolar側でIncrementalにしてるっぽい
 			completionProvider: {
 				triggerCharacters: ["$", "@"],
 				resolveProvider: true,

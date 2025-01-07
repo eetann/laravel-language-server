@@ -15,6 +15,7 @@ export class ProvideCompletionItemsUseCase {
 		completionContext,
 		token,
 	) => {
+		console.debug("ProvideCompletionItemsUseCase");
 		if (token.isCancellationRequested) return null;
 		const items: CompletionItem[] = [];
 		if (textDocument.languageId === "blade") {
