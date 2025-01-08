@@ -4,7 +4,6 @@ import { ProvideCompletionItemsUseCase } from "@/usecase/provideCompletionItems/
 import {
 	type Connection,
 	DidChangeWatchedFilesNotification,
-	DidOpenTextDocumentNotification,
 	FileChangeType,
 	type LanguageServiceContext,
 	type LanguageServicePluginInstance,
@@ -14,39 +13,32 @@ import {
 import { URI } from "vscode-uri";
 
 export class LanguageServicePluginInstanceCreator {
-	private initializationStarted = false;
 	private index: Index;
-	constructor(private connection: Connection) {
-		this.connection.onNotification(
-			DidOpenTextDocumentNotification.type,
-			async () => {
-				if (!this.initializationStarted) {
-					await this.initialize();
-				}
-			},
-		);
-	}
+	constructor(private connection: Connection) {}
 
 	// Use arrow function to keep `this` in the defined scope
 	execute = (
 		_context: LanguageServiceContext,
 	): LanguageServicePluginInstance => {
+		this.initialize();
 		return {
-			provideCompletionItems: (...args) =>
-				new ProvideCompletionItemsUseCase(this.index).execute(...args),
+			provideCompletionItems: new ProvideCompletionItemsUseCase(this.index)
+				.execute,
 		};
 	};
 
 	async initialize() {
 		console.debug("initialize start");
-		this.initializationStarted = true;
+
 		const progress = await this.connection.window.createWorkDoneProgress();
 		progress.begin("initializing...");
+
 		this.connection.workspace.getWorkspaceFolders();
 		const workspaceFolders = await this.getWorkspaceFolders();
 		// TODO: ワークスペースが複数あるときの対応
 		// TODO: ファイルが変更された時のindexの扱い
 		this.index = new CreateIndexUseCase().execute(workspaceFolders[0]);
+
 		this.connection.onNotification(
 			DidChangeWatchedFilesNotification.type,
 			(params) => {
@@ -67,6 +59,7 @@ export class LanguageServicePluginInstanceCreator {
 				}
 			},
 		);
+
 		progress.done();
 		this.connection.sendNotification(ShowMessageNotification.type, {
 			type: MessageType.Info,

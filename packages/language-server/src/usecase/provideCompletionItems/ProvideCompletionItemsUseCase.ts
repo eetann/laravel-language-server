@@ -9,13 +9,13 @@ import { ViewCompletionItemsProvider } from "./viewCompletionItemsProvider/viewC
 
 export class ProvideCompletionItemsUseCase {
 	constructor(private index: Index) {}
+
 	execute: LanguageServicePluginInstance["provideCompletionItems"] = (
 		textDocument,
 		position,
 		completionContext,
 		token,
 	) => {
-		console.debug("ProvideCompletionItemsUseCase");
 		if (token.isCancellationRequested) return null;
 		const items: CompletionItem[] = [];
 		if (textDocument.languageId === "blade") {
