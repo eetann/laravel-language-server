@@ -10,12 +10,16 @@ export const bladeDirective: CompletionItem[] = [
 		label: "@break",
 		kind: CompletionItemKind.Function,
 		detail: "Break the statement",
+		insertText: "break",
+		filterText: "break",
 		documentation: "",
 	},
 	{
 		label: "@continue",
 		kind: CompletionItemKind.Function,
 		detail: "Continues the loop iteration",
+		filterText: "continue",
+		insertText: "continue",
 		documentation: "",
 	},
 	{
@@ -23,7 +27,8 @@ export const bladeDirective: CompletionItem[] = [
 		kind: CompletionItemKind.Snippet,
 		detail: "@continue",
 		documentation: "```blade\n@continue\n```",
-		insertText: "@continue",
+		filterText: "continue",
+		insertText: "continue",
 		insertTextFormat: InsertTextFormat.Snippet,
 	},
 	{
@@ -32,6 +37,8 @@ export const bladeDirective: CompletionItem[] = [
 		detail: "Begin verbatim directive",
 		documentation:
 			"Start a block of code that will be output as-is, without Blade parsing.",
+		filterText: "verbatim",
+		insertText: "verbatim",
 	},
 	{
 		label: "@endverbatim",
@@ -39,13 +46,16 @@ export const bladeDirective: CompletionItem[] = [
 		detail: "End verbatim directive",
 		documentation:
 			"End a block of code that will be output as-is, without Blade parsing.",
+		filterText: "endverbatim",
+		insertText: "endverbatim",
 	},
 	{
 		label: "@verbatim",
 		kind: CompletionItemKind.Snippet,
 		detail: "@verbatim ~ @endverbatim",
 		documentation: "@verbatim\n    ${1}\n@endverbatim",
-		insertText: "@verbatim\n    ${1}\n@endverbatim",
+		filterText: "verbatim",
+		insertText: "verbatim\n    ${1}\n@endverbatim",
 		insertTextFormat: InsertTextFormat.Snippet,
 	},
 	{
@@ -54,6 +64,8 @@ export const bladeDirective: CompletionItem[] = [
 		detail: "Begin if directive",
 		documentation: "Start an if statement.",
 		insertTextFormat: InsertTextFormat.PlainText,
+		filterText: "if",
+		insertText: "if",
 	},
 	{
 		label: "@elseif",
@@ -61,6 +73,8 @@ export const bladeDirective: CompletionItem[] = [
 		detail: "Begin elseif directive",
 		documentation: "Start an elseif statement.",
 		insertTextFormat: InsertTextFormat.PlainText,
+		filterText: "elseif",
+		insertText: "elseif",
 	},
 	{
 		label: "@else",
@@ -68,6 +82,8 @@ export const bladeDirective: CompletionItem[] = [
 		detail: "Begin else directive",
 		documentation: "Start an else statement.",
 		insertTextFormat: InsertTextFormat.PlainText,
+		filterText: "else",
+		insertText: "else",
 	},
 	{
 		label: "@endif",
@@ -75,13 +91,16 @@ export const bladeDirective: CompletionItem[] = [
 		detail: "End if directive",
 		documentation: "End an if statement.",
 		insertTextFormat: InsertTextFormat.PlainText,
+		filterText: "endif",
+		insertText: "endif",
 	},
 	{
 		label: "@if",
 		kind: CompletionItemKind.Snippet,
 		detail: "@if ~ @endif",
 		documentation: "@if (${1:condition})\n    ${2}\n@endif",
-		insertText: "@if (${1:condition})\n    ${2}\n@endif",
+		filterText: "if",
+		insertText: "if (${1:condition})\n    ${2}\n@endif",
 		insertTextFormat: InsertTextFormat.Snippet,
 	},
 	{
@@ -90,8 +109,9 @@ export const bladeDirective: CompletionItem[] = [
 		detail: "@if ~ @elseif ~ @endif",
 		documentation:
 			"@if (${1:condition})\n    ${2}\n@elseif (${3:condition})\n    ${4}\n@endif",
+		filterText: "elseif",
 		insertText:
-			"@if (${1:condition})\n    ${2}\n@elseif (${3:condition})\n    ${4}\n@endif",
+			"if (${1:condition})\n    ${2}\n@elseif (${3:condition})\n    ${4}\n@endif",
 		insertTextFormat: InsertTextFormat.Snippet,
 	},
 	{
@@ -100,6 +120,8 @@ export const bladeDirective: CompletionItem[] = [
 		detail: "Begin unless directive",
 		documentation: "Start an unless statement.",
 		insertTextFormat: InsertTextFormat.PlainText,
+		filterText: "unless",
+		insertText: "unless",
 	},
 	{
 		label: "@endunless",
@@ -107,13 +129,16 @@ export const bladeDirective: CompletionItem[] = [
 		detail: "End unless directive",
 		documentation: "End an unless statement.",
 		insertTextFormat: InsertTextFormat.PlainText,
+		filterText: "endunless",
+		insertText: "endunless",
 	},
 	{
 		label: "@unless",
 		kind: CompletionItemKind.Snippet,
 		detail: "@unless ~ @endunless",
 		documentation: "@unless (${1:condition})\n    ${2}\n@endunless",
-		insertText: "@unless (${1:condition})\n    ${2}\n@endunless",
+		filterText: "unless",
+		insertText: "unless (${1:condition})\n    ${2}\n@endunless",
 		insertTextFormat: InsertTextFormat.Snippet,
 	},
 	{
@@ -121,7 +146,8 @@ export const bladeDirective: CompletionItem[] = [
 		kind: CompletionItemKind.Function,
 		detail: "Begin isset directive",
 		documentation: "Check if a variable exists and is not null.",
-		insertText: "@isset(${1:variable})\n    ${2}\n@endisset",
+		filterText: "isset",
+		insertText: "isset(${1:variable})\n    ${2}\n@endisset",
 		insertTextFormat: InsertTextFormat.Snippet,
 	},
 	{
@@ -129,14 +155,16 @@ export const bladeDirective: CompletionItem[] = [
 		kind: CompletionItemKind.Function,
 		detail: "End isset directive",
 		documentation: "End the isset directive.",
-		insertText: "@endisset",
+		filterText: "endisset",
+		insertText: "endisset",
 	},
 	{
 		label: "@isset",
 		kind: CompletionItemKind.Snippet,
 		detail: "@isset ~ @endisset",
 		documentation: "Check if a variable exists and is not null.",
-		insertText: "@isset(${1:variable})\n    ${2}\n@endisset",
+		filterText: "isset",
+		insertText: "isset(${1:variable})\n    ${2}\n@endisset",
 		insertTextFormat: InsertTextFormat.Snippet,
 	},
 	{
@@ -145,6 +173,8 @@ export const bladeDirective: CompletionItem[] = [
 		detail: "Begin empty directive",
 		documentation:
 			"Start a block of code that will be executed if the variable is empty.",
+		filterText: "empty",
+		insertText: "empty",
 	},
 	{
 		label: "@endempty",
@@ -152,13 +182,16 @@ export const bladeDirective: CompletionItem[] = [
 		detail: "End empty directive",
 		documentation:
 			"End a block of code that will be executed if the variable is empty.",
+		filterText: "endempty",
+		insertText: "endempty",
 	},
 	{
 		label: "@empty",
 		kind: CompletionItemKind.Snippet,
 		detail: "@empty ~ @endempty",
 		documentation: "@empty\n    ${1}\n@endempty",
-		insertText: "@empty\n    ${1}\n@endempty",
+		filterText: "empty",
+		insertText: "empty\n    ${1}\n@endempty",
 		insertTextFormat: InsertTextFormat.Snippet,
 	},
 	{
@@ -167,6 +200,8 @@ export const bladeDirective: CompletionItem[] = [
 		detail: "Begin auth directive",
 		documentation:
 			"Start a block of code that will be output only when the user is authenticated.",
+		filterText: "_auth",
+		insertText: "auth",
 	},
 	{
 		label: "@endauth",
@@ -174,13 +209,16 @@ export const bladeDirective: CompletionItem[] = [
 		detail: "End auth directive",
 		documentation:
 			"End a block of code that will be output only when the user is authenticated.",
+		filterText: "endauth",
+		insertText: "endauth",
 	},
 	{
 		label: "@auth",
 		kind: CompletionItemKind.Snippet,
 		detail: "@auth ~ @endauth",
 		documentation: "@auth\n    ${1}\n@endauth",
-		insertText: "@auth\n    ${1}\n@endauth",
+		filterText: "auth",
+		insertText: "auth\n    ${1}\n@endauth",
 		insertTextFormat: InsertTextFormat.Snippet,
 	},
 	{
@@ -189,6 +227,8 @@ export const bladeDirective: CompletionItem[] = [
 		detail: "Begin guest directive",
 		documentation:
 			"Start a block of code that will be output only when the user is not authenticated.",
+		filterText: "guest",
+		insertText: "guest",
 	},
 	{
 		label: "@endguest",
@@ -196,13 +236,16 @@ export const bladeDirective: CompletionItem[] = [
 		detail: "End guest directive",
 		documentation:
 			"End a block of code that will be output only when the user is not authenticated.",
+		filterText: "endguest",
+		insertText: "endguest",
 	},
 	{
 		label: "@guest",
 		kind: CompletionItemKind.Snippet,
 		detail: "@guest ~ @endguest",
 		documentation: "@guest\n    ${1}\n@endguest",
-		insertText: "@guest\n    ${1}\n@endguest",
+		filterText: "guest",
+		insertText: "guest\n    ${1}\n@endguest",
 		insertTextFormat: InsertTextFormat.Snippet,
 	},
 	{
@@ -211,19 +254,24 @@ export const bladeDirective: CompletionItem[] = [
 		detail: "Output the content of the block only in production environments",
 		documentation:
 			"This directive outputs the content of the block only in production environments.",
+		filterText: "production",
+		insertText: "production",
 	},
 	{
 		label: "@endproduction",
 		kind: CompletionItemKind.Function,
 		detail: "End production directive",
 		documentation: "Ends the production directive.",
+		filterText: "endproduction",
+		insertText: "endproduction",
 	},
 	{
 		label: "@production",
 		kind: CompletionItemKind.Snippet,
 		detail: "@production ~ @endproduction",
 		documentation: "@production\n    ${1}\n@endproduction",
-		insertText: "@production\n    ${1}\n@endproduction",
+		filterText: "production",
+		insertText: "production\n    ${1}\n@endproduction",
 		insertTextFormat: InsertTextFormat.Snippet,
 	},
 	{
@@ -231,19 +279,24 @@ export const bladeDirective: CompletionItem[] = [
 		kind: CompletionItemKind.Function,
 		detail: "Output the value of an environment variable",
 		documentation: "",
+		filterText: "env",
+		insertText: "env",
 	},
 	{
 		label: "@endenv",
 		kind: CompletionItemKind.Function,
 		detail: "Ends the env directive",
 		documentation: "",
+		filterText: "endenv",
+		insertText: "endenv",
 	},
 	{
 		label: "@env",
 		kind: CompletionItemKind.Snippet,
 		detail: "@env('value') ~ @endenv",
 		documentation: "```blade\n@env('${1}')\n    ${2}\n@endenv\n```",
-		insertText: "@env('${1}')\n    ${2}\n@endenv",
+		filterText: "env",
+		insertText: "env('${1}')\n    ${2}\n@endenv",
 		insertTextFormat: InsertTextFormat.Snippet,
 	},
 	{
@@ -252,6 +305,8 @@ export const bladeDirective: CompletionItem[] = [
 		detail: "Check if the given section exists in the configuration file.",
 		documentation:
 			"The hasSection directive checks if the given section exists in the configuration file.\n\n```blade\n@hasSection('database')\n    // The database section exists in the configuration file.\n@endhasSection\n```",
+		filterText: "hasSection",
+		insertText: "hasSection",
 	},
 	{
 		label: "@hasSection",
@@ -259,7 +314,8 @@ export const bladeDirective: CompletionItem[] = [
 		detail: "@hasSection('section') ~ @endhasSection",
 		documentation:
 			"The hasSection directive checks if the given section exists in the configuration file.\n\n```blade\n@hasSection('database')\n    // The database section exists in the configuration file.\n@endhasSection\n```",
-		insertText: "@hasSection('${1}')\n    ${2}\n@endhasSection",
+		filterText: "hasSection",
+		insertText: "hasSection('${1}')\n    ${2}\n@endhasSection",
 		insertTextFormat: InsertTextFormat.Snippet,
 	},
 	{
@@ -268,13 +324,16 @@ export const bladeDirective: CompletionItem[] = [
 		detail: "Ends the hasSection directive",
 		documentation:
 			"The hasSection directive checks if the given section exists in the configuration file.\n\n```blade\n@hasSection('database')\n    // The database section exists in the configuration file.\n@endhasSection\n```",
-		insertText: "@endhasSection",
+		filterText: "endhasSection",
+		insertText: "endhasSection",
 	},
 	{
 		label: "@sectionMissing",
 		kind: CompletionItemKind.Function,
 		detail: "Define a section with default content",
 		documentation: "",
+		filterText: "sectionMissing",
+		insertText: "sectionMissing",
 	},
 	{
 		label: "@sectionMissing",
@@ -282,7 +341,8 @@ export const bladeDirective: CompletionItem[] = [
 		detail: "Define a section with default content",
 		documentation:
 			"@sectionMissing('navigation')\n    <div class='pull-right'>\n        @include('default-navigation')\n    </div>\n@endif",
-		insertText: "@sectionMissing('${1}', '${2}')\n    ${3}\n@endif",
+		filterText: "sectionMissing",
+		insertText: "sectionMissing('${1}', '${2}')\n    ${3}\n@endif",
 		insertTextFormat: InsertTextFormat.Snippet,
 	},
 	{
@@ -290,19 +350,24 @@ export const bladeDirective: CompletionItem[] = [
 		kind: CompletionItemKind.Function,
 		detail: "Retrieve a session value",
 		documentation: "",
+		filterText: "session",
+		insertText: "session",
 	},
 	{
 		label: "@endsession",
 		kind: CompletionItemKind.Function,
 		detail: "Ends the session directive",
 		documentation: "",
+		filterText: "endsession",
+		insertText: "endsession",
 	},
 	{
 		label: "@session",
 		kind: CompletionItemKind.Snippet,
 		detail: "@session('key') ~ @endsession",
 		documentation: "@session('${1}')\n    ${2}\n@endsession",
-		insertText: "@session('${1}')\n    ${2}\n@endsession",
+		filterText: "session",
+		insertText: "session('${1}')\n    ${2}\n@endsession",
 		insertTextFormat: InsertTextFormat.Snippet,
 	},
 	{
@@ -310,12 +375,16 @@ export const bladeDirective: CompletionItem[] = [
 		kind: CompletionItemKind.Function,
 		detail: "Start a switch statement",
 		documentation: "",
+		filterText: "switch",
+		insertText: "switch",
 	},
 	{
 		label: "@endswitch",
 		kind: CompletionItemKind.Function,
 		detail: "Ends the switch statement",
 		documentation: "",
+		filterText: "endswitch",
+		insertText: "endswitch",
 	},
 	{
 		label: "@switch",
@@ -323,8 +392,9 @@ export const bladeDirective: CompletionItem[] = [
 		detail: "@switch($expression) ~ @endswitch",
 		documentation:
 			"```blade\n@switch($expression)\n    @case(${1})\n        ${2}\n        @break\n    @default\n        ${3}\n@endswitch\n```",
+		filterText: "switch",
 		insertText:
-			"@switch(${1})\n    @case(${2})\n        ${3}\n        @break\n    @default\n        ${4}\n@endswitch",
+			"switch(${1})\n    @case(${2})\n        ${3}\n        @break\n    @default\n        ${4}\n@endswitch",
 		insertTextFormat: InsertTextFormat.Snippet,
 	},
 	{
@@ -332,24 +402,32 @@ export const bladeDirective: CompletionItem[] = [
 		kind: CompletionItemKind.Function,
 		detail: "case the switch statement",
 		documentation: "",
+		filterText: "case",
+		insertText: "case",
 	},
 	{
 		label: "@default",
 		kind: CompletionItemKind.Function,
 		detail: "Default the switch statement",
 		documentation: "",
+		filterText: "default",
+		insertText: "default",
 	},
 	{
 		label: "@for",
 		kind: CompletionItemKind.Function,
 		detail: "Loop over a given collection",
 		documentation: "",
+		filterText: "for",
+		insertText: "for",
 	},
 	{
 		label: "@endfor",
 		kind: CompletionItemKind.Function,
 		detail: "Ends the for directive",
 		documentation: "",
+		filterText: "endfor",
+		insertText: "endfor",
 	},
 	{
 		label: "@for",
@@ -357,8 +435,9 @@ export const bladeDirective: CompletionItem[] = [
 		detail: "@for($loop, $item in $collection) ~ @endfor",
 		documentation:
 			"```blade\n@for($i = 0; $i < 10; $i++)\n    {{ $i }}\n@endfor\n```",
+		filterText: "for",
 		insertText:
-			"@for(${1:$i = 0}; ${2:$i < 10}; ${3:$i++})\n    ${2: {{ $i }}}\n@endfor",
+			"for(${1:$i = 0}; ${2:$i < 10}; ${3:$i++})\n    ${2: {{ $i }}}\n@endfor",
 		insertTextFormat: InsertTextFormat.Snippet,
 	},
 	{
@@ -366,12 +445,16 @@ export const bladeDirective: CompletionItem[] = [
 		kind: CompletionItemKind.Function,
 		detail: "Loop over a collection",
 		documentation: "",
+		filterText: "foreach",
+		insertText: "foreach",
 	},
 	{
 		label: "@endforeach",
 		kind: CompletionItemKind.Function,
 		detail: "Ends the foreach directive",
 		documentation: "",
+		filterText: "endforeach",
+		insertText: "endforeach",
 	},
 	{
 		label: "@foreach",
@@ -379,7 +462,8 @@ export const bladeDirective: CompletionItem[] = [
 		detail: "@foreach($items as $item) ~ @endforeach",
 		documentation:
 			"```blade\n@foreach(${1:items} as ${2:item})\n    ${3}\n@endforeach\n```",
-		insertText: "@foreach(${1:items} as ${2:item})\n    ${3}\n@endforeach",
+		filterText: "foreach",
+		insertText: "foreach(${1:items} as ${2:item})\n    ${3}\n@endforeach",
 		insertTextFormat: InsertTextFormat.Snippet,
 	},
 	{
@@ -387,27 +471,26 @@ export const bladeDirective: CompletionItem[] = [
 		kind: CompletionItemKind.Function,
 		detail: "Loop over a collection of items",
 		documentation: "",
-	},
-	{
-		label: "@empty",
-		kind: CompletionItemKind.Function,
-		detail: "Display content if the collection is empty",
-		documentation: "",
+		filterText: "forelse",
+		insertText: "forelse",
 	},
 	{
 		label: "@endforelse",
 		kind: CompletionItemKind.Function,
 		detail: "Ends the forelse directive",
 		documentation: "",
+		filterText: "endforelse",
+		insertText: "endforelse",
 	},
 	{
 		label: "@forelse",
 		kind: CompletionItemKind.Snippet,
 		detail: "@forelse($collection as $item) ~ @empty ~ @endforelse",
 		documentation:
-			"```blade\n@forelse($collection as $item)\n    ${1}\n@empty\n    ${2}\n@endforelse\n```",
+			"```blade\n@forelse($collection as $item)\n    ${}\n@empty\n    ${}\n@endforelse\n```",
+		filterText: "forelse",
 		insertText:
-			"@forelse($collection as $item)\n    ${1}\n@empty\n    ${2}\n@endforelse",
+			"forelse(${1:collection} as ${2:item})\n    ${3}\n@empty\n    ${4}\n@endforelse",
 		insertTextFormat: InsertTextFormat.Snippet,
 	},
 	{
@@ -415,19 +498,24 @@ export const bladeDirective: CompletionItem[] = [
 		kind: CompletionItemKind.Function,
 		detail: "Loop through a given condition",
 		documentation: "",
+		filterText: "while",
+		insertText: "while",
 	},
 	{
 		label: "@endwhile",
 		kind: CompletionItemKind.Function,
 		detail: "Ends the while directive",
 		documentation: "",
+		filterText: "endwhile",
+		insertText: "endwhile",
 	},
 	{
 		label: "@while",
 		kind: CompletionItemKind.Snippet,
 		detail: "@while(condition) ~ @endwhile",
 		documentation: "```blade\n@while(${1})\n    ${2}\n@endwhile\n```",
-		insertText: "@while(${1})\n    ${2}\n@endwhile",
+		filterText: "while",
+		insertText: "while(${1})\n    ${2}\n@endwhile",
 		insertTextFormat: InsertTextFormat.Snippet,
 	},
 	{
@@ -435,19 +523,24 @@ export const bladeDirective: CompletionItem[] = [
 		kind: CompletionItemKind.Function,
 		detail: "Inline PHP code",
 		documentation: "",
+		filterText: "php",
+		insertText: "php",
 	},
 	{
 		label: "@endphp",
 		kind: CompletionItemKind.Function,
 		detail: "Ends the PHP directive",
 		documentation: "",
+		filterText: "endphp",
+		insertText: "endphp",
 	},
 	{
 		label: "@php",
 		kind: CompletionItemKind.Snippet,
 		detail: "@php ~ @endphp",
 		documentation: "```blade\n@php\n    ${1}\n@endphp\n```",
-		insertText: "@php\n    ${1}\n@endphp",
+		filterText: "php",
+		insertText: "php\n    ${1}\n@endphp",
 		insertTextFormat: InsertTextFormat.Snippet,
 	},
 	{
@@ -455,13 +548,16 @@ export const bladeDirective: CompletionItem[] = [
 		kind: CompletionItemKind.Function,
 		detail: "Include a view file",
 		documentation: "",
+		filterText: "include",
+		insertText: "include",
 	},
 	{
 		label: "@include",
 		kind: CompletionItemKind.Snippet,
 		detail: "@include('path/to/view', ['key' => 'value'])",
 		documentation: "```blade\n@include('${1}', [${2}])\n```",
-		insertText: "@include('${1}', [${2}])",
+		filterText: "include",
+		insertText: "include('${1}', [${2}])",
 		insertTextFormat: InsertTextFormat.Snippet,
 	},
 	{
@@ -469,13 +565,16 @@ export const bladeDirective: CompletionItem[] = [
 		kind: CompletionItemKind.Function,
 		detail: "Include a view if a condition is true",
 		documentation: "",
+		filterText: "includeIf",
+		insertText: "includeIf",
 	},
 	{
 		label: "@includeIf",
 		kind: CompletionItemKind.Snippet,
 		detail: "@includeIf('path/to/view, ['key' => 'value'])",
 		documentation: "```blade\n@includeIf(${1}, [${2}])\n```",
-		insertText: "@includeIf(${1}, [${2}])",
+		filterText: "includeIf",
+		insertText: "includeIf(${1}, [${2}])",
 		insertTextFormat: InsertTextFormat.Snippet,
 	},
 	{
@@ -483,13 +582,16 @@ export const bladeDirective: CompletionItem[] = [
 		kind: CompletionItemKind.Function,
 		detail: "Includes a view if a condition is met",
 		documentation: "",
+		filterText: "includeWhen",
+		insertText: "includeWhen",
 	},
 	{
 		label: "@includeWhen",
 		kind: CompletionItemKind.Snippet,
 		detail: "@includeWhen('condition', 'view', ['key' => 'value'])",
 		documentation: "```blade\n@includeWhen(${1}, '${2}, [${3}])\n```",
-		insertText: "@includeWhen(${1}, '${2}, [${3}])",
+		filterText: "includeWhen",
+		insertText: "includeWhen(${1}, '${2}, [${3}])",
 		insertTextFormat: InsertTextFormat.Snippet,
 	},
 	{
@@ -497,13 +599,16 @@ export const bladeDirective: CompletionItem[] = [
 		kind: CompletionItemKind.Function,
 		detail: "Includes a view if a condition is not met",
 		documentation: "",
+		filterText: "includeUnless",
+		insertText: "includeUnless",
 	},
 	{
 		label: "@includeUnless",
 		kind: CompletionItemKind.Snippet,
 		detail: "@includeUnless('condition', 'view', ['key' => 'value'])",
 		documentation: "```blade\n@includeUnless(${1}, '${2}, [${3}])\n```",
-		insertText: "@includeUnless(${1}, '${2}, [${3}])",
+		filterText: "includeUnless",
+		insertText: "includeUnless(${1}, '${2}, [${3}])",
 		insertTextFormat: InsertTextFormat.Snippet,
 	},
 	{
@@ -511,13 +616,16 @@ export const bladeDirective: CompletionItem[] = [
 		kind: CompletionItemKind.Function,
 		detail: "Loop over a collection of data",
 		documentation: "",
+		filterText: "each",
+		insertText: "each",
 	},
 	{
 		label: "@each",
 		kind: CompletionItemKind.Snippet,
 		detail: "@each('path/to/view, $items, 'item')",
 		documentation: "```blade\n@each('${1}', ${2}, '${3}')\n```",
-		insertText: "@each('${1}', ${2}, '${3}')",
+		filterText: "each",
+		insertText: "each('${1}', ${2}, '${3}')",
 		insertTextFormat: InsertTextFormat.Snippet,
 	},
 	// ディレクティブ以外を別ファイルに作る
@@ -531,19 +639,24 @@ export const classDirective: CompletionItem[] = [
 		kind: CompletionItemKind.Function,
 		detail: "Add a CSS class to an element",
 		documentation: "",
+		filterText: "class",
+		insertText: "class",
 	},
 	{
 		label: "@endclass",
 		kind: CompletionItemKind.Function,
 		detail: "Ends the class directive",
 		documentation: "",
+		filterText: "endclass",
+		insertText: "endclass",
 	},
 	{
 		label: "@class",
 		kind: CompletionItemKind.Snippet,
 		detail: "@class(['class1', 'class2'])",
 		documentation: "```blade\n@class([$1])\n```",
-		insertText: "@class([$1])",
+		filterText: "class",
+		insertText: "class([$1])",
 		insertTextFormat: InsertTextFormat.Snippet,
 	},
 	{
@@ -551,13 +664,16 @@ export const classDirective: CompletionItem[] = [
 		kind: CompletionItemKind.Function,
 		detail: "Output inline CSS styles",
 		documentation: "",
+		filterText: "style",
+		insertText: "style",
 	},
 	{
 		label: "@style",
 		kind: CompletionItemKind.Snippet,
 		detail: "@style([$1])",
 		documentation: "```blade\n@style([$1])\n```",
-		insertText: "@style([$1])",
+		filterText: "style",
+		insertText: "style([$1])",
 		insertTextFormat: InsertTextFormat.Snippet,
 	},
 	// https://laravel.com/docs/11.x/blade#additional-attributes
@@ -566,13 +682,16 @@ export const classDirective: CompletionItem[] = [
 		kind: CompletionItemKind.Function,
 		detail: "Check if a value is true",
 		documentation: "",
+		filterText: "checked",
+		insertText: "checked",
 	},
 	{
 		label: "@checked",
 		kind: CompletionItemKind.Snippet,
 		detail: "@checked(value)",
 		documentation: "```blade\n@checked(${1})\n```",
-		insertText: "@checked(${1})",
+		filterText: "checked",
+		insertText: "checked(${1})",
 		insertTextFormat: InsertTextFormat.Snippet,
 	},
 	{
@@ -580,13 +699,16 @@ export const classDirective: CompletionItem[] = [
 		kind: CompletionItemKind.Function,
 		detail: "Check if a given option is selected",
 		documentation: "",
+		filterText: "selected",
+		insertText: "selected",
 	},
 	{
 		label: "@selected",
 		kind: CompletionItemKind.Snippet,
 		detail: "@selected('value')",
 		documentation: "```blade\n@selected(${1})\n```",
-		insertText: "@selected(${1})",
+		filterText: "selected",
+		insertText: "selected(${1})",
 		insertTextFormat: InsertTextFormat.Snippet,
 	},
 	{
@@ -594,13 +716,16 @@ export const classDirective: CompletionItem[] = [
 		kind: CompletionItemKind.Function,
 		detail: "Outputs the content of the block if the given condition is false",
 		documentation: "",
+		filterText: "disabled",
+		insertText: "disabled",
 	},
 	{
 		label: "@disabled",
 		kind: CompletionItemKind.Snippet,
 		detail: "@disabled('condition')",
 		documentation: "```blade\n@disabled(${1})\n```",
-		insertText: "@disabled(${1})",
+		filterText: "disabled",
+		insertText: "disabled(${1})",
 		insertTextFormat: InsertTextFormat.Snippet,
 	},
 	{
@@ -608,13 +733,16 @@ export const classDirective: CompletionItem[] = [
 		kind: CompletionItemKind.Function,
 		detail: "Output the value of a readonly variable",
 		documentation: "",
+		filterText: "readonly",
+		insertText: "readonly",
 	},
 	{
 		label: "@readonly",
 		kind: CompletionItemKind.Snippet,
 		detail: "@readonly()",
 		documentation: "```blade\n@readonly(${1})\n```",
-		insertText: "@readonly(${1})",
+		filterText: "readonly",
+		insertText: "readonly(${1})",
 		insertTextFormat: InsertTextFormat.Snippet,
 	},
 	{
@@ -622,13 +750,16 @@ export const classDirective: CompletionItem[] = [
 		kind: CompletionItemKind.Function,
 		detail: "Check if a variable is required",
 		documentation: "",
+		filterText: "required",
+		insertText: "required",
 	},
 	{
 		label: "@required",
 		kind: CompletionItemKind.Snippet,
 		detail: "@required('value')",
 		documentation: "```blade\n@required(${1})\n```",
-		insertText: "@required(${1})",
+		filterText: "required",
+		insertText: "required(${1})",
 		insertTextFormat: InsertTextFormat.Snippet,
 	},
 ];
