@@ -17,30 +17,35 @@ export class ViewCompletionItemsProvider {
 	constructor(private index: Index) {}
 	execute(textDocument: TextDocument, position: LspPosition): CompletionItem[] {
 		const items: CompletionItem[] = [];
-		const bladeParser = new BladeParser(textDocument.getText());
-		const currentNode = bladeParser.getCurrentNode(position);
 
-		const viewPathMatch = textDocument.uri.match(
-			/resources%252Fviews%252F(.*).blade.php/,
-		);
-		if (viewPathMatch && 2 <= viewPathMatch.length) {
-			const currentViewPath = decodeURIComponent(
-				decodeURIComponent(viewPathMatch[1]),
-			);
-			items.push(...this.getEchoNodeItems(currentViewPath, currentNode));
+		const currentViewPath = this.getCurrentViewPath(textDocument.uri);
+		if (
+			currentViewPath !== "" &&
+			this.isInEchoNode(textDocument.getText(), position)
+		) {
+			items.push(...this.getItemsFromView(currentViewPath));
 		}
 		return items;
 	}
 
-	getEchoNodeItems(currentViewPath: string, currentNode: AbstractNode) {
-		const items: CompletionItem[] = [];
+	getCurrentViewPath(uri: string): string {
+		const viewPathMatch = uri.match(/resources%252Fviews%252F(.*).blade.php/);
+		if (viewPathMatch && 2 <= viewPathMatch.length) {
+			return decodeURIComponent(decodeURIComponent(viewPathMatch[1]));
+		}
+		return "";
+	}
+
+	isInEchoNode(text: string, position: LspPosition): boolean {
+		const bladeParser = new BladeParser(text);
+		const currentNode = bladeParser.getCurrentNode(position);
 		if (!(currentNode instanceof BladeEchoNode)) {
-			return items;
+			return false;
 		}
 		if (typeof this.index === "undefined") {
-			return items;
+			return false;
 		}
-		return this.getItemsFromView(currentViewPath);
+		return true;
 	}
 
 	getItemsFromView(currentViewPath: string): CompletionItem[] {
