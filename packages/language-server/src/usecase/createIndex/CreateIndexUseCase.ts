@@ -44,12 +44,11 @@ export class CreateIndexUseCase {
 		}).filter((f) => f.isFile() && f.name.endsWith(".php"));
 		// TODO: できればライブラリも取得
 		for (const absoluteFile of files) {
-			const { document, viewArgumentDict } = this.indexOneFile(
+			this.indexOneFile(
+				index,
 				workspaceFolder,
 				path.join(absoluteFile.parentPath, absoluteFile.name),
 			);
-			index.documents.push(document);
-			Object.assign(index.viewArgumentDict, viewArgumentDict);
 		}
 		return index;
 	}
@@ -60,12 +59,10 @@ export class CreateIndexUseCase {
 	}
 
 	indexOneFile(
+		index: Index,
 		workspaceFolder: string,
 		absolutePath: string,
-	): {
-		document: Document;
-		viewArgumentDict: ViewArgumentDict;
-	} {
+	): void {
 		const content = readFileSync(absolutePath, "utf-8");
 		const relativePath = path.relative(workspaceFolder, absolutePath);
 		const rootNode = this.phpParser.parseCode(content, relativePath);
@@ -75,7 +72,7 @@ export class CreateIndexUseCase {
 			relativePath,
 		);
 
-		const strategy = new IndexStrategy(relativePath, symbolCreator);
+		const strategy = new IndexStrategy(index, relativePath, symbolCreator);
 		traverseForIndex(
 			rootNode,
 			"",
@@ -83,9 +80,5 @@ export class CreateIndexUseCase {
 			strategy.onEnter,
 			strategy.onLeave,
 		);
-		return {
-			document: strategy.document,
-			viewArgumentDict: strategy.viewArgumentDict,
-		};
 	}
 }

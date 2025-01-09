@@ -22,8 +22,8 @@ export class LanguageServicePluginInstanceCreator {
 	): LanguageServicePluginInstance => {
 		this.initialize();
 		return {
-			provideCompletionItems: new ProvideCompletionItemsUseCase(this.index)
-				.execute,
+			provideCompletionItems: (...args) =>
+				new ProvideCompletionItemsUseCase(this.index).execute(...args),
 		};
 	};
 

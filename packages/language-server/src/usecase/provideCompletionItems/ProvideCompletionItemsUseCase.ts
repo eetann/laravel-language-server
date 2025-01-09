@@ -8,7 +8,9 @@ import { BladeCompletionItemsProvider } from "./bladeCompletionItemsProvider/Bla
 import { ViewCompletionItemsProvider } from "./viewCompletionItemsProvider/viewCompletionItemsProvider";
 
 export class ProvideCompletionItemsUseCase {
-	constructor(private index: Index) {}
+	constructor(private index: Index) {
+		console.log("ProvideCompletionItemsUseCase constructor");
+	}
 
 	execute: LanguageServicePluginInstance["provideCompletionItems"] = (
 		textDocument,
@@ -16,6 +18,7 @@ export class ProvideCompletionItemsUseCase {
 		completionContext,
 		token,
 	) => {
+		console.log("ProvideCompletionItemsUseCase execute");
 		if (token.isCancellationRequested) return null;
 		const items: CompletionItem[] = [];
 		if (textDocument.languageId === "blade") {

@@ -1,9 +1,8 @@
-import type { Index, SymbolInformation } from "@/domain/model/scip";
+import type { Index } from "@/domain/model/scip";
 import { BladeParser } from "@/usecase/shared/BladeParser";
 import {
 	type CompletionItem,
 	CompletionItemKind,
-	InsertTextFormat,
 } from "@volar/language-server";
 import {
 	type AbstractNode,
@@ -55,7 +54,7 @@ export class ViewCompletionItemsProvider {
 			for (const [argName, arg] of Object.entries(args)) {
 				let documentation = "";
 				if (arg.typeInfo === "") {
-					for (const doc of this.index.documents) {
+					for (const doc of Object.values(this.index.documents)) {
 						const symbolInfomation = doc.symbols[arg.symbol];
 						if (symbolInfomation) {
 							documentation = (symbolInfomation.documentation ?? []).join("\n");

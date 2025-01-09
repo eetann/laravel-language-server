@@ -1,4 +1,5 @@
 import {
+	type Index,
 	type Occurrence,
 	OccurrenceSchema,
 	type SymbolDict,
@@ -67,14 +68,12 @@ export function createOccurrenceMultipleLine(
 	});
 }
 
-type ReturnOnLeave = {
-	symbolDict: SymbolDict;
-	occurrences: Occurrence[];
-	viewArgumentDict: ViewArgumentDict;
-};
-
 export class NodeStrategy {
-	constructor(protected symbolCreator: SymbolCreator) {}
+	constructor(
+		protected index: Index,
+		protected relativePath: string,
+		protected symbolCreator: SymbolCreator,
+	) {}
 
 	getSymbol(_node: Node, parentSymbol: string): string {
 		return parentSymbol;
@@ -90,18 +89,35 @@ export class NodeStrategy {
 	getType(node: Node): string {
 		return "";
 	}
+
 	createSymbolInformations(node: Node): SymbolDict {
 		return {};
 	}
+	insertSymbolInformations(node: Node): void {
+		const symbolDict = this.createSymbolInformations(node);
+		Object.assign(this.index.documents[this.relativePath].symbols, symbolDict);
+	}
+
 	createOccurrences(node: Node): Occurrence[] {
 		return [];
 	}
-	onLeave(node: Node): ReturnOnLeave {
+	insertOccurrences(node: Node): void {
+		const occurrences = this.createOccurrences(node);
+		this.index.documents[this.relativePath].occurrences.push(...occurrences);
+	}
+
+	createViewArgumentDict(node: Node): ViewArgumentDict {
+		return {};
+	}
+	insertViewArgumentDict(node: Node): void {
+		const viewArgumentDict = this.createViewArgumentDict(node);
+		Object.assign(this.index.viewArgumentDict, viewArgumentDict);
+	}
+
+	onLeave(node: Node): void {
 		node.typeInfo = this.getType(node);
-		return {
-			symbolDict: this.createSymbolInformations(node),
-			occurrences: this.createOccurrences(node),
-			viewArgumentDict: {},
-		};
+		this.insertSymbolInformations(node);
+		this.insertOccurrences(node);
+		this.insertViewArgumentDict(node);
 	}
 }

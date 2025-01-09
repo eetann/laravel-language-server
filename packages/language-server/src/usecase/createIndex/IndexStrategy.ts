@@ -94,8 +94,8 @@ import {
 } from "@/domain/model/PhpNode";
 import { NodeStrategy } from "@/domain/model/PhpNode/NodeStrategy";
 import {
-	type Document,
 	DocumentSchema,
+	type Index,
 	type ViewArgumentDict,
 } from "@/domain/model/scip";
 import type { SymbolCreator } from "@/domain/model/shared/SymbolCreator";
@@ -122,150 +122,385 @@ export function traverseForIndex(
 }
 
 export class IndexStrategy extends NodeStrategy {
-	public document: Document;
-	public viewArgumentDict: ViewArgumentDict = {};
 	private strategies = new Map<string, NodeStrategy>();
 
-	constructor(relativePath: string, symbolCreator: SymbolCreator) {
-		super(symbolCreator);
-		this.document = create(DocumentSchema, {
+	constructor(
+		public index: Index,
+		relativePath: string,
+		symbolCreator: SymbolCreator,
+	) {
+		super(index, relativePath, symbolCreator);
+		this.index.documents[relativePath] = create(DocumentSchema, {
 			language: "php",
-			relativePath,
 		});
-		this.strategies.set("array", new PhpArrayStrategy(symbolCreator));
-		this.strategies.set("arrowfunc", new ArrowFuncStrategy(symbolCreator));
-		this.strategies.set("assign", new AssignStrategy(symbolCreator));
-		this.strategies.set("assignref", new AssignRefStrategy(symbolCreator));
-		this.strategies.set("attrgroup", new AttrGroupStrategy(symbolCreator));
-		this.strategies.set("attribute", new AttributeStrategy(symbolCreator));
-		this.strategies.set("bin", new BinStrategy(symbolCreator));
-		this.strategies.set("block", new BlockStrategy(symbolCreator));
-		this.strategies.set("boolean", new PhpBooleanStrategy(symbolCreator));
-		this.strategies.set("break", new BreakStrategy(symbolCreator));
-		this.strategies.set("call", new CallStrategy(symbolCreator));
-		this.strategies.set("case", new CaseStrategy(symbolCreator));
-		this.strategies.set("cast", new CastStrategy(symbolCreator));
-		this.strategies.set("catch", new CatchStrategy(symbolCreator));
-		this.strategies.set("class", new ClassStrategy(symbolCreator));
+		this.strategies.set(
+			"array",
+			new PhpArrayStrategy(index, relativePath, symbolCreator),
+		);
+		this.strategies.set(
+			"arrowfunc",
+			new ArrowFuncStrategy(index, relativePath, symbolCreator),
+		);
+		this.strategies.set(
+			"assign",
+			new AssignStrategy(index, relativePath, symbolCreator),
+		);
+		this.strategies.set(
+			"assignref",
+			new AssignRefStrategy(index, relativePath, symbolCreator),
+		);
+		this.strategies.set(
+			"attrgroup",
+			new AttrGroupStrategy(index, relativePath, symbolCreator),
+		);
+		this.strategies.set(
+			"attribute",
+			new AttributeStrategy(index, relativePath, symbolCreator),
+		);
+		this.strategies.set(
+			"bin",
+			new BinStrategy(index, relativePath, symbolCreator),
+		);
+		this.strategies.set(
+			"block",
+			new BlockStrategy(index, relativePath, symbolCreator),
+		);
+		this.strategies.set(
+			"boolean",
+			new PhpBooleanStrategy(index, relativePath, symbolCreator),
+		);
+		this.strategies.set(
+			"break",
+			new BreakStrategy(index, relativePath, symbolCreator),
+		);
+		this.strategies.set(
+			"call",
+			new CallStrategy(index, relativePath, symbolCreator),
+		);
+		this.strategies.set(
+			"case",
+			new CaseStrategy(index, relativePath, symbolCreator),
+		);
+		this.strategies.set(
+			"cast",
+			new CastStrategy(index, relativePath, symbolCreator),
+		);
+		this.strategies.set(
+			"catch",
+			new CatchStrategy(index, relativePath, symbolCreator),
+		);
+		this.strategies.set(
+			"class",
+			new ClassStrategy(index, relativePath, symbolCreator),
+		);
 		this.strategies.set(
 			"classconstant",
-			new ClassConstantStrategy(symbolCreator),
+			new ClassConstantStrategy(index, relativePath, symbolCreator),
 		);
-		this.strategies.set("clone", new CloneStrategy(symbolCreator));
-		this.strategies.set("closure", new ClosureStrategy(symbolCreator));
-		this.strategies.set("constant", new ConstantStrategy(symbolCreator));
-		this.strategies.set("continue", new ContinueStrategy(symbolCreator));
-		this.strategies.set("declare", new DeclareStrategy(symbolCreator));
+		this.strategies.set(
+			"clone",
+			new CloneStrategy(index, relativePath, symbolCreator),
+		);
+		this.strategies.set(
+			"closure",
+			new ClosureStrategy(index, relativePath, symbolCreator),
+		);
+		this.strategies.set(
+			"constant",
+			new ConstantStrategy(index, relativePath, symbolCreator),
+		);
+		this.strategies.set(
+			"continue",
+			new ContinueStrategy(index, relativePath, symbolCreator),
+		);
+		this.strategies.set(
+			"declare",
+			new DeclareStrategy(index, relativePath, symbolCreator),
+		);
 		this.strategies.set(
 			"declaredirective",
-			new DeclareDirectiveStrategy(symbolCreator),
+			new DeclareDirectiveStrategy(index, relativePath, symbolCreator),
 		);
-		this.strategies.set("do", new DoStrategy(symbolCreator));
-		this.strategies.set("echo", new EchoStrategy(symbolCreator));
-		this.strategies.set("empty", new EmptyStrategy(symbolCreator));
-		this.strategies.set("encapsed", new EncapsedStrategy(symbolCreator));
+		this.strategies.set(
+			"do",
+			new DoStrategy(index, relativePath, symbolCreator),
+		);
+		this.strategies.set(
+			"echo",
+			new EchoStrategy(index, relativePath, symbolCreator),
+		);
+		this.strategies.set(
+			"empty",
+			new EmptyStrategy(index, relativePath, symbolCreator),
+		);
+		this.strategies.set(
+			"encapsed",
+			new EncapsedStrategy(index, relativePath, symbolCreator),
+		);
 		this.strategies.set(
 			"encapsedpart",
-			new EncapsedPartStrategy(symbolCreator),
+			new EncapsedPartStrategy(index, relativePath, symbolCreator),
 		);
-		this.strategies.set("entry", new EntryStrategy(symbolCreator));
-		this.strategies.set("enum", new EnumStrategy(symbolCreator));
-		this.strategies.set("enumcase", new EnumCaseStrategy(symbolCreator));
-		this.strategies.set("eval", new EvalStrategy(symbolCreator));
-		this.strategies.set("exit", new ExitStrategy(symbolCreator));
+		this.strategies.set(
+			"entry",
+			new EntryStrategy(index, relativePath, symbolCreator),
+		);
+		this.strategies.set(
+			"enum",
+			new EnumStrategy(index, relativePath, symbolCreator),
+		);
+		this.strategies.set(
+			"enumcase",
+			new EnumCaseStrategy(index, relativePath, symbolCreator),
+		);
+		this.strategies.set(
+			"eval",
+			new EvalStrategy(index, relativePath, symbolCreator),
+		);
+		this.strategies.set(
+			"exit",
+			new ExitStrategy(index, relativePath, symbolCreator),
+		);
 		this.strategies.set(
 			"expressionstatement",
-			new ExpressionStatementStrategy(symbolCreator),
+			new ExpressionStatementStrategy(index, relativePath, symbolCreator),
 		);
-		this.strategies.set("for", new ForStrategy(symbolCreator));
-		this.strategies.set("foreach", new ForeachStrategy(symbolCreator));
-		this.strategies.set("function", new PhpFunctionStrategy(symbolCreator));
-		this.strategies.set("global", new GlobalStrategy(symbolCreator));
-		this.strategies.set("goto", new GotoStrategy(symbolCreator));
-		this.strategies.set("halt", new HaltStrategy(symbolCreator));
-		this.strategies.set("identifier", new IdentifierStrategy(symbolCreator));
-		this.strategies.set("if", new IfStrategy(symbolCreator));
-		this.strategies.set("include", new IncludeStrategy(symbolCreator));
-		this.strategies.set("interface", new InterfaceStrategy(symbolCreator));
-		this.strategies.set("isset", new IssetStrategy(symbolCreator));
-		this.strategies.set("label", new LabelStrategy(symbolCreator));
-		this.strategies.set("list", new ListStrategy(symbolCreator));
-		this.strategies.set("match", new MatchStrategy(symbolCreator));
-		this.strategies.set("matcharm", new MatchArmStrategy(symbolCreator));
-		this.strategies.set("method", new MethodStrategy(symbolCreator));
+		this.strategies.set(
+			"for",
+			new ForStrategy(index, relativePath, symbolCreator),
+		);
+		this.strategies.set(
+			"foreach",
+			new ForeachStrategy(index, relativePath, symbolCreator),
+		);
+		this.strategies.set(
+			"function",
+			new PhpFunctionStrategy(index, relativePath, symbolCreator),
+		);
+		this.strategies.set(
+			"global",
+			new GlobalStrategy(index, relativePath, symbolCreator),
+		);
+		this.strategies.set(
+			"goto",
+			new GotoStrategy(index, relativePath, symbolCreator),
+		);
+		this.strategies.set(
+			"halt",
+			new HaltStrategy(index, relativePath, symbolCreator),
+		);
+		this.strategies.set(
+			"identifier",
+			new IdentifierStrategy(index, relativePath, symbolCreator),
+		);
+		this.strategies.set(
+			"if",
+			new IfStrategy(index, relativePath, symbolCreator),
+		);
+		this.strategies.set(
+			"include",
+			new IncludeStrategy(index, relativePath, symbolCreator),
+		);
+		this.strategies.set(
+			"interface",
+			new InterfaceStrategy(index, relativePath, symbolCreator),
+		);
+		this.strategies.set(
+			"isset",
+			new IssetStrategy(index, relativePath, symbolCreator),
+		);
+		this.strategies.set(
+			"label",
+			new LabelStrategy(index, relativePath, symbolCreator),
+		);
+		this.strategies.set(
+			"list",
+			new ListStrategy(index, relativePath, symbolCreator),
+		);
+		this.strategies.set(
+			"match",
+			new MatchStrategy(index, relativePath, symbolCreator),
+		);
+		this.strategies.set(
+			"matcharm",
+			new MatchArmStrategy(index, relativePath, symbolCreator),
+		);
+		this.strategies.set(
+			"method",
+			new MethodStrategy(index, relativePath, symbolCreator),
+		);
 		this.strategies.set(
 			"namedargument",
-			new namedargumentStrategy(symbolCreator),
+			new namedargumentStrategy(index, relativePath, symbolCreator),
 		);
-		this.strategies.set("namespace", new NamespaceStrategy(symbolCreator));
-		this.strategies.set("new", new NewStrategy(symbolCreator));
-		this.strategies.set("noop", new NoopStrategy(symbolCreator));
-		this.strategies.set("nowdoc", new NowDocStrategy(symbolCreator));
-		this.strategies.set("nullkeyword", new NullKeywordStrategy(symbolCreator));
+		this.strategies.set(
+			"namespace",
+			new NamespaceStrategy(index, relativePath, symbolCreator),
+		);
+		this.strategies.set(
+			"new",
+			new NewStrategy(index, relativePath, symbolCreator),
+		);
+		this.strategies.set(
+			"noop",
+			new NoopStrategy(index, relativePath, symbolCreator),
+		);
+		this.strategies.set(
+			"nowdoc",
+			new NowDocStrategy(index, relativePath, symbolCreator),
+		);
+		this.strategies.set(
+			"nullkeyword",
+			new NullKeywordStrategy(index, relativePath, symbolCreator),
+		);
 		this.strategies.set(
 			"nullsafepropertylookup",
-			new NullSafePropertyLookupStrategy(symbolCreator),
+			new NullSafePropertyLookupStrategy(index, relativePath, symbolCreator),
 		);
-		this.strategies.set("number", new PhpNumberStrategy(symbolCreator));
+		this.strategies.set(
+			"number",
+			new PhpNumberStrategy(index, relativePath, symbolCreator),
+		);
 		this.strategies.set(
 			"offsetlookup",
-			new OffsetLookupStrategy(symbolCreator),
+			new OffsetLookupStrategy(index, relativePath, symbolCreator),
 		);
-		this.strategies.set("parameter", new ParameterStrategy(symbolCreator));
+		this.strategies.set(
+			"parameter",
+			new ParameterStrategy(index, relativePath, symbolCreator),
+		);
 		this.strategies.set(
 			"parentreference",
-			new ParentReferenceStrategy(symbolCreator),
+			new ParentReferenceStrategy(index, relativePath, symbolCreator),
 		);
-		this.strategies.set("post", new PostStrategy(symbolCreator));
-		this.strategies.set("pre", new PreStrategy(symbolCreator));
-		this.strategies.set("print", new PrintStrategy(symbolCreator));
-		this.strategies.set("program", new ProgramStrategy(symbolCreator));
-		this.strategies.set("property", new PropertyStrategy(symbolCreator));
+		this.strategies.set(
+			"post",
+			new PostStrategy(index, relativePath, symbolCreator),
+		);
+		this.strategies.set(
+			"pre",
+			new PreStrategy(index, relativePath, symbolCreator),
+		);
+		this.strategies.set(
+			"print",
+			new PrintStrategy(index, relativePath, symbolCreator),
+		);
+		this.strategies.set(
+			"program",
+			new ProgramStrategy(index, relativePath, symbolCreator),
+		);
+		this.strategies.set(
+			"property",
+			new PropertyStrategy(index, relativePath, symbolCreator),
+		);
 		this.strategies.set(
 			"propertylookup",
-			new PropertyLookupStrategy(symbolCreator),
+			new PropertyLookupStrategy(index, relativePath, symbolCreator),
 		);
 		this.strategies.set(
 			"propertystatement",
-			new PropertyStatementStrategy(symbolCreator),
+			new PropertyStatementStrategy(index, relativePath, symbolCreator),
 		);
-		this.strategies.set("reference", new ReferenceStrategy(symbolCreator));
-		this.strategies.set("retif", new RetIfStrategy(symbolCreator));
-		this.strategies.set("return", new ReturnStrategy(symbolCreator));
+		this.strategies.set(
+			"reference",
+			new ReferenceStrategy(index, relativePath, symbolCreator),
+		);
+		this.strategies.set(
+			"retif",
+			new RetIfStrategy(index, relativePath, symbolCreator),
+		);
+		this.strategies.set(
+			"return",
+			new ReturnStrategy(index, relativePath, symbolCreator),
+		);
 		this.strategies.set(
 			"selfreference",
-			new SelfReferenceStrategy(symbolCreator),
+			new SelfReferenceStrategy(index, relativePath, symbolCreator),
 		);
-		this.strategies.set("silent", new SilentStrategy(symbolCreator));
-		this.strategies.set("static", new StaticStrategy(symbolCreator));
+		this.strategies.set(
+			"silent",
+			new SilentStrategy(index, relativePath, symbolCreator),
+		);
+		this.strategies.set(
+			"static",
+			new StaticStrategy(index, relativePath, symbolCreator),
+		);
 		this.strategies.set(
 			"staticlookup",
-			new StaticLookupStrategy(symbolCreator),
+			new StaticLookupStrategy(index, relativePath, symbolCreator),
 		);
 		this.strategies.set(
 			"staticvariable",
-			new StaticVariableStrategy(symbolCreator),
+			new StaticVariableStrategy(index, relativePath, symbolCreator),
 		);
-		this.strategies.set("string", new PhpStringStrategy(symbolCreator));
-		this.strategies.set("switch", new SwitchStrategy(symbolCreator));
-		this.strategies.set("throw", new ThrowStrategy(symbolCreator));
-		this.strategies.set("trait", new TraitStrategy(symbolCreator));
-		this.strategies.set("traitalias", new TraitAliasStrategy(symbolCreator));
-		this.strategies.set("traituse", new TraitUseStrategy(symbolCreator));
-		this.strategies.set("try", new TryStrategy(symbolCreator));
+		this.strategies.set(
+			"string",
+			new PhpStringStrategy(index, relativePath, symbolCreator),
+		);
+		this.strategies.set(
+			"switch",
+			new SwitchStrategy(index, relativePath, symbolCreator),
+		);
+		this.strategies.set(
+			"throw",
+			new ThrowStrategy(index, relativePath, symbolCreator),
+		);
+		this.strategies.set(
+			"trait",
+			new TraitStrategy(index, relativePath, symbolCreator),
+		);
+		this.strategies.set(
+			"traitalias",
+			new TraitAliasStrategy(index, relativePath, symbolCreator),
+		);
+		this.strategies.set(
+			"traituse",
+			new TraitUseStrategy(index, relativePath, symbolCreator),
+		);
+		this.strategies.set(
+			"try",
+			new TryStrategy(index, relativePath, symbolCreator),
+		);
 		this.strategies.set(
 			"typereference",
-			new TypeReferenceStrategy(symbolCreator),
+			new TypeReferenceStrategy(index, relativePath, symbolCreator),
 		);
-		this.strategies.set("unary", new UnaryStrategy(symbolCreator));
-		this.strategies.set("uniontype", new UnionTypeStrategy(symbolCreator));
-		this.strategies.set("unset", new UnsetStrategy(symbolCreator));
-		this.strategies.set("usegroup", new UseGroupStrategy(symbolCreator));
-		this.strategies.set("useitem", new UseItemStrategy(symbolCreator));
-		this.strategies.set("variable", new VariableStrategy(symbolCreator));
-		this.strategies.set("while", new WhileStrategy(symbolCreator));
-		this.strategies.set("yield", new YieldStrategy(symbolCreator));
-		this.strategies.set("yieldfrom", new YieldFromStrategy(symbolCreator));
+		this.strategies.set(
+			"unary",
+			new UnaryStrategy(index, relativePath, symbolCreator),
+		);
+		this.strategies.set(
+			"uniontype",
+			new UnionTypeStrategy(index, relativePath, symbolCreator),
+		);
+		this.strategies.set(
+			"unset",
+			new UnsetStrategy(index, relativePath, symbolCreator),
+		);
+		this.strategies.set(
+			"usegroup",
+			new UseGroupStrategy(index, relativePath, symbolCreator),
+		);
+		this.strategies.set(
+			"useitem",
+			new UseItemStrategy(index, relativePath, symbolCreator),
+		);
+		this.strategies.set(
+			"variable",
+			new VariableStrategy(index, relativePath, symbolCreator),
+		);
+		this.strategies.set(
+			"while",
+			new WhileStrategy(index, relativePath, symbolCreator),
+		);
+		this.strategies.set(
+			"yield",
+			new YieldStrategy(index, relativePath, symbolCreator),
+		);
+		this.strategies.set(
+			"yieldfrom",
+			new YieldFromStrategy(index, relativePath, symbolCreator),
+		);
 	}
 
 	// thisを固定するためにarrow functionを使う
@@ -278,19 +513,6 @@ export class IndexStrategy extends NodeStrategy {
 	};
 
 	onLeave = (node: Node) => {
-		const strategy = this.strategies.get(node.kind);
-		if (typeof strategy === "undefined") {
-			return;
-		}
-		const { symbolDict, occurrences, viewArgumentDict } =
-			strategy.onLeave(node);
-		Object.assign(this.document.symbols, symbolDict);
-		this.document.occurrences.push(...occurrences);
-		Object.assign(this.viewArgumentDict, viewArgumentDict);
-		return {
-			symbolDict: {},
-			occurrences: [],
-			viewArgumentDict: {},
-		};
+		this.strategies.get(node.kind)?.onLeave(node);
 	};
 }

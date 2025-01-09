@@ -1,9 +1,11 @@
 import {
+	IndexSchema,
 	SymbolInformation_Kind,
 	SymbolRole,
 	SyntaxKind,
 } from "@/domain/model/scip";
 import { SymbolCreator } from "@/domain/model/shared/SymbolCreator";
+import { create } from "@bufbuild/protobuf";
 import { Engine } from "php-parser";
 import { IndexStrategy, traverseForIndex } from "./IndexStrategy";
 
@@ -371,7 +373,9 @@ function generatorFrom() {
 			packageVersion,
 			filename,
 		);
-		const strategy = new IndexStrategy(filename, symbolCreator);
+		const index = create(IndexSchema, {});
+		index.viewArgumentDict = {};
+		const strategy = new IndexStrategy(index, filename, symbolCreator);
 		expect(() =>
 			traverseForIndex(
 				rootNode,
@@ -384,13 +388,13 @@ function generatorFrom() {
 		const prefix = "laravel-language-server composer example 0.0.0 ";
 		const namespace = `${prefix}ExampleNamespace/`;
 		const symbol = `${namespace}exampleFunction().`;
-		expect(strategy.document.symbols).toHaveProperty(symbol);
-		expect(strategy.document.symbols[symbol]).toEqual(
+		expect(strategy.index.documents[filename].symbols).toHaveProperty(symbol);
+		expect(strategy.index.documents[filename].symbols[symbol]).toEqual(
 			expect.objectContaining({
 				kind: SymbolInformation_Kind.Function,
 			}),
 		);
-		expect(strategy.document.occurrences).toContainEqual(
+		expect(strategy.index.documents[filename].occurrences).toContainEqual(
 			expect.objectContaining({
 				symbol,
 				syntaxKind: SyntaxKind.IdentifierFunctionDefinition,

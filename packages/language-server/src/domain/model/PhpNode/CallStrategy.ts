@@ -84,12 +84,4 @@ export class CallStrategy extends NodeStrategy {
 		}
 		return viewArgumentDict;
 	}
-	onLeave(node: Call) {
-		node.typeInfo = this.getType(node);
-		return {
-			symbolDict: this.createSymbolInformations(node),
-			occurrences: this.createOccurrences(node),
-			viewArgumentDict: this.createViewArgumentDict(node),
-		};
-	}
 }

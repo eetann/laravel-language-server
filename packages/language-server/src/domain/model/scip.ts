@@ -54,7 +54,22 @@ export type Index = Message<"scip.Index"> & {
 	 *
 	 * @generated from field: repeated scip.Document documents = 2;
 	 */
-	documents: Document[];
+	documents: {
+		/**
+		 * Unique path to the text document.
+		 *
+		 * 1. The path must be relative to the directory supplied in the associated
+		 *    `Metadata.project_root`.
+		 * 2. The path must not begin with a leading '/'.
+		 * 3. The path must point to a regular file, not a symbolic link.
+		 * 4. The path must use '/' as the separator, including on Windows.
+		 * 5. The path must be canonical; it cannot include empty components ('//'),
+		 *    or '.' or '..'.
+		 *
+		 * @generated from field: string relative_path = 1;
+		 */
+		[relativePath: string]: Document;
+	};
 
 	/**
 	 * (optional) Symbols that are referenced from this index but are defined in
@@ -185,21 +200,6 @@ export type Document = Message<"scip.Document"> & {
 	 * @generated from field: string language = 4;
 	 */
 	language: string;
-
-	/**
-	 * (Required) Unique path to the text document.
-	 *
-	 * 1. The path must be relative to the directory supplied in the associated
-	 *    `Metadata.project_root`.
-	 * 2. The path must not begin with a leading '/'.
-	 * 3. The path must point to a regular file, not a symbolic link.
-	 * 4. The path must use '/' as the separator, including on Windows.
-	 * 5. The path must be canonical; it cannot include empty components ('//'),
-	 *    or '.' or '..'.
-	 *
-	 * @generated from field: string relative_path = 1;
-	 */
-	relativePath: string;
 
 	/**
 	 * Occurrences that appear in this file.

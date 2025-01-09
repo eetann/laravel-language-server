@@ -2,7 +2,9 @@ import {
 	IndexStrategy,
 	traverseForIndex,
 } from "@/usecase/createIndex/IndexStrategy";
+import { create } from "@bufbuild/protobuf";
 import { Engine } from "php-parser";
+import { IndexSchema } from "../scip";
 import { SymbolCreator } from "../shared/SymbolCreator";
 
 describe("CallStrategy", () => {
@@ -38,7 +40,9 @@ class BookController extends Controller
 `,
 			filename,
 		);
-		const strategy = new IndexStrategy(filename, symbolCreator);
+		const index = create(IndexSchema, {});
+		index.viewArgumentDict = {};
+		const strategy = new IndexStrategy(index, filename, symbolCreator);
 		expect(() =>
 			traverseForIndex(
 				rootNode,
@@ -51,8 +55,8 @@ class BookController extends Controller
 		const prefix = `laravel-language-server composer ${packageName} ${packageVersion} `;
 		const namespace = `${prefix}\`App\\Http\\Controllers\`/BookController#`;
 		const symbol = `${namespace}index().view().`;
-		expect(strategy.document.symbols).toHaveProperty(symbol);
-		expect(strategy.viewArgumentDict).toEqual(
+		expect(strategy.index.documents[filename].symbols).toHaveProperty(symbol);
+		expect(strategy.index.viewArgumentDict).toEqual(
 			expect.objectContaining({
 				"book/index": {
 					books: {
@@ -80,7 +84,9 @@ class BookController extends Controller
 `,
 			filename,
 		);
-		const strategy = new IndexStrategy(filename, symbolCreator);
+		const index = create(IndexSchema, {});
+		index.viewArgumentDict = {};
+		const strategy = new IndexStrategy(index, filename, symbolCreator);
 		expect(() =>
 			traverseForIndex(
 				rootNode,
@@ -93,8 +99,8 @@ class BookController extends Controller
 		const prefix = `laravel-language-server composer ${packageName} ${packageVersion} `;
 		const namespace = `${prefix}\`App\\Http\\Controllers\`/BookController#`;
 		const symbol = `${namespace}index().view().`;
-		expect(strategy.document.symbols).toHaveProperty(symbol);
-		expect(strategy.viewArgumentDict).toEqual(
+		expect(strategy.index.documents[filename].symbols).toHaveProperty(symbol);
+		expect(strategy.index.viewArgumentDict).toEqual(
 			expect.objectContaining({
 				"book/index": {
 					books: {
@@ -114,7 +120,9 @@ $result = max(1, 2, 3);
 `,
 			filename,
 		);
-		const strategy = new IndexStrategy(filename, symbolCreator);
+		const index = create(IndexSchema, {});
+		index.viewArgumentDict = {};
+		const strategy = new IndexStrategy(index, filename, symbolCreator);
 		expect(() =>
 			traverseForIndex(
 				rootNode,
@@ -124,8 +132,8 @@ $result = max(1, 2, 3);
 				strategy.onLeave,
 			),
 		).not.toThrow();
-		const node = Object.keys(strategy.document.symbols).filter((v) =>
-			v.match("view"),
+		const node = Object.keys(strategy.index.documents[filename].symbols).filter(
+			(v) => v.match("view"),
 		);
 		expect(node.length).toBe(0);
 	});

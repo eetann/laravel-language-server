@@ -9,9 +9,8 @@ describe("CreateIndexUseCase", () => {
 		const prefix = "laravel-language-server composer laravel/laravel 0.0.0 ";
 		const namespace = `${prefix}\`App\\Http\\Controllers\`/BookController#`;
 		const symbol = `${namespace}index().view().`;
-		const bookControllerDocument = index.documents.find(
-			(d) => d.relativePath === "app/Http/Controllers/BookController.php",
-		);
+		const bookControllerDocument =
+			index.documents["app/Http/Controllers/BookController.php"];
 		expect(bookControllerDocument).not.toBeUndefined();
 		expect(bookControllerDocument.symbols).toHaveProperty(symbol);
 		expect(index.viewArgumentDict).toEqual(
