@@ -1,6 +1,5 @@
 import {
 	type Occurrence,
-	type SymbolInformation,
 	SymbolInformation_Kind,
 	SymbolRole,
 	SyntaxKind,

@@ -1,8 +1,11 @@
-import { NodeStrategy } from "./NodeStrategy";
 import type { Return } from "php-parser";
+import { NodeStrategy } from "./NodeStrategy";
 
 export class ReturnStrategy extends NodeStrategy {
 	getChildren(node: Return) {
-		return [node.expr];
+		if (node.expr) {
+			return [node.expr];
+		}
+		return [];
 	}
 }

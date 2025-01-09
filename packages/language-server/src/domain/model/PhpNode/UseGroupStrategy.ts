@@ -1,5 +1,11 @@
+import type { UseGroup, UseItem } from "php-parser";
 import { NodeStrategy } from "./NodeStrategy";
-import type { UseGroup } from "php-parser";
+
+declare module "php-parser" {
+	interface UseGroup {
+		items: UseItem[];
+	}
+}
 
 export class UseGroupStrategy extends NodeStrategy {
 	getChildren(node: UseGroup) {

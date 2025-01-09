@@ -376,6 +376,7 @@ function generatorFrom() {
 		);
 		const index = create(IndexSchema, {});
 		index.viewArgumentDict = {};
+		index.packageDict = {};
 		const workspaceFolder = path.resolve("../laravel-sample/");
 		const strategy = new IndexStrategy(
 			index,

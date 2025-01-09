@@ -1,8 +1,14 @@
+import type { Node, OffsetLookup } from "php-parser";
 import { NodeStrategy } from "./NodeStrategy";
-import type { OffsetLookup } from "php-parser";
 
 export class OffsetLookupStrategy extends NodeStrategy {
 	getChildren(node: OffsetLookup) {
-		return [node.what, node.offset];
+		const children: Node[] = [node.what];
+		// node.offset = falseのケースがあるため
+		// $b[] = 'a' で配列末尾に追加
+		if (node.offset) {
+			children.push(node.offset);
+		}
+		return children;
 	}
 }

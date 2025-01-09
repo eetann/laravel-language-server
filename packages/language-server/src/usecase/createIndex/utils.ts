@@ -86,6 +86,7 @@ import {
 	UnsetStrategy,
 	UseGroupStrategy,
 	VariableStrategy,
+	VariadicStrategy,
 	WhileStrategy,
 	YieldFromStrategy,
 	YieldStrategy,
@@ -395,6 +396,10 @@ export function setStrategies(
 	strategies.set(
 		"variable",
 		new VariableStrategy(index, relativePath, symbolCreator),
+	);
+	strategies.set(
+		"variadic",
+		new VariadicStrategy(index, relativePath, symbolCreator),
 	);
 	strategies.set(
 		"while",

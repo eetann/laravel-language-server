@@ -21,13 +21,12 @@ export class ProgramStrategy extends NodeStrategy {
 		return node.children;
 	}
 
-	createSymbolInformation(node: Program): SymbolInformation[] {
-		return [
-			createSymbolInformation({
-				symbol: node.symbol,
+	createSymbolInformation(node: Program) {
+		return {
+			[node.symbol]: createSymbolInformation({
 				kind: SymbolInformation_Kind.Namespace,
 			}),
-		];
+		};
 	}
 
 	createOccurrenceMultipleLine(node: Program): Occurrence[] {

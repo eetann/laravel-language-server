@@ -10,9 +10,10 @@
         - [x] 変数がプリミティブ型
         - [x] 変数が配列
         - [ ] 変数がモデル（`App\Models\Book`のようなやつ）
-            - [ ] UseItem Nodeの型をどうやって取得するか
-                - 全strategyのconstructorにindexを渡す？
-                - そうすると`createSymbolInformations`などはリストを返すのではなくindexを変更にしたほうが良さそう
+            - パーサーを修正しないとだめなやつが結構あるのでどうしたものか……
+            - [ ] `?->`のようなnullsafe operatorに対応する
+            - [ ] `$query->{$method}(...array_values($value), boolean: $boolean);`みたいなvariadic(...)の後に変数置いても大丈夫なようにする
+
 - [ ] for関係で配列の中身の要素の型を反映
 - [ ] bladeの変数でDefinitionの確認（辿れる場合のみ）
 - [ ] bladeからviewの場所を特定するコマンド

@@ -59,6 +59,16 @@ export class UseItemStrategy extends NodeStrategy {
 		} else {
 			alias = node.name.split("\\").at(-1);
 		}
+		if (namespace in this.index.packageDict) {
+			const absolutePath = this.index.packageDict[namespace].src;
+			// PHP 8.0以降の文法に対応していないのでパーサー側を修正しないといけない
+			// new Indexer().execute(
+			// 	this.index,
+			// 	this.workspaceFolder,
+			// 	absolutePath,
+			// 	false,
+			// );
+		}
 		// TODO: Controllerよりも前にModelsのファイルを読み込まないと、
 		//   Modelsのファイルで決められた名前空間と一致するか検索できない
 		//   一旦名前空間とファイル名が一致している前提で実装する
@@ -130,25 +140,29 @@ export class Indexer {
 			return;
 		}
 		const content = readFileSync(absolutePath, "utf-8");
-		const rootNode = phpParser.parseCode(content, relativePath);
-		const symbolCreator = new SymbolCreator(
-			"laravel/laravel",
-			"0.0.0",
-			relativePath,
-		);
+		try {
+			const rootNode = phpParser.parseCode(content, relativePath);
+			const symbolCreator = new SymbolCreator(
+				"laravel/laravel",
+				"0.0.0",
+				relativePath,
+			);
 
-		const strategy = new IndexStrategy(
-			index,
-			workspaceFolder,
-			relativePath,
-			symbolCreator,
-		);
-		traverseForIndex(
-			rootNode,
-			"",
-			strategy.getChildren,
-			strategy.onEnter,
-			strategy.onLeave,
-		);
+			const strategy = new IndexStrategy(
+				index,
+				workspaceFolder,
+				relativePath,
+				symbolCreator,
+			);
+			traverseForIndex(
+				rootNode,
+				"",
+				strategy.getChildren,
+				strategy.onEnter,
+				strategy.onLeave,
+			);
+		} catch (error) {
+			console.error(error);
+		}
 	}
 }

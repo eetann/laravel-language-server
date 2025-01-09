@@ -85,6 +85,7 @@ export { UnionTypeStrategy } from "./UnionTypeStrategy";
 export { UnsetStrategy } from "./UnsetStrategy";
 export { UseGroupStrategy } from "./UseGroupStrategy";
 export { VariableStrategy } from "./VariableStrategy";
+export { VariadicStrategy } from "./VariadicStrategy";
 export { WhileStrategy } from "./WhileStrategy";
 export { YieldFromStrategy } from "./YieldFromStrategy";
 export { YieldStrategy } from "./YieldStrategy";
