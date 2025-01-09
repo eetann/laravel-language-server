@@ -1,8 +1,5 @@
 import path from "node:path";
-import {
-	IndexStrategy,
-	traverseForIndex,
-} from "@/usecase/createIndex/IndexStrategy";
+import { IndexStrategy, traverseForIndex } from "@/usecase/createIndex/Indexer";
 import { create } from "@bufbuild/protobuf";
 import { Engine } from "php-parser";
 import { IndexSchema } from "../scip";

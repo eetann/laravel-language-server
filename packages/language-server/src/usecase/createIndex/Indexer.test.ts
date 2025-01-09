@@ -8,7 +8,7 @@ import {
 import { SymbolCreator } from "@/domain/model/shared/SymbolCreator";
 import { create } from "@bufbuild/protobuf";
 import { Engine } from "php-parser";
-import { IndexStrategy, traverseForIndex } from "./IndexStrategy";
+import { IndexStrategy, traverseForIndex } from "./Indexer";
 
 describe("IndexStrategy", () => {
 	const parser = new Engine({

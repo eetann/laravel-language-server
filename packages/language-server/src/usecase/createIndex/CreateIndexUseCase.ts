@@ -6,7 +6,7 @@ import {
 	ComposerLockFetcher,
 	type PackageDict,
 } from "../shared/composerLockFetcher/ComposerLockFetcher";
-import { indexOneFile } from "./IndexStrategy";
+import { Indexer } from "./Indexer";
 
 export type ViewCaller = {
 	parentSymbol: string;
@@ -27,7 +27,7 @@ export class CreateIndexUseCase {
 			withFileTypes: true,
 		}).filter((f) => f.isFile() && f.name.endsWith(".php"));
 		for (const absoluteFile of files) {
-			indexOneFile(
+			new Indexer().execute(
 				index,
 				workspaceFolder,
 				path.join(absoluteFile.parentPath, absoluteFile.name),
