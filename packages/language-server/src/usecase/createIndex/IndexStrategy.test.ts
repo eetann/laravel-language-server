@@ -1,3 +1,4 @@
+import path from "node:path";
 import {
 	IndexSchema,
 	SymbolInformation_Kind,
@@ -375,7 +376,13 @@ function generatorFrom() {
 		);
 		const index = create(IndexSchema, {});
 		index.viewArgumentDict = {};
-		const strategy = new IndexStrategy(index, filename, symbolCreator);
+		const workspaceFolder = path.resolve("../laravel-sample/");
+		const strategy = new IndexStrategy(
+			index,
+			workspaceFolder,
+			filename,
+			symbolCreator,
+		);
 		expect(() =>
 			traverseForIndex(
 				rootNode,

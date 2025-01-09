@@ -21,7 +21,7 @@ function escapedIdentifier(_value: string | Identifier) {
 	return `\`${value.replace(/`/g, "``")}\``;
 }
 
-function getName(name: string | Identifier) {
+export function getName(name: string | Identifier) {
 	if (typeof name === "string") {
 		return name;
 	}

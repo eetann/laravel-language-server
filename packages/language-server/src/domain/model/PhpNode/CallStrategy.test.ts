@@ -1,3 +1,4 @@
+import path from "node:path";
 import {
 	IndexStrategy,
 	traverseForIndex,
@@ -25,6 +26,7 @@ describe("CallStrategy", () => {
 		packageVersion,
 		filename,
 	);
+	const workspaceFolder = path.resolve("../laravel-sample/");
 	it("view array", () => {
 		const rootNode = parser.parseCode(
 			`<?php
@@ -42,7 +44,12 @@ class BookController extends Controller
 		);
 		const index = create(IndexSchema, {});
 		index.viewArgumentDict = {};
-		const strategy = new IndexStrategy(index, filename, symbolCreator);
+		const strategy = new IndexStrategy(
+			index,
+			workspaceFolder,
+			filename,
+			symbolCreator,
+		);
 		expect(() =>
 			traverseForIndex(
 				rootNode,
@@ -86,7 +93,12 @@ class BookController extends Controller
 		);
 		const index = create(IndexSchema, {});
 		index.viewArgumentDict = {};
-		const strategy = new IndexStrategy(index, filename, symbolCreator);
+		const strategy = new IndexStrategy(
+			index,
+			workspaceFolder,
+			filename,
+			symbolCreator,
+		);
 		expect(() =>
 			traverseForIndex(
 				rootNode,
@@ -122,7 +134,12 @@ $result = max(1, 2, 3);
 		);
 		const index = create(IndexSchema, {});
 		index.viewArgumentDict = {};
-		const strategy = new IndexStrategy(index, filename, symbolCreator);
+		const strategy = new IndexStrategy(
+			index,
+			workspaceFolder,
+			filename,
+			symbolCreator,
+		);
 		expect(() =>
 			traverseForIndex(
 				rootNode,

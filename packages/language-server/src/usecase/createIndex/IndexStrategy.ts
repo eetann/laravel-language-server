@@ -1,3 +1,5 @@
+import { readFileSync } from "node:fs";
+import path from "node:path";
 import {
 	ArrowFuncStrategy,
 	AssignRefStrategy,
@@ -85,7 +87,6 @@ import {
 	UnionTypeStrategy,
 	UnsetStrategy,
 	UseGroupStrategy,
-	UseItemStrategy,
 	VariableStrategy,
 	WhileStrategy,
 	YieldFromStrategy,
@@ -93,14 +94,12 @@ import {
 	namedargumentStrategy,
 } from "@/domain/model/PhpNode";
 import { NodeStrategy } from "@/domain/model/PhpNode/NodeStrategy";
-import {
-	DocumentSchema,
-	type Index,
-	type ViewArgumentDict,
-} from "@/domain/model/scip";
-import type { SymbolCreator } from "@/domain/model/shared/SymbolCreator";
+import { DocumentSchema, type Index } from "@/domain/model/scip";
+import { SymbolCreator } from "@/domain/model/shared/SymbolCreator";
 import { create } from "@bufbuild/protobuf";
 import type { Node } from "php-parser";
+import type { UseItem } from "php-parser";
+import { Engine } from "php-parser";
 
 // 走査関数
 export function traverseForIndex(
@@ -121,11 +120,96 @@ export function traverseForIndex(
 	}
 }
 
+const phpParser = new Engine({
+	parser: {
+		extractDoc: true,
+	},
+	ast: {
+		withPositions: true,
+	},
+});
+
+export function indexOneFile(
+	index: Index,
+	workspaceFolder: string,
+	filePath: string,
+	isRelative: boolean,
+): void {
+	let relativePath = "";
+	let absolutePath = "";
+	if (isRelative) {
+		relativePath = filePath;
+		absolutePath = path.join(workspaceFolder, filePath);
+	} else {
+		relativePath = path.relative(workspaceFolder, filePath);
+		absolutePath = filePath;
+	}
+	if (index.documents[relativePath]) {
+		return;
+	}
+	const content = readFileSync(absolutePath, "utf-8");
+	const rootNode = phpParser.parseCode(content, relativePath);
+	const symbolCreator = new SymbolCreator(
+		"laravel/laravel",
+		"0.0.0",
+		relativePath,
+	);
+
+	const strategy = new IndexStrategy(
+		index,
+		workspaceFolder,
+		relativePath,
+		symbolCreator,
+	);
+	traverseForIndex(
+		rootNode,
+		"",
+		strategy.getChildren,
+		strategy.onEnter,
+		strategy.onLeave,
+	);
+}
+
+function convertNamespaceToFilePath(namespace: string): string {
+	const filePath = namespace.replace(/^App\\/, "app/").replace(/\\/g, "/");
+	return `${filePath}.php`;
+}
+
+export class UseItemStrategy extends NodeStrategy {
+	constructor(
+		index: Index,
+		relativePath: string,
+		symbolCreator: SymbolCreator,
+		private workspaceFolder: string,
+	) {
+		super(index, relativePath, symbolCreator);
+	}
+	getChildren(node: UseItem) {
+		const namespace = node.name;
+		let alias = "";
+		if (node.alias) {
+			alias = node.alias.name;
+		} else {
+			alias = node.name.split("\\").at(-1);
+		}
+		// TODO: Controllerよりも前にModelsのファイルを読み込まないと、
+		//   Modelsのファイルで決められた名前空間と一致するか検索できない
+		//   一旦名前空間とファイル名が一致している前提で実装する
+		const relativePath = convertNamespaceToFilePath(namespace);
+		if (relativePath.startsWith("app")) {
+			indexOneFile(this.index, this.workspaceFolder, relativePath, true);
+		}
+		// vendorでもindexOneFileする
+		return [];
+	}
+}
+
 export class IndexStrategy extends NodeStrategy {
 	private strategies = new Map<string, NodeStrategy>();
 
 	constructor(
 		public index: Index,
+		workspaceFolder: string,
 		relativePath: string,
 		symbolCreator: SymbolCreator,
 	) {
@@ -483,7 +567,7 @@ export class IndexStrategy extends NodeStrategy {
 		);
 		this.strategies.set(
 			"useitem",
-			new UseItemStrategy(index, relativePath, symbolCreator),
+			new UseItemStrategy(index, relativePath, symbolCreator, workspaceFolder),
 		);
 		this.strategies.set(
 			"variable",
