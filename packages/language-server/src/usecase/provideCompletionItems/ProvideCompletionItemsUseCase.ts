@@ -4,8 +4,8 @@ import {
 	CompletionItemKind,
 	type LanguageServicePluginInstance,
 } from "@volar/language-server";
-import { BladeCompletionItemsProvider } from "./bladeCompletionItemsProvider/BladeCompletionItemsProvider";
-import { ViewCompletionItemsProvider } from "./viewCompletionItemsProvider/viewCompletionItemsProvider";
+import { BladeCompletionItemsProvider } from "./blade/BladeCompletionItemsProvider";
+import { ViewCompletionItemsProvider } from "./view/viewCompletionItemsProvider";
 
 export class ProvideCompletionItemsUseCase {
 	constructor(private index: Index) {
