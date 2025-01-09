@@ -2,10 +2,7 @@ import { readdirSync } from "node:fs";
 import path from "node:path";
 import { type Index, IndexSchema } from "@/domain/model/scip";
 import { create } from "@bufbuild/protobuf";
-import {
-	ComposerLockFetcher,
-	type PackageDict,
-} from "../shared/composerLockFetcher/ComposerLockFetcher";
+import { ComposerLockFetcher } from "../shared/composerLockFetcher/ComposerLockFetcher";
 import { Indexer } from "./Indexer";
 
 export type ViewCaller = {
@@ -22,6 +19,7 @@ export class CreateIndexUseCase {
 			},
 		});
 		index.viewArgumentDict = {};
+		index.packageDict = new ComposerLockFetcher(workspaceFolder).execute();
 		const files = readdirSync(path.join(workspaceFolder, "app"), {
 			recursive: true,
 			withFileTypes: true,
@@ -35,10 +33,5 @@ export class CreateIndexUseCase {
 			);
 		}
 		return index;
-	}
-
-	getPackageDict(workspaceFolder: string): PackageDict {
-		const composerLockPath = path.join(workspaceFolder, "composer.lock");
-		return new ComposerLockFetcher(composerLockPath).execute();
 	}
 }

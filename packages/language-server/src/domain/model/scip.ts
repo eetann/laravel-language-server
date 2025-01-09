@@ -86,6 +86,8 @@ export type Index = Message<"scip.Index"> & {
 	externalSymbols: SymbolInformation[];
 
 	viewArgumentDict: ViewArgumentDict;
+
+	packageDict: PackageDict;
 };
 
 /**
@@ -104,6 +106,25 @@ export type ViewArgument = {
 };
 export type ViewArgumentDict = {
 	[viewPath: string]: ViewArgument;
+};
+export type PackageDict = {
+	/**
+	 * Example: "Illuminate\\Database\\Seeder"
+	 */
+	[nanmespace: string]: {
+		/**
+		 * Example: "laravel/framework"
+		 */
+		name: string;
+		/**
+		 * Example: "v11.29.0"
+		 */
+		version: string;
+		/**
+		 * Example: "vendor/laravel/framework/src/Illuminate/Database/Seeder.php"
+		 */
+		src: string;
+	};
 };
 
 /**

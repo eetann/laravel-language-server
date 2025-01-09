@@ -1,29 +1,10 @@
 import { existsSync, readFileSync, readdirSync } from "node:fs";
 import path from "node:path";
-
-export type PackageDict = {
-	/**
-	 * Example: "Illuminate\\Database\\Seeder"
-	 */
-	[nanmespace: string]: {
-		/**
-		 * Example: "laravel/framework"
-		 */
-		name: string;
-		/**
-		 * Example: "v11.29.0"
-		 */
-		version: string;
-		/**
-		 * Example: "vendor/laravel/framework/src/Illuminate/Database/Seeder.php"
-		 */
-		src: string;
-	};
-};
+import type { PackageDict } from "@/domain/model/scip";
 
 export class ComposerLockFetcher {
 	private packageDict: PackageDict = {};
-	constructor(private composerLockPath: string) {}
+	constructor(private workspaceFolder: string) {}
 
 	execute(): PackageDict {
 		const composerData = this.readComposerLock();
@@ -31,15 +12,16 @@ export class ComposerLockFetcher {
 	}
 
 	private readComposerLock(): unknown {
-		if (!existsSync(this.composerLockPath)) {
-			throw new Error(`composer.lock not found at ${this.composerLockPath}`);
+		const composerLockPath = path.join(this.workspaceFolder, "composer.lock");
+		if (!existsSync(composerLockPath)) {
+			throw new Error(`composer.lock not found at ${composerLockPath}`);
 		}
-		const content = readFileSync(this.composerLockPath, "utf-8");
+		const content = readFileSync(composerLockPath, "utf-8");
 		return JSON.parse(content);
 	}
 
 	// biome-ignore lint/suspicious/noExplicitAny: <explanation>
-	private extractPsr4Mapping(data: any): PackageDict {
+	public extractPsr4Mapping(data: any): PackageDict {
 		if (!data.packages) {
 			throw new Error("Invalid composer.lock format: `packages` not found");
 		}
@@ -70,9 +52,8 @@ export class ComposerLockFetcher {
 		packageName: string,
 		packageVersion: string,
 	) {
-		const dirPath = path.join("vendor", packageName, dir);
+		const dirPath = path.join(this.workspaceFolder, "vendor", packageName, dir);
 		if (!existsSync(dirPath)) {
-			console.log("existsSync: false");
 			return;
 		}
 
